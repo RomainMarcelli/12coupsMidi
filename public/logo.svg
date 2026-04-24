@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>Midi Master — Les 12 Coups de Midi</title>
+  <!-- 12 rayons (soleil + horloge) -->
+  <g stroke="#F5B700" stroke-width="6" stroke-linecap="round">
+    <line x1="100" y1="14" x2="100" y2="32" />
+    <line x1="143" y1="25.5" x2="134" y2="41.1" />
+    <line x1="174.5" y1="57" x2="158.9" y2="66" />
+    <line x1="186" y1="100" x2="168" y2="100" />
+    <line x1="174.5" y1="143" x2="158.9" y2="134" />
+    <line x1="143" y1="174.5" x2="134" y2="158.9" />
+    <line x1="100" y1="186" x2="100" y2="168" />
+    <line x1="57" y1="174.5" x2="66" y2="158.9" />
+    <line x1="25.5" y1="143" x2="41.1" y2="134" />
+    <line x1="14" y1="100" x2="32" y2="100" />
+    <line x1="25.5" y1="57" x2="41.1" y2="66" />
+    <line x1="57" y1="25.5" x2="66" y2="41.1" />
+  </g>
+  <!-- Cadran soleil -->
+  <circle cx="100" cy="100" r="58" fill="#F5B700" />
+  <circle cx="100" cy="100" r="58" fill="none" stroke="#C99100" stroke-width="2" />
+  <!-- Aiguilles à 12h00 (grande minute + petite heure, toutes deux vers le haut) -->
+  <line x1="100" y1="100" x2="100" y2="62" stroke="#0B1F4D" stroke-width="5" stroke-linecap="round" />
+  <line x1="100" y1="100" x2="100" y2="74" stroke="#0B1F4D" stroke-width="7" stroke-linecap="round" />
+  <!-- Centre -->
+  <circle cx="100" cy="100" r="6" fill="#0B1F4D" />
+  <!-- "XII" stylisé sous les aiguilles -->
+  <text x="100" y="130" font-family="Georgia, serif" font-size="18" font-weight="700"
+        fill="#0B1F4D" text-anchor="middle" letter-spacing="1">XII</text>
+</svg>

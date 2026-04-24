@@ -1,0 +1,1842 @@
+[
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 1,
+    "enonce": "En quelle année a eu lieu le débarquement de Normandie ?",
+    "reponses": [{"text": "1944", "correct": true}, {"text": "1945", "correct": false}],
+    "explication": "Le 6 juin 1944, opération Overlord."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "revolution",
+    "difficulte": 1,
+    "enonce": "La prise de la Bastille a eu lieu en 1789.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Le 14 juillet 1789 — début symbolique de la Révolution française."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 2,
+    "enonce": "Qui a conquis la Gaule ?",
+    "reponses": [{"text": "Jules César", "correct": true}, {"text": "Auguste", "correct": false}],
+    "explication": "Jules César, entre 58 et 51 av. J.-C."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "renaissance",
+    "difficulte": 2,
+    "enonce": "Qui a peint le plafond de la chapelle Sixtine ?",
+    "reponses": [{"text": "Michel-Ange", "correct": true}, {"text": "Raphaël", "correct": false}],
+    "explication": "Michel-Ange, entre 1508 et 1512."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "contemporain",
+    "difficulte": 2,
+    "enonce": "Le mur de Berlin est tombé en :",
+    "reponses": [{"text": "1989", "correct": true}, {"text": "1991", "correct": false}],
+    "explication": "Le 9 novembre 1989."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "moyen-age",
+    "difficulte": 2,
+    "enonce": "Jeanne d'Arc a été brûlée vive à Rouen.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Le 30 mai 1431, place du Vieux-Marché à Rouen."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 1,
+    "enonce": "La capitale de l'Australie est :",
+    "reponses": [{"text": "Canberra", "correct": true}, {"text": "Sydney", "correct": false}],
+    "explication": "Sydney est la plus grande ville mais Canberra est la capitale fédérale."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 1,
+    "enonce": "La capitale du Canada est Ottawa.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Ottawa, et non Toronto ou Montréal."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 2,
+    "enonce": "Quel est le plus long fleuve de France ?",
+    "reponses": [{"text": "La Loire", "correct": true}, {"text": "La Seine", "correct": false}],
+    "explication": "La Loire, environ 1 006 km."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 2,
+    "enonce": "Quel est le plus grand océan ?",
+    "reponses": [{"text": "Pacifique", "correct": true}, {"text": "Atlantique", "correct": false}],
+    "explication": "L'océan Pacifique couvre environ un tiers de la surface terrestre."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "fleuves-montagnes",
+    "difficulte": 2,
+    "enonce": "Le Mont Blanc culmine à près de 4 810 m.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Altitude officielle révisée régulièrement, proche de 4 809 / 4 810 m."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 1,
+    "enonce": "La France a remporté la Coupe du monde 1998 à domicile.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Finale 3-0 contre le Brésil au Stade de France."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 1,
+    "enonce": "Zinédine Zidane a marqué combien de buts en finale 1998 ?",
+    "reponses": [{"text": "2", "correct": true}, {"text": "1", "correct": false}],
+    "explication": "Deux têtes sur corner contre le Brésil."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 2,
+    "enonce": "Roland-Garros se joue sur terre battue.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Contrairement à Wimbledon (gazon) et l'US Open / Open d'Australie (dur)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 2,
+    "enonce": "Les premiers Jeux olympiques modernes ont eu lieu à :",
+    "reponses": [{"text": "Athènes", "correct": true}, {"text": "Paris", "correct": false}],
+    "explication": "Athènes 1896, sur initiative de Pierre de Coubertin."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "cyclisme",
+    "difficulte": 2,
+    "enonce": "Le maillot jaune du Tour de France est porté par :",
+    "reponses": [{"text": "Le leader au classement général", "correct": true}, {"text": "Le meilleur sprinteur", "correct": false}],
+    "explication": "Le sprinteur porte le maillot vert, le grimpeur le maillot à pois."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 1,
+    "enonce": "La Joconde a été peinte par Léonard de Vinci.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Au début du XVIe siècle, aujourd'hui exposée au Louvre."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 2,
+    "enonce": "Quel peintre s'est coupé l'oreille ?",
+    "reponses": [{"text": "Van Gogh", "correct": true}, {"text": "Gauguin", "correct": false}],
+    "explication": "Vincent Van Gogh, en décembre 1888 à Arles."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "architecture",
+    "difficulte": 2,
+    "enonce": "La Tour Eiffel a été construite pour :",
+    "reponses": [{"text": "L'Exposition universelle de 1889", "correct": true}, {"text": "Les JO de Paris", "correct": false}],
+    "explication": "Inaugurée en 1889, centenaire de la Révolution française."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "sculpture",
+    "difficulte": 2,
+    "enonce": "« Le Penseur » est une sculpture de :",
+    "reponses": [{"text": "Auguste Rodin", "correct": true}, {"text": "Camille Claudel", "correct": false}],
+    "explication": "Rodin, fin XIXe siècle — plusieurs exemplaires en bronze."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 1,
+    "enonce": "« Les Misérables » a été écrit par :",
+    "reponses": [{"text": "Victor Hugo", "correct": true}, {"text": "Émile Zola", "correct": false}],
+    "explication": "Publié en 1862."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 2,
+    "enonce": "Qui a écrit « Madame Bovary » ?",
+    "reponses": [{"text": "Gustave Flaubert", "correct": true}, {"text": "Honoré de Balzac", "correct": false}],
+    "explication": "Publié en 1857."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 2,
+    "enonce": "L'auteur de « 1984 » est :",
+    "reponses": [{"text": "George Orwell", "correct": true}, {"text": "Aldous Huxley", "correct": false}],
+    "explication": "Roman dystopique publié en 1949."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "bd",
+    "difficulte": 1,
+    "enonce": "Astérix a été créé par :",
+    "reponses": [{"text": "Goscinny et Uderzo", "correct": true}, {"text": "Hergé", "correct": false}],
+    "explication": "René Goscinny (scénario) et Albert Uderzo (dessin) en 1959."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 1,
+    "enonce": "Le cœur humain comporte 4 cavités.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Deux oreillettes + deux ventricules."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 2,
+    "enonce": "Le plus gros organe du corps humain est :",
+    "reponses": [{"text": "La peau", "correct": true}, {"text": "Le foie", "correct": false}],
+    "explication": "La peau, environ 2 m² chez l'adulte."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 1,
+    "enonce": "Le plus grand mammifère est la baleine bleue.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Jusqu'à 30 m et 170 tonnes."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "svt",
+    "subcategory_slug": "plantes",
+    "difficulte": 2,
+    "enonce": "Les plantes absorbent du CO₂ et rejettent :",
+    "reponses": [{"text": "De l'oxygène", "correct": true}, {"text": "De l'azote", "correct": false}],
+    "explication": "Photosynthèse : CO₂ + H₂O + lumière → glucose + O₂."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 1,
+    "enonce": "Le symbole de l'or est Au.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Du latin aurum."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 1,
+    "enonce": "L'eau a pour formule :",
+    "reponses": [{"text": "H₂O", "correct": true}, {"text": "CO₂", "correct": false}],
+    "explication": "Deux atomes d'hydrogène, un atome d'oxygène."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 2,
+    "enonce": "Le pH neutre vaut :",
+    "reponses": [{"text": "7", "correct": true}, {"text": "0", "correct": false}],
+    "explication": "En dessous : acide ; au-dessus : basique."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 1,
+    "enonce": "La planète la plus proche du Soleil est :",
+    "reponses": [{"text": "Mercure", "correct": true}, {"text": "Vénus", "correct": false}],
+    "explication": "Mercure, puis Vénus, puis la Terre."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 2,
+    "enonce": "Un jour sur Terre dure 24 heures.",
+    "reponses": [{"text": "Vrai (approximativement)", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Jour solaire moyen de 24 h ; jour sidéral : environ 23 h 56 min."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 2,
+    "enonce": "L'unité de force est :",
+    "reponses": [{"text": "Le newton", "correct": true}, {"text": "Le joule", "correct": false}],
+    "explication": "Le joule est l'unité d'énergie."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "physique",
+    "subcategory_slug": "electricite",
+    "difficulte": 2,
+    "enonce": "L'unité de tension électrique est :",
+    "reponses": [{"text": "Le volt", "correct": true}, {"text": "L'ampère", "correct": false}],
+    "explication": "L'ampère mesure l'intensité."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 1,
+    "enonce": "Mario est la mascotte de :",
+    "reponses": [{"text": "Nintendo", "correct": true}, {"text": "Sega", "correct": false}],
+    "explication": "Créé par Shigeru Miyamoto."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "retro",
+    "difficulte": 2,
+    "enonce": "Le jeu Pac-Man est sorti en :",
+    "reponses": [{"text": "1980", "correct": true}, {"text": "1985", "correct": false}],
+    "explication": "Développé par Namco."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "consoles",
+    "difficulte": 2,
+    "enonce": "Sony fabrique la PlayStation.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Première PlayStation sortie en 1994 au Japon."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 2,
+    "enonce": "Zelda est une franchise :",
+    "reponses": [{"text": "Nintendo", "correct": true}, {"text": "Microsoft", "correct": false}],
+    "explication": "Créée par Shigeru Miyamoto en 1986."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "actualite",
+    "subcategory_slug": "politique",
+    "difficulte": 2,
+    "enonce": "Le président de la République française est élu pour :",
+    "reponses": [{"text": "5 ans", "correct": true}, {"text": "7 ans", "correct": false}],
+    "explication": "Quinquennat depuis la révision constitutionnelle de 2000."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "actualite",
+    "subcategory_slug": "politique",
+    "difficulte": 2,
+    "enonce": "L'Assemblée nationale française compte :",
+    "reponses": [{"text": "577 députés", "correct": true}, {"text": "350 députés", "correct": false}],
+    "explication": "577 circonscriptions depuis 1986."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "actualite",
+    "subcategory_slug": "societe",
+    "difficulte": 3,
+    "enonce": "L'ONU a été fondée en 1945.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Charte signée le 26 juin 1945 à San Francisco."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 1,
+    "enonce": "« Titanic » a été réalisé par James Cameron.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Sorti en 1997."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 2,
+    "enonce": "Dans « Le Seigneur des Anneaux », Frodon doit détruire :",
+    "reponses": [{"text": "L'Anneau unique", "correct": true}, {"text": "L'Étoile de Mort", "correct": false}],
+    "explication": "Dans la Montagne du Destin, au Mordor."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 2,
+    "enonce": "Louis de Funès a joué dans « Le Gendarme de Saint-Tropez ».",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Série de 6 films entre 1964 et 1982."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "series",
+    "difficulte": 2,
+    "enonce": "La série « Friends » se passe à :",
+    "reponses": [{"text": "New York", "correct": true}, {"text": "Los Angeles", "correct": false}],
+    "explication": "À Manhattan, 1994-2004."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 2,
+    "enonce": "« Les Visiteurs » a été réalisé par Jean-Marie Poiré.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Comédie culte de 1993 avec Jean Reno et Christian Clavier."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 1,
+    "enonce": "« Ne me quitte pas » est une chanson de Jacques Brel.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Enregistrée en 1959."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 2,
+    "enonce": "« La Vie en rose » est de :",
+    "reponses": [{"text": "Édith Piaf", "correct": true}, {"text": "Charles Aznavour", "correct": false}],
+    "explication": "Enregistrée en 1947."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 2,
+    "enonce": "Les Beatles viennent de :",
+    "reponses": [{"text": "Liverpool", "correct": true}, {"text": "Londres", "correct": false}],
+    "explication": "Formé à Liverpool en 1960."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "musique-classique-genre",
+    "difficulte": 2,
+    "enonce": "Beethoven a composé la 9ème Symphonie.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Créée en 1824, inclut l'« Ode à la joie »."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "rap",
+    "difficulte": 2,
+    "enonce": "IAM vient de :",
+    "reponses": [{"text": "Marseille", "correct": true}, {"text": "Paris", "correct": false}],
+    "explication": "Groupe de rap formé à Marseille en 1989."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 1,
+    "enonce": "Le cassoulet est une spécialité de :",
+    "reponses": [{"text": "Castelnaudary / Toulouse", "correct": true}, {"text": "Lyon", "correct": false}],
+    "explication": "Plat traditionnel du Languedoc."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "vins",
+    "difficulte": 2,
+    "enonce": "Le Bordeaux est un vin principalement du Sud-Ouest.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Vignoble autour de la ville de Bordeaux."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 2,
+    "enonce": "La bouillabaisse est un plat originaire de :",
+    "reponses": [{"text": "Marseille", "correct": true}, {"text": "Nice", "correct": false}],
+    "explication": "Soupe de poissons marseillaise."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "ingredients",
+    "difficulte": 2,
+    "enonce": "Le roquefort est fabriqué avec :",
+    "reponses": [{"text": "Du lait de brebis", "correct": true}, {"text": "Du lait de vache", "correct": false}],
+    "explication": "Fromage AOP à pâte persillée."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 2,
+    "enonce": "Le téléphone a été inventé par :",
+    "reponses": [{"text": "Alexander Graham Bell", "correct": true}, {"text": "Thomas Edison", "correct": false}],
+    "explication": "Brevet déposé en 1876."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 2,
+    "enonce": "Zeus est le dieu :",
+    "reponses": [{"text": "Grec", "correct": true}, {"text": "Romain", "correct": false}],
+    "explication": "Équivalent romain : Jupiter."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "culture-g",
+    "subcategory_slug": "langues",
+    "difficulte": 2,
+    "enonce": "La langue la plus parlée au monde (langue maternelle) est :",
+    "reponses": [{"text": "Le mandarin", "correct": true}, {"text": "L'anglais", "correct": false}],
+    "explication": "Chinois mandarin : plus de 900 millions de locuteurs natifs."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "culture-g",
+    "subcategory_slug": "religions",
+    "difficulte": 2,
+    "enonce": "Le Coran est le livre saint de l'islam.",
+    "reponses": [{"text": "Vrai", "correct": true}, {"text": "Faux", "correct": false}],
+    "explication": "Révélé selon la tradition au prophète Mahomet."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "histoire",
+    "subcategory_slug": "revolution",
+    "difficulte": 2,
+    "enonce": "Qui était roi de France à la prise de la Bastille ?",
+    "reponses": [
+      {"text": "Louis XIV", "correct": false},
+      {"text": "Louis XV", "correct": false},
+      {"text": "Louis XVI", "correct": true},
+      {"text": "Louis XVIII", "correct": false}
+    ],
+    "explication": "Louis XVI, guillotiné le 21 janvier 1793."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 2,
+    "enonce": "En quelle année la Seconde Guerre mondiale s'est-elle terminée en Europe ?",
+    "reponses": [
+      {"text": "1943", "correct": false},
+      {"text": "1944", "correct": false},
+      {"text": "1945", "correct": true},
+      {"text": "1946", "correct": false}
+    ],
+    "explication": "Capitulation allemande le 8 mai 1945."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 3,
+    "enonce": "Quelle bataille Napoléon Bonaparte a-t-il perdue en 1815 ?",
+    "reponses": [
+      {"text": "Austerlitz", "correct": false},
+      {"text": "Waterloo", "correct": true},
+      {"text": "Trafalgar", "correct": false},
+      {"text": "Iéna", "correct": false}
+    ],
+    "explication": "Défaite face aux coalisés anglais et prussiens, 18 juin 1815."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "histoire",
+    "subcategory_slug": "contemporain",
+    "difficulte": 2,
+    "enonce": "Qui a été le premier président de la Ve République ?",
+    "reponses": [
+      {"text": "Vincent Auriol", "correct": false},
+      {"text": "René Coty", "correct": false},
+      {"text": "Charles de Gaulle", "correct": true},
+      {"text": "Georges Pompidou", "correct": false}
+    ],
+    "explication": "De Gaulle, président de 1959 à 1969."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 2,
+    "enonce": "Quelle est la capitale de la Finlande ?",
+    "reponses": [
+      {"text": "Oslo", "correct": false},
+      {"text": "Stockholm", "correct": false},
+      {"text": "Helsinki", "correct": true},
+      {"text": "Copenhague", "correct": false}
+    ],
+    "explication": "Helsinki, sur la côte sud."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "geographie",
+    "subcategory_slug": "europe",
+    "difficulte": 3,
+    "enonce": "Quel pays n'est pas membre de l'Union européenne ?",
+    "reponses": [
+      {"text": "Norvège", "correct": true},
+      {"text": "Finlande", "correct": false},
+      {"text": "Pologne", "correct": false},
+      {"text": "Portugal", "correct": false}
+    ],
+    "explication": "La Norvège a rejeté l'adhésion par référendum à deux reprises."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Le plus haut sommet du monde est :",
+    "reponses": [
+      {"text": "Le K2", "correct": false},
+      {"text": "Le Kilimandjaro", "correct": false},
+      {"text": "L'Everest", "correct": true},
+      {"text": "L'Aconcagua", "correct": false}
+    ],
+    "explication": "L'Everest, 8 848 m, entre Népal et Chine."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 2,
+    "enonce": "Combien de régions compte la France métropolitaine ?",
+    "reponses": [
+      {"text": "11", "correct": false},
+      {"text": "13", "correct": true},
+      {"text": "15", "correct": false},
+      {"text": "22", "correct": false}
+    ],
+    "explication": "Depuis la réforme de 2016."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "Quel club a remporté le plus de Ligues des Champions ?",
+    "reponses": [
+      {"text": "FC Barcelone", "correct": false},
+      {"text": "Real Madrid", "correct": true},
+      {"text": "AC Milan", "correct": false},
+      {"text": "Bayern Munich", "correct": false}
+    ],
+    "explication": "Le Real Madrid domine largement le palmarès."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 3,
+    "enonce": "Quel joueur détient le record de titres à Roland-Garros ?",
+    "reponses": [
+      {"text": "Roger Federer", "correct": false},
+      {"text": "Novak Djokovic", "correct": false},
+      {"text": "Rafael Nadal", "correct": true},
+      {"text": "Björn Borg", "correct": false}
+    ],
+    "explication": "14 titres à Roland-Garros."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 3,
+    "enonce": "Dans quelle ville ont eu lieu les JO d'été 2024 ?",
+    "reponses": [
+      {"text": "Tokyo", "correct": false},
+      {"text": "Los Angeles", "correct": false},
+      {"text": "Paris", "correct": true},
+      {"text": "Rio", "correct": false}
+    ],
+    "explication": "Paris, 26 juillet au 11 août 2024."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "« La Nuit étoilée » est un tableau de :",
+    "reponses": [
+      {"text": "Claude Monet", "correct": false},
+      {"text": "Pablo Picasso", "correct": false},
+      {"text": "Vincent Van Gogh", "correct": true},
+      {"text": "Edvard Munch", "correct": false}
+    ],
+    "explication": "Peint en 1889, exposé au MoMA de New York."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Le mouvement impressionniste est né en :",
+    "reponses": [
+      {"text": "Italie", "correct": false},
+      {"text": "France", "correct": true},
+      {"text": "Allemagne", "correct": false},
+      {"text": "Espagne", "correct": false}
+    ],
+    "explication": "Seconde moitié du XIXe siècle, autour de Monet, Renoir, Degas…"
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "art",
+    "subcategory_slug": "musique-classique",
+    "difficulte": 3,
+    "enonce": "Qui a composé « Les Quatre Saisons » ?",
+    "reponses": [
+      {"text": "Mozart", "correct": false},
+      {"text": "Bach", "correct": false},
+      {"text": "Vivaldi", "correct": true},
+      {"text": "Haendel", "correct": false}
+    ],
+    "explication": "Concertos pour violon composés vers 1720."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 2,
+    "enonce": "Qui a écrit « Le Petit Prince » ?",
+    "reponses": [
+      {"text": "Marcel Proust", "correct": false},
+      {"text": "Albert Camus", "correct": false},
+      {"text": "Antoine de Saint-Exupéry", "correct": true},
+      {"text": "André Gide", "correct": false}
+    ],
+    "explication": "Publié en 1943."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 3,
+    "enonce": "« Cent ans de solitude » est un roman de :",
+    "reponses": [
+      {"text": "Mario Vargas Llosa", "correct": false},
+      {"text": "Gabriel García Márquez", "correct": true},
+      {"text": "Jorge Luis Borges", "correct": false},
+      {"text": "Isabel Allende", "correct": false}
+    ],
+    "explication": "Colombien, prix Nobel 1982. Roman publié en 1967."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "litterature",
+    "subcategory_slug": "poesie",
+    "difficulte": 3,
+    "enonce": "« Les Fleurs du mal » est un recueil de :",
+    "reponses": [
+      {"text": "Arthur Rimbaud", "correct": false},
+      {"text": "Paul Verlaine", "correct": false},
+      {"text": "Charles Baudelaire", "correct": true},
+      {"text": "Alfred de Musset", "correct": false}
+    ],
+    "explication": "Publié en 1857."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "litterature",
+    "subcategory_slug": "bd",
+    "difficulte": 2,
+    "enonce": "Qui est le créateur de Tintin ?",
+    "reponses": [
+      {"text": "Goscinny", "correct": false},
+      {"text": "Hergé", "correct": true},
+      {"text": "Franquin", "correct": false},
+      {"text": "Morris", "correct": false}
+    ],
+    "explication": "Georges Remi dit Hergé, 1929."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 3,
+    "enonce": "Combien d'os compte le squelette humain adulte ?",
+    "reponses": [
+      {"text": "106", "correct": false},
+      {"text": "156", "correct": false},
+      {"text": "206", "correct": true},
+      {"text": "306", "correct": false}
+    ],
+    "explication": "Environ 206 (variations individuelles possibles)."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 3,
+    "enonce": "Combien de cœurs a une pieuvre ?",
+    "reponses": [
+      {"text": "1", "correct": false},
+      {"text": "2", "correct": false},
+      {"text": "3", "correct": true},
+      {"text": "4", "correct": false}
+    ],
+    "explication": "Un cœur principal et deux branchiaux."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Quel est le gaz le plus abondant dans l'atmosphère terrestre ?",
+    "reponses": [
+      {"text": "Oxygène", "correct": false},
+      {"text": "Dioxyde de carbone", "correct": false},
+      {"text": "Azote", "correct": true},
+      {"text": "Argon", "correct": false}
+    ],
+    "explication": "Environ 78 % d'azote, 21 % d'oxygène."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Quel est l'élément de numéro atomique 1 ?",
+    "reponses": [
+      {"text": "Hélium", "correct": false},
+      {"text": "Hydrogène", "correct": true},
+      {"text": "Lithium", "correct": false},
+      {"text": "Carbone", "correct": false}
+    ],
+    "explication": "L'hydrogène, H, 1 proton."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 2,
+    "enonce": "Combien de planètes compte le système solaire ?",
+    "reponses": [
+      {"text": "7", "correct": false},
+      {"text": "8", "correct": true},
+      {"text": "9", "correct": false},
+      {"text": "10", "correct": false}
+    ],
+    "explication": "Depuis 2006 et le déclassement de Pluton."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "La vitesse de la lumière dans le vide est d'environ :",
+    "reponses": [
+      {"text": "30 000 km/s", "correct": false},
+      {"text": "300 000 km/s", "correct": true},
+      {"text": "3 000 000 km/s", "correct": false},
+      {"text": "30 000 000 km/s", "correct": false}
+    ],
+    "explication": "299 792 458 m/s exactement."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 3,
+    "enonce": "L'accélération de la pesanteur terrestre vaut environ :",
+    "reponses": [
+      {"text": "4,9 m/s²", "correct": false},
+      {"text": "9,8 m/s²", "correct": true},
+      {"text": "19,6 m/s²", "correct": false},
+      {"text": "98 m/s²", "correct": false}
+    ],
+    "explication": "g ≈ 9,81 m/s²."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 2,
+    "enonce": "Qui est le héros de la licence « The Legend of Zelda » ?",
+    "reponses": [
+      {"text": "Zelda", "correct": false},
+      {"text": "Link", "correct": true},
+      {"text": "Ganon", "correct": false},
+      {"text": "Sheik", "correct": false}
+    ],
+    "explication": "Zelda est la princesse, Link est le héros."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "consoles",
+    "difficulte": 3,
+    "enonce": "Quelle console est sortie en premier ?",
+    "reponses": [
+      {"text": "PlayStation 1", "correct": false},
+      {"text": "Nintendo 64", "correct": false},
+      {"text": "Sega Mega Drive", "correct": true},
+      {"text": "Game Boy", "correct": false}
+    ],
+    "explication": "Mega Drive : 1988 (JP) / 1990 (FR) ; Game Boy : 1989 (JP) / 1990 (FR)."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "actualite",
+    "subcategory_slug": "politique",
+    "difficulte": 3,
+    "enonce": "La monnaie unique européenne « l'euro » a été mise en circulation fiduciaire en :",
+    "reponses": [
+      {"text": "1999", "correct": false},
+      {"text": "2001", "correct": false},
+      {"text": "2002", "correct": true},
+      {"text": "2004", "correct": false}
+    ],
+    "explication": "1er janvier 2002 pour les pièces et billets (1999 en version scripturale)."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "actualite",
+    "subcategory_slug": "economie",
+    "difficulte": 3,
+    "enonce": "Le siège de l'Union européenne est à :",
+    "reponses": [
+      {"text": "Paris", "correct": false},
+      {"text": "Berlin", "correct": false},
+      {"text": "Bruxelles", "correct": true},
+      {"text": "Strasbourg", "correct": false}
+    ],
+    "explication": "Bruxelles (Commission, Conseil) — Strasbourg accueille le Parlement."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 3,
+    "enonce": "Qui a réalisé « Pulp Fiction » ?",
+    "reponses": [
+      {"text": "Martin Scorsese", "correct": false},
+      {"text": "Quentin Tarantino", "correct": true},
+      {"text": "David Lynch", "correct": false},
+      {"text": "Steven Spielberg", "correct": false}
+    ],
+    "explication": "Palme d'or 1994."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "oscars-cesar",
+    "difficulte": 3,
+    "enonce": "Le premier film à avoir remporté l'Oscar du meilleur film est :",
+    "reponses": [
+      {"text": "Autant en emporte le vent", "correct": false},
+      {"text": "Les Ailes (Wings)", "correct": true},
+      {"text": "Citizen Kane", "correct": false},
+      {"text": "Casablanca", "correct": false}
+    ],
+    "explication": "« Wings » en 1929, premier Oscar du meilleur film."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "series",
+    "difficulte": 3,
+    "enonce": "La série « Breaking Bad » se passe dans quel État américain ?",
+    "reponses": [
+      {"text": "Texas", "correct": false},
+      {"text": "Arizona", "correct": false},
+      {"text": "Nouveau-Mexique", "correct": true},
+      {"text": "Nevada", "correct": false}
+    ],
+    "explication": "À Albuquerque, Nouveau-Mexique."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 2,
+    "enonce": "« Aux Champs-Élysées » est chantée par :",
+    "reponses": [
+      {"text": "Charles Aznavour", "correct": false},
+      {"text": "Joe Dassin", "correct": true},
+      {"text": "Michel Sardou", "correct": false},
+      {"text": "Gilbert Bécaud", "correct": false}
+    ],
+    "explication": "Sortie en 1969."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 3,
+    "enonce": "Qui a composé « Bohemian Rhapsody » ?",
+    "reponses": [
+      {"text": "John Lennon", "correct": false},
+      {"text": "Freddie Mercury", "correct": true},
+      {"text": "Elton John", "correct": false},
+      {"text": "David Bowie", "correct": false}
+    ],
+    "explication": "Queen, 1975."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "musique",
+    "subcategory_slug": "rap",
+    "difficulte": 3,
+    "enonce": "Qui est surnommé « le King of Rap » et a sorti « Thriller » ?",
+    "reponses": [
+      {"text": "Prince", "correct": false},
+      {"text": "Michael Jackson", "correct": true},
+      {"text": "Stevie Wonder", "correct": false},
+      {"text": "Lionel Richie", "correct": false}
+    ],
+    "explication": "Michael Jackson — « Thriller » (1982) est l'album le plus vendu de tous les temps."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 2,
+    "enonce": "La tarte Tatin est une tarte :",
+    "reponses": [
+      {"text": "Aux pommes, renversée", "correct": true},
+      {"text": "Aux fraises", "correct": false},
+      {"text": "Au citron", "correct": false},
+      {"text": "Aux abricots", "correct": false}
+    ],
+    "explication": "Inventée par les sœurs Tatin en Sologne."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "du-monde",
+    "difficulte": 2,
+    "enonce": "Les sushis sont d'origine :",
+    "reponses": [
+      {"text": "Chinoise", "correct": false},
+      {"text": "Coréenne", "correct": false},
+      {"text": "Japonaise", "correct": true},
+      {"text": "Vietnamienne", "correct": false}
+    ],
+    "explication": "Japon."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "vins",
+    "difficulte": 3,
+    "enonce": "Le champagne est produit dans la région :",
+    "reponses": [
+      {"text": "De Bourgogne", "correct": false},
+      {"text": "Du Languedoc", "correct": false},
+      {"text": "De Champagne", "correct": true},
+      {"text": "Du Bordelais", "correct": false}
+    ],
+    "explication": "Appellation d'origine protégée restreinte à la Champagne."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 3,
+    "enonce": "Dans la mythologie grecque, qui a ouvert une jarre libérant tous les maux ?",
+    "reponses": [
+      {"text": "Athéna", "correct": false},
+      {"text": "Pandore", "correct": true},
+      {"text": "Aphrodite", "correct": false},
+      {"text": "Artémis", "correct": false}
+    ],
+    "explication": "« La boîte de Pandore »."
+  },
+  {
+    "type": "quizz_4",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 3,
+    "enonce": "Qui a inventé l'ampoule électrique (diffusion commerciale) ?",
+    "reponses": [
+      {"text": "Alexander Graham Bell", "correct": false},
+      {"text": "Nikola Tesla", "correct": false},
+      {"text": "Thomas Edison", "correct": true},
+      {"text": "Marie Curie", "correct": false}
+    ],
+    "explication": "Edison commercialise l'ampoule en 1879 (d'autres inventeurs ont travaillé en parallèle)."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Charles de Gaulle",
+    "alias": ["de Gaulle", "Général de Gaulle"],
+    "indices": [
+      "Je suis né à Lille en 1890.",
+      "Général militaire, j'ai refusé l'armistice en 1940.",
+      "J'ai lancé un célèbre appel depuis Londres le 18 juin 1940.",
+      "J'ai fondé la Ve République en 1958.",
+      "Ma haute taille et mon képi sont légendaires."
+    ],
+    "reponses": [],
+    "explication": "Charles de Gaulle, président de 1959 à 1969."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Cléopâtre",
+    "alias": ["Cléopâtre VII"],
+    "indices": [
+      "Je suis née vers 69 av. J.-C.",
+      "Je fus la dernière souveraine de l'Égypte antique.",
+      "J'ai séduit Jules César puis Marc Antoine.",
+      "La légende dit que je suis morte d'une morsure de serpent.",
+      "Astérix et Obélix m'ont rendue célèbre en BD."
+    ],
+    "reponses": [],
+    "explication": "Cléopâtre VII, reine d'Égypte."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Pablo Picasso",
+    "alias": ["Picasso"],
+    "indices": [
+      "Je suis né à Málaga en 1881.",
+      "J'ai passé la majeure partie de ma vie en France.",
+      "Je suis l'un des fondateurs du cubisme.",
+      "J'ai peint « Guernica ».",
+      "Mes périodes bleue et rose sont célèbres."
+    ],
+    "reponses": [],
+    "explication": "Pablo Picasso, mort en 1973."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Victor Hugo",
+    "alias": ["Hugo"],
+    "indices": [
+      "Je suis né à Besançon en 1802.",
+      "Chef de file du romantisme français.",
+      "J'ai été exilé sous le Second Empire.",
+      "J'ai écrit « Les Misérables ».",
+      "Ma tombe est au Panthéon."
+    ],
+    "reponses": [],
+    "explication": "Victor Hugo, mort en 1885."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Zinédine Zidane",
+    "alias": ["Zizou", "Zidane"],
+    "indices": [
+      "Je suis né à Marseille en 1972.",
+      "J'ai porté le numéro 10 en équipe de France.",
+      "J'ai marqué deux buts en finale d'une Coupe du monde.",
+      "J'ai entraîné le Real Madrid.",
+      "Un coup de tête en finale 2006 a fait polémique."
+    ],
+    "reponses": [],
+    "explication": "Zinédine Zidane."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Jean Dujardin",
+    "alias": ["Dujardin"],
+    "indices": [
+      "Je suis né en 1972 en région parisienne.",
+      "J'ai fait partie d'une bande comique à la télé.",
+      "J'ai incarné un agent secret parodique, OSS 117.",
+      "J'ai remporté l'Oscar du meilleur acteur.",
+      "C'était pour un film muet en noir et blanc."
+    ],
+    "reponses": [],
+    "explication": "Jean Dujardin, Oscar pour « The Artist » en 2012."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Édith Piaf",
+    "alias": ["Piaf", "la Môme"],
+    "indices": [
+      "Je suis née à Paris en 1915.",
+      "On m'a surnommée « la Môme ».",
+      "Ma petite taille est légendaire.",
+      "J'ai chanté « La Vie en rose ».",
+      "« Non, je ne regrette rien » est devenu un hymne."
+    ],
+    "reponses": [],
+    "explication": "Édith Piaf, morte en 1963."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "histoire",
+    "subcategory_slug": "renaissance",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Léonard de Vinci",
+    "alias": ["Leonardo da Vinci", "de Vinci", "Vinci"],
+    "indices": [
+      "Je suis né en Italie en 1452.",
+      "J'étais peintre, sculpteur, architecte et ingénieur.",
+      "J'ai laissé des carnets remplis d'inventions visionnaires.",
+      "J'ai terminé ma vie en France, invité par François Ier.",
+      "J'ai peint « La Joconde »."
+    ],
+    "reponses": [],
+    "explication": "Léonard de Vinci."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Rafael Nadal",
+    "alias": ["Nadal", "Rafa"],
+    "indices": [
+      "Je suis né à Majorque en 1986.",
+      "Je suis surnommé « le taureau de Manacor ».",
+      "Je joue de la main gauche.",
+      "Je suis le recordman absolu de titres à Roland-Garros.",
+      "On m'appelle aussi « le roi de la terre battue »."
+    ],
+    "reponses": [],
+    "explication": "Rafael Nadal."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Marie Curie",
+    "alias": ["Curie", "Maria Skłodowska"],
+    "indices": [
+      "Je suis née en Pologne en 1867.",
+      "J'ai travaillé en France la majeure partie de ma vie.",
+      "J'ai découvert le polonium et le radium.",
+      "Je suis la seule personne à avoir reçu deux Nobel dans deux disciplines scientifiques.",
+      "Mon nom est aussi celui d'une unité de radioactivité."
+    ],
+    "reponses": [],
+    "explication": "Marie Curie."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Louis de Funès",
+    "alias": ["de Funès"],
+    "indices": [
+      "Je suis né en 1914 à Courbevoie.",
+      "Je joue des personnages colériques et gesticulateurs.",
+      "J'ai interprété un gendarme à Saint-Tropez.",
+      "J'ai joué dans « La Grande Vadrouille ».",
+      "Je suis mort en 1983."
+    ],
+    "reponses": [],
+    "explication": "Louis de Funès."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Freddie Mercury",
+    "alias": ["Mercury", "Farrokh Bulsara"],
+    "indices": [
+      "Je suis né en 1946 à Zanzibar.",
+      "Mon vrai nom est Farrokh Bulsara.",
+      "J'ai été le leader d'un groupe de rock britannique.",
+      "« Bohemian Rhapsody » est mon œuvre la plus célèbre.",
+      "Je suis mort en 1991."
+    ],
+    "reponses": [],
+    "explication": "Freddie Mercury, chanteur de Queen."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Napoléon Bonaparte",
+    "alias": ["Napoléon", "Bonaparte", "Napoléon Ier"],
+    "indices": [
+      "Je suis né en Corse en 1769.",
+      "Je fus général puis empereur des Français.",
+      "J'ai remporté la bataille d'Austerlitz.",
+      "J'ai été exilé sur l'île d'Elbe puis à Sainte-Hélène.",
+      "J'ai perdu la bataille de Waterloo."
+    ],
+    "reponses": [],
+    "explication": "Napoléon Bonaparte (1769-1821)."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Claude Monet",
+    "alias": ["Monet"],
+    "indices": [
+      "Je suis né à Paris en 1840.",
+      "Je suis un des pères de l'impressionnisme.",
+      "J'ai vécu à Giverny en Normandie.",
+      "J'ai peint la série des « Nymphéas ».",
+      "Mon tableau « Impression, soleil levant » a donné son nom au mouvement."
+    ],
+    "reponses": [],
+    "explication": "Claude Monet."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Molière",
+    "alias": ["Jean-Baptiste Poquelin", "Poquelin"],
+    "indices": [
+      "Je suis né à Paris en 1622.",
+      "Mon vrai nom est Jean-Baptiste Poquelin.",
+      "Je suis acteur, auteur et metteur en scène.",
+      "J'ai écrit « Le Misanthrope » et « L'Avare ».",
+      "Je suis mort en scène en jouant « Le Malade imaginaire »."
+    ],
+    "reponses": [],
+    "explication": "Molière, mort en 1673."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Albert Einstein",
+    "alias": ["Einstein"],
+    "indices": [
+      "Je suis né en Allemagne en 1879.",
+      "J'ai exercé en Suisse puis aux États-Unis.",
+      "J'ai reçu le prix Nobel de physique en 1921.",
+      "J'ai formulé la théorie de la relativité.",
+      "E = mc² est ma formule la plus connue."
+    ],
+    "reponses": [],
+    "explication": "Albert Einstein."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Kylian Mbappé",
+    "alias": ["Mbappé"],
+    "indices": [
+      "Je suis né à Bondy en 1998.",
+      "J'ai commencé au Monaco.",
+      "J'ai été champion du monde à 19 ans.",
+      "J'ai porté le maillot du PSG pendant plusieurs saisons.",
+      "J'ai signé au Real Madrid en 2024."
+    ],
+    "reponses": [],
+    "explication": "Kylian Mbappé."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est ce pays ?",
+    "bonne_reponse": "Japon",
+    "alias": ["le Japon"],
+    "indices": [
+      "Je suis un archipel asiatique.",
+      "Ma capitale est Tokyo.",
+      "Ma monnaie est le yen.",
+      "Le mont Fuji est mon plus célèbre volcan.",
+      "On me surnomme « le pays du soleil levant »."
+    ],
+    "reponses": [],
+    "explication": "Le Japon."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 3,
+    "enonce": "Qui suis-je ?",
+    "bonne_reponse": "Marion Cotillard",
+    "alias": ["Cotillard"],
+    "indices": [
+      "Je suis née à Paris en 1975.",
+      "Ma carrière internationale est remarquable.",
+      "J'ai joué dans « Inception » de Christopher Nolan.",
+      "J'ai remporté le César et l'Oscar de la meilleure actrice.",
+      "C'était pour le rôle d'Édith Piaf dans « La Môme »."
+    ],
+    "reponses": [],
+    "explication": "Marion Cotillard."
+  },
+  {
+    "type": "etoile",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quelle est cette ville ?",
+    "bonne_reponse": "Venise",
+    "alias": ["Venezia"],
+    "indices": [
+      "Je suis une ville italienne du nord-est.",
+      "On me surnomme la « Sérénissime ».",
+      "Je suis bâtie sur une lagune.",
+      "On s'y déplace en gondole.",
+      "Mon carnaval et ma place Saint-Marc sont mondialement connus."
+    ],
+    "reponses": [],
+    "explication": "Venise."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 2,
+    "enonce": "Quelle est la capitale de l'Espagne ?",
+    "bonne_reponse": "Madrid",
+    "alias": [],
+    "reponses": [],
+    "explication": "Madrid, au centre du pays."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 2,
+    "enonce": "Quelle est la capitale du Portugal ?",
+    "bonne_reponse": "Lisbonne",
+    "alias": ["Lisboa"],
+    "reponses": [],
+    "explication": "Lisbonne."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 2,
+    "enonce": "Quelle est la capitale de l'Allemagne ?",
+    "bonne_reponse": "Berlin",
+    "alias": [],
+    "reponses": [],
+    "explication": "Berlin, depuis la réunification en 1990."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 2,
+    "enonce": "En quelle année a commencé la Première Guerre mondiale ?",
+    "bonne_reponse": "1914",
+    "alias": [],
+    "reponses": [],
+    "explication": "28 juillet 1914."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 2,
+    "enonce": "En quelle année a-t-on découvert l'Amérique ?",
+    "bonne_reponse": "1492",
+    "alias": [],
+    "reponses": [],
+    "explication": "Christophe Colomb, 12 octobre 1492."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "Combien de joueurs compte une équipe de football sur le terrain ?",
+    "bonne_reponse": "11",
+    "alias": ["onze"],
+    "reponses": [],
+    "explication": "10 joueurs + 1 gardien."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 2,
+    "enonce": "Combien d'anneaux compte le logo olympique ?",
+    "bonne_reponse": "5",
+    "alias": ["cinq"],
+    "reponses": [],
+    "explication": "Cinq, représentant les cinq continents."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "rugby",
+    "difficulte": 3,
+    "enonce": "Combien de points rapporte un essai au rugby à XV ?",
+    "bonne_reponse": "5",
+    "alias": ["cinq"],
+    "reponses": [],
+    "explication": "5 points, plus 2 de transformation potentiels."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Qui a écrit « Les Trois Mousquetaires » ?",
+    "bonne_reponse": "Alexandre Dumas",
+    "alias": ["Dumas", "Dumas père"],
+    "reponses": [],
+    "explication": "Publié en 1844."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 3,
+    "enonce": "Qui est l'auteur de la saga « Harry Potter » ?",
+    "bonne_reponse": "J.K. Rowling",
+    "alias": ["Rowling", "Joanne Rowling"],
+    "reponses": [],
+    "explication": "7 tomes entre 1997 et 2007."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 3,
+    "enonce": "Quel film a remporté la Palme d'or 2019 ?",
+    "bonne_reponse": "Parasite",
+    "alias": [],
+    "reponses": [],
+    "explication": "Parasite de Bong Joon-ho."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 3,
+    "enonce": "Quelle actrice française a joué dans « Amélie Poulain » ?",
+    "bonne_reponse": "Audrey Tautou",
+    "alias": ["Tautou"],
+    "reponses": [],
+    "explication": "Le Fabuleux Destin d'Amélie Poulain, 2001."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 3,
+    "enonce": "Qui chante « Mistral gagnant » ?",
+    "bonne_reponse": "Renaud",
+    "alias": ["Renaud Séchan"],
+    "reponses": [],
+    "explication": "Sorti en 1985."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "rap",
+    "difficulte": 3,
+    "enonce": "Quel rappeur français a sorti l'album « Racine carrée » ?",
+    "bonne_reponse": "Stromae",
+    "alias": ["Paul Van Haver"],
+    "reponses": [],
+    "explication": "Stromae, album 2013."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 2,
+    "enonce": "Combien de vertèbres cervicales a un humain ?",
+    "bonne_reponse": "7",
+    "alias": ["sept"],
+    "reponses": [],
+    "explication": "Sept, comme la plupart des mammifères."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Quel métal a pour symbole Fe ?",
+    "bonne_reponse": "Le fer",
+    "alias": ["fer"],
+    "reponses": [],
+    "explication": "Du latin ferrum."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quel est le satellite naturel de la Terre ?",
+    "bonne_reponse": "La Lune",
+    "alias": ["Lune"],
+    "reponses": [],
+    "explication": "Unique satellite naturel de la Terre."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 3,
+    "enonce": "Qui est le dieu romain de la guerre ?",
+    "bonne_reponse": "Mars",
+    "alias": [],
+    "reponses": [],
+    "explication": "Mars (équivalent grec : Arès)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 2,
+    "enonce": "Quel plat français est composé de pommes de terre gratinées avec fromage et crème ?",
+    "bonne_reponse": "Le gratin dauphinois",
+    "alias": ["gratin dauphinois", "dauphinois"],
+    "reponses": [],
+    "explication": "Spécialité du Dauphiné."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "architecture",
+    "difficulte": 3,
+    "enonce": "Quel architecte a conçu la pyramide du Louvre ?",
+    "bonne_reponse": "Ieoh Ming Pei",
+    "alias": ["I.M. Pei", "Pei"],
+    "reponses": [],
+    "explication": "I. M. Pei, inaugurée en 1989."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Winston Churchill",
+    "alias": ["Churchill"],
+    "indices": [
+      "Premier ministre britannique pendant la Seconde Guerre mondiale.",
+      "Prix Nobel de littérature en 1953.",
+      "Son cigare et son V de la victoire sont iconiques."
+    ],
+    "reponses": [],
+    "explication": "Winston Churchill (1874-1965)."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Steve Jobs",
+    "alias": ["Jobs"],
+    "indices": [
+      "Cofondateur d'une entreprise californienne en 1976.",
+      "A popularisé l'iPhone en 2007.",
+      "Célèbre pour son look col roulé noir et jean."
+    ],
+    "reponses": [],
+    "explication": "Steve Jobs, fondateur d'Apple."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Michael Jackson",
+    "alias": ["MJ", "Jackson"],
+    "indices": [
+      "Surnommé « le roi de la pop ».",
+      "A popularisé le moonwalk.",
+      "« Thriller » est son album emblématique."
+    ],
+    "reponses": [],
+    "explication": "Michael Jackson (1958-2009)."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Charlie Chaplin",
+    "alias": ["Chaplin", "Charlot"],
+    "indices": [
+      "Acteur britannique né en 1889.",
+      "Personnage fétiche : un vagabond moustachu avec chapeau melon.",
+      "A réalisé « Le Dictateur » en 1940."
+    ],
+    "reponses": [],
+    "explication": "Charlie Chaplin."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Diego Maradona",
+    "alias": ["Maradona"],
+    "indices": [
+      "Footballeur argentin (1960-2020).",
+      "Célèbre pour la « main de Dieu » en 1986.",
+      "Champion du monde en 1986 au Mexique."
+    ],
+    "reponses": [],
+    "explication": "Diego Maradona."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Salvador Dalí",
+    "alias": ["Dalí", "Dali"],
+    "indices": [
+      "Peintre surréaliste espagnol.",
+      "Sa moustache pointue est mondialement connue.",
+      "« La Persistance de la mémoire » et ses montres molles sont son œuvre."
+    ],
+    "reponses": [],
+    "explication": "Salvador Dalí (1904-1989)."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Brigitte Bardot",
+    "alias": ["Bardot", "BB"],
+    "indices": [
+      "Actrice française emblématique des années 1950-1960.",
+      "Symbolisée par les initiales « BB ».",
+      "A consacré sa seconde vie à la défense des animaux."
+    ],
+    "reponses": [],
+    "explication": "Brigitte Bardot."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Simone de Beauvoir",
+    "alias": ["Beauvoir"],
+    "indices": [
+      "Philosophe et écrivaine française née en 1908.",
+      "Compagne de Jean-Paul Sartre.",
+      "A écrit « Le Deuxième Sexe », manifeste féministe."
+    ],
+    "reponses": [],
+    "explication": "Simone de Beauvoir."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Louis Pasteur",
+    "alias": ["Pasteur"],
+    "indices": [
+      "Scientifique français né en 1822.",
+      "A mis au point le vaccin contre la rage.",
+      "Son nom est associé à un procédé de conservation du lait."
+    ],
+    "reponses": [],
+    "explication": "Louis Pasteur, inventeur de la pasteurisation."
+  },
+  {
+    "type": "coup_maitre",
+    "category_slug": "histoire",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Identifie cette célébrité.",
+    "bonne_reponse": "Nelson Mandela",
+    "alias": ["Mandela", "Madiba"],
+    "indices": [
+      "Militant sud-africain contre l'apartheid.",
+      "A passé 27 ans en prison.",
+      "Premier président noir d'Afrique du Sud en 1994."
+    ],
+    "reponses": [],
+    "explication": "Nelson Mandela (1918-2013)."
+  }
+]

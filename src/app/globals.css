@@ -1,26 +1,160 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ===========================================================================
+   MIDI MASTER — Design system "Reichmann" (12 Coups de Midi)
+   Palette :
+     midnight  #0B1F4D   bleu nuit TV
+     gold      #F5C518   or midi
+     buzz      #E63946   rouge buzz
+     cream     #F1FAEE   blanc cassé
+     life-green  #2ECC71   vie pleine
+     life-yellow #F5C518   vie moyenne (= gold)
+     life-red    #E63946   vie critique (= buzz)
+   =========================================================================== */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-montserrat);
+  --font-heading: var(--font-montserrat);
+
+  /* Couleurs Midi Master (utilisables via bg-midnight, text-gold, …) */
+  --color-midnight: #0b1f4d;
+  --color-midnight-deep: #081638;
+  --color-gold: #f5c518;
+  --color-gold-dim: #c99e0d;
+  --color-buzz: #e63946;
+  --color-cream: #f1faee;
+  --color-life-green: #2ecc71;
+  --color-life-yellow: #f5c518;
+  --color-life-red: #e63946;
+
+  /* shadcn tokens (mappés aux variables CSS) */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ----- Thème Midi Master par défaut : bleu nuit + or (dark-by-default) ----- */
+:root {
+  --background: #0b1f4d; /* midnight */
+  --foreground: #f1faee; /* cream */
+  --card: #112a63;
+  --card-foreground: #f1faee;
+  --popover: #112a63;
+  --popover-foreground: #f1faee;
+  --primary: #f5c518; /* gold */
+  --primary-foreground: #0b1f4d;
+  --secondary: #1a3578;
+  --secondary-foreground: #f1faee;
+  --muted: #1a3578;
+  --muted-foreground: #a8b5d1;
+  --accent: #f5c518;
+  --accent-foreground: #0b1f4d;
+  --destructive: #e63946; /* buzz */
+  --border: rgb(255 255 255 / 0.12);
+  --input: rgb(255 255 255 / 0.12);
+  --ring: #f5c518;
+  --chart-1: #f5c518;
+  --chart-2: #2ecc71;
+  --chart-3: #e63946;
+  --chart-4: #f1faee;
+  --chart-5: #1a3578;
+  --radius: 0.75rem;
+  --sidebar: #0b1f4d;
+  --sidebar-foreground: #f1faee;
+  --sidebar-primary: #f5c518;
+  --sidebar-primary-foreground: #0b1f4d;
+  --sidebar-accent: #1a3578;
+  --sidebar-accent-foreground: #f1faee;
+  --sidebar-border: rgb(255 255 255 / 0.12);
+  --sidebar-ring: #f5c518;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  html {
+    @apply h-full font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), system-ui, sans-serif;
+    letter-spacing: -0.01em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ----- Utilitaires custom Midi Master ----- */
+@layer utilities {
+  /* Glow or — pour boutons gold en hover / focus */
+  .glow-gold {
+    box-shadow:
+      0 0 0 2px rgba(245, 197, 24, 0.35),
+      0 0 24px rgba(245, 197, 24, 0.55);
+  }
+  /* Glow bleu — pour cartes actives */
+  .glow-midnight {
+    box-shadow:
+      0 0 0 1px rgba(245, 197, 24, 0.2),
+      0 8px 32px rgba(11, 31, 77, 0.6);
+  }
+  /* Shake pour mauvaise réponse (fallback CSS si Framer Motion off) */
+  @keyframes mm-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .animate-shake {
+    animation: mm-shake 0.4s ease-in-out;
+  }
 }
