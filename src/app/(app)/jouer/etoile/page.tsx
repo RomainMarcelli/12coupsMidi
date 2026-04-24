@@ -1,15 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
-import {
-  CPC_ROUNDS_PER_GAME,
-  pickCoupParCoupRounds,
-} from "@/lib/game-logic/coup-par-coup";
-import { CoupParCoupClient } from "./coup-par-coup-client";
-import { NoRoundsPlaceholder } from "./no-rounds";
+import { pickOneEtoile } from "@/lib/game-logic/jeu2";
+import { EtoileClient } from "./etoile-client";
+import { NoQuestionPlaceholder } from "./no-question";
 
-export const metadata = { title: "Le Coup par Coup" };
+export const metadata = { title: "Étoile Mystérieuse" };
 export const dynamic = "force-dynamic";
 
-export default async function Jeu2Page() {
+export default async function EtoilePage() {
   const supabase = await createClient();
 
   const [{ data: pool }, { data: categories }] = await Promise.all([
@@ -18,7 +15,7 @@ export default async function Jeu2Page() {
       .select(
         "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at",
       )
-      .eq("type", "coup_par_coup")
+      .eq("type", "etoile")
       .limit(200),
     supabase.from("categories").select("id, nom, couleur"),
   ]);
@@ -26,15 +23,9 @@ export default async function Jeu2Page() {
   const categoriesById = new Map(
     (categories ?? []).map((c) => [c.id, c] as const),
   );
-  const rounds = pickCoupParCoupRounds(
-    pool ?? [],
-    categoriesById,
-    CPC_ROUNDS_PER_GAME,
-  );
+  const question = pickOneEtoile(pool ?? [], categoriesById);
 
-  if (rounds.length === 0) {
-    return <NoRoundsPlaceholder />;
-  }
+  if (!question) return <NoQuestionPlaceholder />;
 
-  return <CoupParCoupClient rounds={rounds} />;
+  return <EtoileClient question={question} />;
 }

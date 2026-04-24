@@ -166,6 +166,91 @@ Voir [DECISIONS.md](./DECISIONS.md).
 
 ---
 
-## Phases 5 à 12
+## Phase 5 — Jeu 2 Étoile Mystérieuse
+
+**Statut** : DONE
+**Date** : 2026-04-24
+
+### Livrables
+
+- [x] [`src/lib/matching/fuzzy-match.ts`](./src/lib/matching/fuzzy-match.ts) — `normalize()` (lowercase + NFD deburr + articles FR/EN + espaces/ponctuation) + `isMatch(input, correct, aliases, threshold=2)` via `fastest-levenshtein`. Seuil de sécurité : pour inputs ≤ 3 caractères, égalité stricte requise (évite les faux positifs du type "oui" / "nui").
+- [x] [`src/lib/voice/speech-recognition.ts`](./src/lib/voice/speech-recognition.ts) — hook `useSpeechRecognition()` avec déclarations TS locales (pas de package externe), `lang='fr-FR'`, `continuous=false`, `interimResults=true`. Retourne `{ transcript, listening, supported, error, start, stop, reset }`. Fallback gracieux si non supporté.
+- [x] [`src/components/game/VoiceInput.tsx`](./src/components/game/VoiceInput.tsx) — gros bouton micro (pulse animé en écoute), transcript live, input texte fallback avec touche Entrée = valider.
+- [x] [`src/lib/game-logic/jeu2.ts`](./src/lib/game-logic/jeu2.ts) — `pickOneEtoile`, `computeBlurPx(revealed)` (flou pixel par palier d'indices révélés), `computeJeu2Xp(revealed)` barème **500 / 400 / 300 / 200 / 100**, `placeholderAvatarUrl` via DiceBear si pas d'image en base.
+- [x] [`src/app/(app)/jouer/jeu-2/page.tsx`](./src/app/(app)/jouer/jeu-2/page.tsx) — Server Component qui tire 1 question `etoile` aléatoire avec ≥ 3 indices.
+- [x] [`jeu2-client.tsx`](./src/app/(app)/jouer/jeu-2/jeu2-client.tsx) — state machine `intro → playing → results` :
+  - Timer global 2 min (passe en pulse rouge à ≤ 15 s)
+  - Auto-reveal d'un indice toutes les 20 s (+ bouton manuel "Indice suivant")
+  - Image floutée avec `filter: blur(Xpx)` qui décroît à chaque révélation (transition 700 ms)
+  - VoiceInput pour répondre, match via `isMatch` (Levenshtein + alias)
+  - Feedback instantané (vert/rouge) sur chaque essai, historique des tentatives
+  - Bouton Abandonner
+  - Écran résultats : révélation image + nom + explication + XP
+- [x] Persistance BDD ([`actions.ts`](./src/app/(app)/jouer/jeu-2/actions.ts)) : `game_sessions` (mode='jeu2'), `answers_log`, `wrong_answers` si raté, `profiles.xp` + niveau.
+
+### Hors périmètre (noté)
+
+- Mode "simple" bonus (thème + 4 propositions dont 1 intrus) : **skippé** pour garder la phase focus. Pourra être ajouté en Phase 8 (Parcours) ou plus tard.
+
+### Revision 2026-04-24 (après retour user)
+
+- **Bug fix Étoile** : l'écran résultat affichait "5 indices révélés" même quand le joueur trouvait au 1er indice → on capture maintenant `indicesRevealedAtFound` au moment exact où le joueur trouve (avant la révélation de l'image). Le tick 1s et les side-effects (auto-reveal / timeout) ont été séparés en 2 `useEffect` pour éviter les double-setState sous StrictMode (bug "2 indices d'un coup").
+- **Redesign Jeu 2** : à la demande du user, **Le Coup par Coup** remplace l'Étoile Mystérieuse en position "jeu 2" (plus fidèle à l'émission). L'Étoile est déplacée en **bonus** accessible depuis `/jouer/etoile`, ligne bonus de la home et hub `/jouer`.
+- **Règles Le Coup par Coup** : 5 manches, 7 propositions / manche (6 liées + 1 intrus), LifeBar 2 paliers (**1 erreur = orange, 2 erreurs = Face-à-Face pénalité**). Scoring : 50 XP / bonne proposition, +200 XP bonus par manche parfaite, +500 XP bonus si 5 manches parfaites.
+- Nouveau type `coup_par_coup` : ajouté au schéma zod, aux types DB, migration SQL `0003_coup_par_coup.sql` (ALTER TABLE questions / CHECK constraint).
+- 17 thèmes seedés via [`src/data/coup-par-coup.json`](./src/data/coup-par-coup.json) — le `npm run seed` lit maintenant les deux fichiers.
+- Nouveau fichier [`src/lib/game-logic/coup-par-coup.ts`](./src/lib/game-logic/coup-par-coup.ts).
+- Nouveau client [`coup-par-coup-client.tsx`](./src/app/(app)/jouer/jeu-2/coup-par-coup-client.tsx) : état `intro → playing → round-ended → results`, shake sur intrus, feedback 2.2s entre les rounds, staggered reveal des 7 propositions.
+- `game_sessions.mode` : on utilise désormais `'etoile'` et `'coup_par_coup'` (au lieu de l'ancien `'jeu2'`). `GameMode` type mis à jour.
+
+---
+
+## Phase 6 — Face-à-Face
+
+**Statut** : DONE
+**Date** : 2026-04-24
+
+### Livrables
+
+- [x] [`src/lib/game-logic/faceAFace.ts`](./src/lib/game-logic/faceAFace.ts) — types `FafMode`, `BotDifficulty`, `FafQuestion`, `FafAnswerLog`, constants `FAF_DURATION_MS=60_000` + `FAF_POOL_SIZE=50` + `BOT_PROFILES` (facile 50 %, moyen 70 %, difficile 90 %, délais 1.2 – 4.5 s). Helpers purs : `pickFaceAFaceQuestions`, `nextQuestionIndex`, `botResponseDelayMs`, `botAnswersCorrectly`, `computeFafXp` (500 / 400 / 300 / 200 selon temps restant).
+- [x] Page [`/jouer/face-a-face`](./src/app/(app)/jouer/face-a-face/page.tsx) — Server Component qui tire jusqu'à 50 questions `face_a_face` + placeholder `NoFafQuestions` si < 5 dispos.
+- [x] [`face-a-face-client.tsx`](./src/app/(app)/jouer/face-a-face/face-a-face-client.tsx) — state machine `mode-select → ami-pseudos → intro → playing ⇄ transition → results`.
+  - 2 cartes chrono (P1 gauche, P2 droite) avec glow or + pulse sur le joueur actif, `tabular-nums`, passage en rouge pulsant à ≤ 10 s.
+  - Tick RAF pur : décrément du chrono du joueur actif uniquement, fin de partie à 0.
+  - Mode vs Bot : 3 difficultés, indicateur « Le bot réfléchit… » pendant le délai random du profil, puis bonne / mauvaise réponse résolue automatiquement.
+  - Mode vs Ami local : saisie des 2 pseudos, même UX ensuite.
+  - Règle : mauvaise réponse → question suivante auto (chrono continue). Passer → idem. Bonne réponse → fige le chrono, phase `transition` avec bouton « Lancer le tour » avant de switcher.
+  - VoiceInput (Phase 5) réutilisé + bouton « Passer ».
+  - Feedback flash court (« Passé », « Le bot se trompe », etc.) entre deux questions.
+- [x] [`actions.ts`](./src/app/(app)/jouer/face-a-face/actions.ts) — `saveFafSession` : `game_sessions` (mode='face_a_face'), `answers_log` **uniquement** pour le user humain authentifié (pas les réponses bot/ami), `wrong_answers` upsertés, `profiles.xp` mis à jour si victoire.
+- [x] Intégration game-over : les écrans de fin de **Jeu 1** (3 erreurs) et **Coup par Coup** (2 intrus) affichent maintenant un bouton rouge « Lancer le Face-à-Face » qui redirige vers `/jouer/face-a-face` (remplace l'ancien texte « dès qu'il sera disponible en Phase 6 »).
+- [x] Hub `/jouer` : badge « Bientôt » retiré de la tuile Face-à-Face (`available: true`).
+
+### Décisions validées avec le user
+
+- Mauvaise réponse = **question suivante auto**, chrono continue (pas retry).
+- Toujours **60 s par joueur**, même en déclenchement pénalité depuis Jeu 1 / CPC — pas de mode pénalité à chrono réduit.
+- Bot UX option (a) : indicateur « Le bot réfléchit… » puis résolution automatique (pas d'animation de frappe texte).
+- Mode Ami : demande des 2 pseudos au début (user pré-rempli avec son pseudo profil).
+
+### Tests unitaires ajoutés (Phase 6 + rétroactif)
+
+- [x] **Vitest** installé ([`vitest.config.ts`](./vitest.config.ts)) + scripts npm `test` / `test:watch`.
+- [x] 6 fichiers de tests, **114 tests passent** :
+  - [`src/lib/matching/fuzzy-match.test.ts`](./src/lib/matching/fuzzy-match.test.ts) — normalize (accents, articles FR/EN, apostrophes typos), isMatch (égalité, Levenshtein, garde-fou ≤ 3 chars, alias, seuil custom), matchDetails.
+  - [`src/lib/schemas/question.test.ts`](./src/lib/schemas/question.test.ts) — validation zod par type (quizz_2 / 4 / etoile / coup_maitre / face_a_face / coup_par_coup), champs communs.
+  - [`src/lib/game-logic/jeu1.test.ts`](./src/lib/game-logic/jeu1.test.ts) — lifeState, shouldTriggerFaceAFace, computeJeu1Xp (bonus parfait), pickJeu1Questions (variété + fallback).
+  - [`src/lib/game-logic/jeu2.test.ts`](./src/lib/game-logic/jeu2.test.ts) — pickOneEtoile (préférence ≥ 3 indices, troncature), computeBlurPx, computeJeu2Xp (barème 500 / 400 / 300 / 200 / 100), placeholderAvatarUrl.
+  - [`src/lib/game-logic/coup-par-coup.test.ts`](./src/lib/game-logic/coup-par-coup.test.ts) — cpcLifeState (2 paliers), cpcIsGameOver, pickCoupParCoupRounds (7 props, 6+1), computeCpcXp (bonus round + bonus partie).
+  - [`src/lib/game-logic/faceAFace.test.ts`](./src/lib/game-logic/faceAFace.test.ts) — pickFaceAFaceQuestions (déterminisme via RNG seedé), nextQuestionIndex (recyclage), BOT_PROFILES (proba croissante), botResponseDelayMs (dans intervalle), botAnswersCorrectly (loi des grands nombres sur 5000 tirages), computeFafXp (paliers 500 / 400 / 300 / 200).
+- [x] Fixtures partagées : [`src/lib/game-logic/_test-fixtures.ts`](./src/lib/game-logic/_test-fixtures.ts) avec `makeQuestion`, `makeCategory`, `SAMPLE_CATEGORIES`, `makeSeededRng` (LCG déterministe).
+
+### Dépendances ajoutées
+
+- `vitest` + `@vitest/coverage-v8` (devDeps).
+
+---
+
+## Phases 7 à 12
 
 Voir le cahier des charges pour le détail. Chaque phase sera notée ici au fil de l'eau.

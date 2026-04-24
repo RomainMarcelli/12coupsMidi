@@ -69,14 +69,34 @@ async function main() {
   const startedAt = Date.now();
   console.log("Midi Master — seed des questions\n");
 
-  // 1. Charge le JSON
-  const jsonPath = resolve(process.cwd(), "src/data/seed-questions.json");
-  const raw = JSON.parse(readFileSync(jsonPath, "utf8")) as unknown;
+  // 1. Charge les JSON (fichier principal + extensions éventuelles)
+  const sources = [
+    "src/data/seed-questions.json",
+    "src/data/coup-par-coup.json",
+  ];
+
+  const rawAll: unknown[] = [];
+  for (const rel of sources) {
+    const absPath = resolve(process.cwd(), rel);
+    try {
+      const content = JSON.parse(readFileSync(absPath, "utf8")) as unknown;
+      if (!Array.isArray(content)) {
+        console.warn(`  ! ${rel} : format inattendu (pas un tableau), ignoré.`);
+        continue;
+      }
+      console.log(`  · ${rel} : ${content.length} questions lues`);
+      rawAll.push(...content);
+    } catch (e) {
+      console.warn(
+        `  ! ${rel} : fichier absent ou invalide (${e instanceof Error ? e.message : "?"}).`,
+      );
+    }
+  }
 
   // 2. Validation zod
-  const parsed = questionsBulkSchema.safeParse(raw);
+  const parsed = questionsBulkSchema.safeParse(rawAll);
   if (!parsed.success) {
-    console.error("Erreur de validation :");
+    console.error("\nErreur de validation :");
     for (const issue of parsed.error.issues.slice(0, 20)) {
       console.error(
         ` - [${issue.path.join(".")}] ${issue.message}`,
@@ -89,7 +109,7 @@ async function main() {
   }
   const questions: QuestionInput[] = parsed.data;
 
-  console.log(`Questions lues : ${questions.length}`);
+  console.log(`\nTotal questions : ${questions.length}`);
 
   const byType: Record<string, number> = {};
   for (const q of questions) byType[q.type] = (byType[q.type] ?? 0) + 1;

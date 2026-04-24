@@ -27,13 +27,15 @@ export type QuestionType =
   | "quizz_4"
   | "etoile"
   | "face_a_face"
-  | "coup_maitre";
+  | "coup_maitre"
+  | "coup_par_coup";
 
 export type UserRole = "user" | "admin";
 
 export type GameMode =
   | "jeu1"
-  | "jeu2"
+  | "coup_par_coup"
+  | "etoile"
   | "face_a_face"
   | "coup_maitre"
   | "parcours"

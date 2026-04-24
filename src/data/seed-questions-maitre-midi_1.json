@@ -1,0 +1,903 @@
+[
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 5,
+    "enonce": "Les douze Césars de Suétone (dirigeants de Rome d'Auguste à Domitien)",
+    "reponses": [
+      { "text": "Auguste", "correct": true },
+      { "text": "Tibère", "correct": true },
+      { "text": "Caligula", "correct": true },
+      { "text": "Claude", "correct": true },
+      { "text": "Néron", "correct": true },
+      { "text": "Vespasien", "correct": true },
+      { "text": "Trajan", "correct": false }
+    ],
+    "explication": "Les 'Douze Césars' de Suétone vont de Jules César à Domitien. Trajan (98-117) lui est postérieur. Les 5 Julio-Claudiens sont Auguste, Tibère, Caligula, Claude et Néron ; Vespasien inaugure les Flaviens en 69."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "revolution",
+    "difficulte": 5,
+    "enonce": "Membres du Directoire (1795-1799)",
+    "reponses": [
+      { "text": "Paul Barras", "correct": true },
+      { "text": "Jean-François Reubell", "correct": true },
+      { "text": "Louis-Marie de La Révellière-Lépeaux", "correct": true },
+      { "text": "Étienne-François Le Tourneur", "correct": true },
+      { "text": "Lazare Carnot", "correct": true },
+      { "text": "Emmanuel-Joseph Sieyès", "correct": true },
+      { "text": "Georges Danton", "correct": false }
+    ],
+    "explication": "Danton a été guillotiné en avril 1794, plus d'un an avant la création du Directoire en octobre 1795."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 5,
+    "enonce": "Pays enclavés (sans littoral) en Afrique",
+    "reponses": [
+      { "text": "Tchad", "correct": true },
+      { "text": "Mali", "correct": true },
+      { "text": "Niger", "correct": true },
+      { "text": "Burkina Faso", "correct": true },
+      { "text": "Éthiopie", "correct": true },
+      { "text": "Zimbabwe", "correct": true },
+      { "text": "Somalie", "correct": false }
+    ],
+    "explication": "La Somalie possède la plus longue façade maritime d'Afrique continentale (plus de 3 300 km). L'Afrique compte 16 pays enclavés au total."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 5,
+    "enonce": "Pays dont la capitale n'est pas la plus grande ville",
+    "reponses": [
+      { "text": "Australie (Canberra vs Sydney)", "correct": true },
+      { "text": "États-Unis (Washington vs New York)", "correct": true },
+      { "text": "Turquie (Ankara vs Istanbul)", "correct": true },
+      { "text": "Brésil (Brasília vs São Paulo)", "correct": true },
+      { "text": "Canada (Ottawa vs Toronto)", "correct": true },
+      { "text": "Suisse (Berne vs Zurich)", "correct": true },
+      { "text": "Argentine (Buenos Aires)", "correct": false }
+    ],
+    "explication": "Buenos Aires est à la fois la capitale et la plus grande ville d'Argentine."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 5,
+    "enonce": "Romans du cycle des Rougon-Macquart d'Émile Zola",
+    "reponses": [
+      { "text": "L'Assommoir", "correct": true },
+      { "text": "Germinal", "correct": true },
+      { "text": "Nana", "correct": true },
+      { "text": "La Bête humaine", "correct": true },
+      { "text": "Au Bonheur des Dames", "correct": true },
+      { "text": "La Terre", "correct": true },
+      { "text": "Thérèse Raquin", "correct": false }
+    ],
+    "explication": "Thérèse Raquin (1867) est antérieur au cycle des Rougon-Macquart (commencé en 1871) et n'en fait pas partie."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "prix-litteraires",
+    "difficulte": 5,
+    "enonce": "Écrivains de langue française ayant reçu le prix Nobel de littérature",
+    "reponses": [
+      { "text": "André Gide (1947)", "correct": true },
+      { "text": "Albert Camus (1957)", "correct": true },
+      { "text": "Jean-Paul Sartre (1964, refusé)", "correct": true },
+      { "text": "Claude Simon (1985)", "correct": true },
+      { "text": "Le Clézio (2008)", "correct": true },
+      { "text": "Patrick Modiano (2014)", "correct": true },
+      { "text": "Marcel Proust", "correct": false }
+    ],
+    "explication": "Marcel Proust n'a jamais reçu le Nobel (il a eu le Goncourt en 1919 pour 'À l'ombre des jeunes filles en fleurs'). Il est mort en 1922."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 5,
+    "enonce": "Joueurs ayant réalisé le Grand Chelem en carrière (les 4 tournois majeurs)",
+    "reponses": [
+      { "text": "Rod Laver", "correct": true },
+      { "text": "Andre Agassi", "correct": true },
+      { "text": "Roger Federer", "correct": true },
+      { "text": "Rafael Nadal", "correct": true },
+      { "text": "Novak Djokovic", "correct": true },
+      { "text": "Don Budge", "correct": true },
+      { "text": "Pete Sampras", "correct": false }
+    ],
+    "explication": "Pete Sampras a 14 titres du Grand Chelem mais n'a jamais gagné Roland-Garros, seul tournoi lui ayant échappé."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "cyclisme",
+    "difficulte": 5,
+    "enonce": "Coureurs ayant remporté les 3 grands tours (Giro, Tour, Vuelta) en carrière",
+    "reponses": [
+      { "text": "Jacques Anquetil", "correct": true },
+      { "text": "Felice Gimondi", "correct": true },
+      { "text": "Eddy Merckx", "correct": true },
+      { "text": "Bernard Hinault", "correct": true },
+      { "text": "Alberto Contador", "correct": true },
+      { "text": "Vincenzo Nibali", "correct": true },
+      { "text": "Miguel Indurain", "correct": false }
+    ],
+    "explication": "Miguel Indurain a gagné 5 Tours de France et 2 Giros, mais jamais la Vuelta (meilleure place : 2e en 1991)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "Peintres du mouvement impressionniste",
+    "reponses": [
+      { "text": "Claude Monet", "correct": true },
+      { "text": "Pierre-Auguste Renoir", "correct": true },
+      { "text": "Edgar Degas", "correct": true },
+      { "text": "Camille Pissarro", "correct": true },
+      { "text": "Berthe Morisot", "correct": true },
+      { "text": "Alfred Sisley", "correct": true },
+      { "text": "Paul Cézanne", "correct": false }
+    ],
+    "explication": "Cézanne a exposé avec les impressionnistes mais est classé comme post-impressionniste : sa recherche formelle annonce le cubisme."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "Peintres nés dans l'actuel territoire des Pays-Bas",
+    "reponses": [
+      { "text": "Rembrandt van Rijn", "correct": true },
+      { "text": "Johannes Vermeer", "correct": true },
+      { "text": "Vincent van Gogh", "correct": true },
+      { "text": "Piet Mondrian", "correct": true },
+      { "text": "Frans Hals", "correct": true },
+      { "text": "Jan Steen", "correct": true },
+      { "text": "Pierre Paul Rubens", "correct": false }
+    ],
+    "explication": "Rubens est né à Siegen (actuelle Allemagne) et a grandi à Anvers, dans les Pays-Bas espagnols (actuelle Belgique). Il est considéré comme flamand, pas néerlandais."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 5,
+    "enonce": "Éléments chimiques dont le symbole vient du nom latin (sans rapport avec le nom français)",
+    "reponses": [
+      { "text": "Sodium (Na, Natrium)", "correct": true },
+      { "text": "Potassium (K, Kalium)", "correct": true },
+      { "text": "Or (Au, Aurum)", "correct": true },
+      { "text": "Argent (Ag, Argentum)", "correct": true },
+      { "text": "Plomb (Pb, Plumbum)", "correct": true },
+      { "text": "Étain (Sn, Stannum)", "correct": true },
+      { "text": "Fer (Fe, Ferrum)", "correct": false }
+    ],
+    "explication": "Le symbole Fe vient bien du latin Ferrum, mais 'Fer' et 'Fe' commencent tous deux par F — il n'y a pas le décalage de lettre des autres exemples."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 5,
+    "enonce": "Métaux alcalins (1re colonne du tableau périodique)",
+    "reponses": [
+      { "text": "Lithium (Li)", "correct": true },
+      { "text": "Sodium (Na)", "correct": true },
+      { "text": "Potassium (K)", "correct": true },
+      { "text": "Rubidium (Rb)", "correct": true },
+      { "text": "Césium (Cs)", "correct": true },
+      { "text": "Francium (Fr)", "correct": true },
+      { "text": "Calcium (Ca)", "correct": false }
+    ],
+    "explication": "Le calcium est un alcalino-terreux (2e colonne), pas un alcalin. L'hydrogène, bien que dans la 1re colonne, n'est pas non plus un alcalin."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 5,
+    "enonce": "Satellites naturels de Jupiter",
+    "reponses": [
+      { "text": "Io", "correct": true },
+      { "text": "Europe", "correct": true },
+      { "text": "Ganymède", "correct": true },
+      { "text": "Callisto", "correct": true },
+      { "text": "Amalthée", "correct": true },
+      { "text": "Himalia", "correct": true },
+      { "text": "Titan", "correct": false }
+    ],
+    "explication": "Titan est le plus grand satellite de Saturne, pas de Jupiter. Les 4 premières lunes citées sont les lunes galiléennes observées par Galilée en 1610."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 5,
+    "enonce": "Physiciens ayant reçu le prix Nobel de physique et ayant travaillé en France",
+    "reponses": [
+      { "text": "Henri Becquerel (1903)", "correct": true },
+      { "text": "Pierre Curie (1903)", "correct": true },
+      { "text": "Gabriel Lippmann (1908)", "correct": true },
+      { "text": "Louis de Broglie (1929)", "correct": true },
+      { "text": "Alfred Kastler (1966)", "correct": true },
+      { "text": "Pierre-Gilles de Gennes (1991)", "correct": true },
+      { "text": "Werner Heisenberg", "correct": false }
+    ],
+    "explication": "Werner Heisenberg (Nobel 1932) est un physicien allemand, fondateur de la mécanique quantique, qui n'a pas travaillé en France."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 5,
+    "enonce": "Mammifères marins de l'ordre des cétacés",
+    "reponses": [
+      { "text": "Baleine bleue", "correct": true },
+      { "text": "Cachalot", "correct": true },
+      { "text": "Orque", "correct": true },
+      { "text": "Dauphin commun", "correct": true },
+      { "text": "Marsouin", "correct": true },
+      { "text": "Béluga", "correct": true },
+      { "text": "Phoque", "correct": false }
+    ],
+    "explication": "Le phoque appartient aux pinnipèdes, pas aux cétacés. Les cétacés ne peuvent pas se déplacer sur terre, contrairement aux phoques qui rampent sur la banquise."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 5,
+    "enonce": "Os qui composent le carpe (poignet)",
+    "reponses": [
+      { "text": "Scaphoïde", "correct": true },
+      { "text": "Lunatum (semi-lunaire)", "correct": true },
+      { "text": "Triquetrum (pyramidal)", "correct": true },
+      { "text": "Pisiforme", "correct": true },
+      { "text": "Trapèze", "correct": true },
+      { "text": "Trapézoïde", "correct": true },
+      { "text": "Cuboïde", "correct": false }
+    ],
+    "explication": "Le cuboïde est un os du tarse (pied), pas du carpe (poignet). Le carpe compte 8 os au total (scaphoïde, lunatum, triquetrum, pisiforme, trapèze, trapézoïde, capitatum, hamatum)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 5,
+    "enonce": "Opéras composés par Giuseppe Verdi",
+    "reponses": [
+      { "text": "La Traviata", "correct": true },
+      { "text": "Rigoletto", "correct": true },
+      { "text": "Aïda", "correct": true },
+      { "text": "Nabucco", "correct": true },
+      { "text": "Otello", "correct": true },
+      { "text": "Falstaff", "correct": true },
+      { "text": "Tosca", "correct": false }
+    ],
+    "explication": "Tosca (1900) est un opéra de Giacomo Puccini, pas de Verdi."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 5,
+    "enonce": "Chansons écrites ou produites par Jean-Jacques Goldman pour Céline Dion",
+    "reponses": [
+      { "text": "Pour que tu m'aimes encore", "correct": true },
+      { "text": "J'irai où tu iras", "correct": true },
+      { "text": "S'il suffisait d'aimer", "correct": true },
+      { "text": "On ne change pas", "correct": true },
+      { "text": "Je sais pas", "correct": true },
+      { "text": "Les derniers seront les premiers", "correct": true },
+      { "text": "All by myself", "correct": false }
+    ],
+    "explication": "All by myself est une chanson d'Eric Carmen (1975) reprise par Céline Dion en 1996, pas écrite par Goldman."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "oscars-cesar",
+    "difficulte": 5,
+    "enonce": "Films ayant remporté au moins 9 Oscars",
+    "reponses": [
+      { "text": "Ben-Hur (1959, 11 Oscars)", "correct": true },
+      { "text": "Titanic (1997, 11 Oscars)", "correct": true },
+      { "text": "Le Seigneur des Anneaux : Le Retour du Roi (11 Oscars)", "correct": true },
+      { "text": "West Side Story (1961, 10 Oscars)", "correct": true },
+      { "text": "Le Dernier Empereur (1987, 9 Oscars)", "correct": true },
+      { "text": "Le Patient anglais (1996, 9 Oscars)", "correct": true },
+      { "text": "Le Parrain", "correct": false }
+    ],
+    "explication": "Le Parrain (1972) n'a gagné que 3 Oscars (dont meilleur film et meilleur acteur pour Brando). Seuls 3 films ont 11 Oscars dans l'histoire, et moins d'une dizaine dépassent les 9 Oscars."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "realisateurs",
+    "difficulte": 5,
+    "enonce": "Films d'Alfred Hitchcock",
+    "reponses": [
+      { "text": "Psychose", "correct": true },
+      { "text": "Les Oiseaux", "correct": true },
+      { "text": "Sueurs froides (Vertigo)", "correct": true },
+      { "text": "La Mort aux trousses", "correct": true },
+      { "text": "Fenêtre sur cour", "correct": true },
+      { "text": "Rebecca", "correct": true },
+      { "text": "Le Troisième Homme", "correct": false }
+    ],
+    "explication": "Le Troisième Homme (1949) est un film de Carol Reed, souvent confondu avec l'univers hitchcockien mais c'est bien un autre réalisateur."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 5,
+    "enonce": "Plats emblématiques de la cuisine lyonnaise",
+    "reponses": [
+      { "text": "Quenelle de brochet", "correct": true },
+      { "text": "Tablier de sapeur", "correct": true },
+      { "text": "Cervelle de canut", "correct": true },
+      { "text": "Saucisson brioché", "correct": true },
+      { "text": "Andouillette", "correct": true },
+      { "text": "Salade lyonnaise", "correct": true },
+      { "text": "Bouillabaisse", "correct": false }
+    ],
+    "explication": "La bouillabaisse est marseillaise (provençale), pas lyonnaise."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "vins",
+    "difficulte": 5,
+    "enonce": "Cépages rouges du Bordelais",
+    "reponses": [
+      { "text": "Cabernet-Sauvignon", "correct": true },
+      { "text": "Merlot", "correct": true },
+      { "text": "Cabernet franc", "correct": true },
+      { "text": "Malbec (Côt)", "correct": true },
+      { "text": "Petit Verdot", "correct": true },
+      { "text": "Carménère", "correct": true },
+      { "text": "Syrah", "correct": false }
+    ],
+    "explication": "La Syrah est le cépage rouge emblématique des Côtes du Rhône septentrionales (Hermitage, Côte-Rôtie), pas du Bordelais."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 5,
+    "enonce": "Travaux d'Hercule impliquant un animal",
+    "reponses": [
+      { "text": "Le lion de Némée", "correct": true },
+      { "text": "L'hydre de Lerne", "correct": true },
+      { "text": "La biche de Cérynie", "correct": true },
+      { "text": "Le sanglier d'Érymanthe", "correct": true },
+      { "text": "Les oiseaux du lac Stymphale", "correct": true },
+      { "text": "Le taureau crétois", "correct": true },
+      { "text": "Le nettoyage des écuries d'Augias", "correct": false }
+    ],
+    "explication": "Les écuries d'Augias concernent un lieu à nettoyer (Hercule détourna deux fleuves), pas un animal à vaincre ou capturer."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 5,
+    "enonce": "Inventions françaises",
+    "reponses": [
+      { "text": "La photographie (Niépce / Daguerre)", "correct": true },
+      { "text": "Le cinématographe (frères Lumière)", "correct": true },
+      { "text": "La montgolfière (frères Montgolfier)", "correct": true },
+      { "text": "Le Braille (Louis Braille)", "correct": true },
+      { "text": "Le stéthoscope (Laennec)", "correct": true },
+      { "text": "La pasteurisation (Pasteur)", "correct": true },
+      { "text": "Le téléphone", "correct": false }
+    ],
+    "explication": "Le téléphone a été breveté par Alexander Graham Bell en 1876 (Écossais naturalisé américain). Antonio Meucci est parfois reconnu comme inventeur antérieur (italien)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 5,
+    "enonce": "Jeux vidéo développés par From Software",
+    "reponses": [
+      { "text": "Demon's Souls", "correct": true },
+      { "text": "Dark Souls", "correct": true },
+      { "text": "Bloodborne", "correct": true },
+      { "text": "Sekiro: Shadows Die Twice", "correct": true },
+      { "text": "Elden Ring", "correct": true },
+      { "text": "Armored Core VI", "correct": true },
+      { "text": "Nioh", "correct": false }
+    ],
+    "explication": "Nioh est développé par Team Ninja (Koei Tecmo), pas From Software, même si le gameplay s'inspire des Souls."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "retro",
+    "difficulte": 5,
+    "enonce": "Consoles de jeux vidéo d'origine japonaise",
+    "reponses": [
+      { "text": "Super Nintendo (SNES)", "correct": true },
+      { "text": "Sega Mega Drive", "correct": true },
+      { "text": "Neo Geo AES (SNK)", "correct": true },
+      { "text": "PlayStation (Sony)", "correct": true },
+      { "text": "Nintendo 64", "correct": true },
+      { "text": "PC Engine (NEC)", "correct": true },
+      { "text": "Atari Jaguar", "correct": false }
+    ],
+    "explication": "L'Atari Jaguar (1993) est une console américaine (Atari Corporation), pas japonaise."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "actualite",
+    "subcategory_slug": "politique",
+    "difficulte": 5,
+    "enonce": "Secrétaires généraux de l'ONU",
+    "reponses": [
+      { "text": "Trygve Lie", "correct": true },
+      { "text": "Dag Hammarskjöld", "correct": true },
+      { "text": "Kofi Annan", "correct": true },
+      { "text": "Ban Ki-moon", "correct": true },
+      { "text": "António Guterres", "correct": true },
+      { "text": "Boutros Boutros-Ghali", "correct": true },
+      { "text": "Jacques Delors", "correct": false }
+    ],
+    "explication": "Jacques Delors a été président de la Commission européenne (1985-1995), jamais secrétaire général de l'ONU."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "moyen-age",
+    "difficulte": 5,
+    "enonce": "Rois capétiens directs (987-1328)",
+    "reponses": [
+      { "text": "Hugues Capet", "correct": true },
+      { "text": "Robert II le Pieux", "correct": true },
+      { "text": "Philippe Auguste", "correct": true },
+      { "text": "Saint Louis (Louis IX)", "correct": true },
+      { "text": "Philippe le Bel", "correct": true },
+      { "text": "Charles IV le Bel", "correct": true },
+      { "text": "Philippe VI", "correct": false }
+    ],
+    "explication": "Philippe VI (1328-1350) est le premier roi des Valois, branche cadette qui succède aux Capétiens directs éteints en 1328 avec Charles IV."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 5,
+    "enonce": "Traités de paix après la Première Guerre mondiale (1919-1923)",
+    "reponses": [
+      { "text": "Traité de Versailles (Allemagne)", "correct": true },
+      { "text": "Traité de Saint-Germain-en-Laye (Autriche)", "correct": true },
+      { "text": "Traité de Neuilly (Bulgarie)", "correct": true },
+      { "text": "Traité du Trianon (Hongrie)", "correct": true },
+      { "text": "Traité de Sèvres (Empire ottoman, 1920)", "correct": true },
+      { "text": "Traité de Lausanne (Turquie, 1923)", "correct": true },
+      { "text": "Traité de Rapallo", "correct": false }
+    ],
+    "explication": "Le traité de Rapallo (1922) est un accord germano-soviétique signé en Italie, pas un traité de paix de la Conférence de Paris."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 5,
+    "enonce": "Pays traversés par l'équateur",
+    "reponses": [
+      { "text": "Équateur", "correct": true },
+      { "text": "Colombie", "correct": true },
+      { "text": "Brésil", "correct": true },
+      { "text": "Gabon", "correct": true },
+      { "text": "Kenya", "correct": true },
+      { "text": "Indonésie", "correct": true },
+      { "text": "Pérou", "correct": false }
+    ],
+    "explication": "L'équateur passe juste au nord du Pérou, en Colombie. Le nom 'Équateur' du pays vient précisément de cette position."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "rugby",
+    "difficulte": 5,
+    "enonce": "Nations du Tournoi des Six Nations de rugby",
+    "reponses": [
+      { "text": "France", "correct": true },
+      { "text": "Angleterre", "correct": true },
+      { "text": "Pays de Galles", "correct": true },
+      { "text": "Écosse", "correct": true },
+      { "text": "Irlande", "correct": true },
+      { "text": "Italie", "correct": true },
+      { "text": "Géorgie", "correct": false }
+    ],
+    "explication": "La Géorgie est pressentie depuis des années pour rejoindre le Tournoi mais n'y participe pas actuellement."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 5,
+    "enonce": "Sports au programme des premiers JO modernes d'Athènes en 1896",
+    "reponses": [
+      { "text": "Athlétisme", "correct": true },
+      { "text": "Escrime", "correct": true },
+      { "text": "Gymnastique", "correct": true },
+      { "text": "Natation", "correct": true },
+      { "text": "Cyclisme", "correct": true },
+      { "text": "Lutte", "correct": true },
+      { "text": "Football", "correct": false }
+    ],
+    "explication": "Le football est apparu aux JO en 1900 (Paris). En 1896, il n'y avait que 9 sports."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "cinema",
+    "difficulte": 5,
+    "enonce": "Réalisateurs de la Nouvelle Vague française",
+    "reponses": [
+      { "text": "François Truffaut", "correct": true },
+      { "text": "Jean-Luc Godard", "correct": true },
+      { "text": "Claude Chabrol", "correct": true },
+      { "text": "Éric Rohmer", "correct": true },
+      { "text": "Jacques Rivette", "correct": true },
+      { "text": "Agnès Varda", "correct": true },
+      { "text": "Jean-Pierre Melville", "correct": false }
+    ],
+    "explication": "Jean-Pierre Melville est un précurseur et une influence majeure de la Nouvelle Vague, mais il n'en faisait pas partie — il appartient à la génération précédente."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 5,
+    "enonce": "Membres de la Pléiade (XVIe siècle)",
+    "reponses": [
+      { "text": "Pierre de Ronsard", "correct": true },
+      { "text": "Joachim du Bellay", "correct": true },
+      { "text": "Jean-Antoine de Baïf", "correct": true },
+      { "text": "Rémy Belleau", "correct": true },
+      { "text": "Étienne Jodelle", "correct": true },
+      { "text": "Pontus de Tyard", "correct": true },
+      { "text": "François Rabelais", "correct": false }
+    ],
+    "explication": "Rabelais est un contemporain mais pas un membre de la Pléiade (groupe de poètes, pas de prosateurs). La Pléiade comptait 7 membres, dont Jean Dorat en 7e."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 5,
+    "enonce": "Compositeurs russes ou soviétiques célèbres",
+    "reponses": [
+      { "text": "Modeste Moussorgski", "correct": true },
+      { "text": "Nikolaï Rimski-Korsakov", "correct": true },
+      { "text": "Piotr Ilitch Tchaïkovski", "correct": true },
+      { "text": "Sergueï Rachmaninov", "correct": true },
+      { "text": "Igor Stravinsky", "correct": true },
+      { "text": "Dmitri Chostakovitch", "correct": true },
+      { "text": "Jean Sibelius", "correct": false }
+    ],
+    "explication": "Jean Sibelius (1865-1957) est le plus grand compositeur finlandais, symbole du nationalisme musical finlandais, pas russe."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "culture-g",
+    "subcategory_slug": "religions",
+    "difficulte": 5,
+    "enonce": "Grandes religions ou traditions spirituelles à caractère monothéiste",
+    "reponses": [
+      { "text": "Christianisme", "correct": true },
+      { "text": "Judaïsme", "correct": true },
+      { "text": "Islam", "correct": true },
+      { "text": "Sikhisme", "correct": true },
+      { "text": "Zoroastrisme", "correct": true },
+      { "text": "Bahaïsme", "correct": true },
+      { "text": "Shintoïsme", "correct": false }
+    ],
+    "explication": "Le shintoïsme (religion traditionnelle japonaise) est polythéiste : il vénère une multitude de 'kami' (divinités) présents dans la nature."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "culture-g",
+    "subcategory_slug": "langues",
+    "difficulte": 5,
+    "enonce": "Langues officielles de l'Organisation des Nations Unies (ONU)",
+    "reponses": [
+      { "text": "Anglais", "correct": true },
+      { "text": "Français", "correct": true },
+      { "text": "Espagnol", "correct": true },
+      { "text": "Russe", "correct": true },
+      { "text": "Chinois (mandarin)", "correct": true },
+      { "text": "Arabe", "correct": true },
+      { "text": "Allemand", "correct": false }
+    ],
+    "explication": "L'ONU compte 6 langues officielles depuis 1973 (l'arabe a été ajouté cette année-là). L'allemand n'en fait pas partie malgré le poids économique de l'Allemagne."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "optique",
+    "difficulte": 5,
+    "enonce": "Couleurs visibles dans le spectre de la lumière blanche",
+    "reponses": [
+      { "text": "Rouge", "correct": true },
+      { "text": "Orange", "correct": true },
+      { "text": "Jaune", "correct": true },
+      { "text": "Vert", "correct": true },
+      { "text": "Bleu", "correct": true },
+      { "text": "Violet", "correct": true },
+      { "text": "Rose", "correct": false }
+    ],
+    "explication": "Le rose n'existe pas dans le spectre de la lumière visible — c'est une perception du cerveau combinant rouge et violet. Newton distinguait classiquement 7 couleurs dans l'arc-en-ciel (en ajoutant l'indigo), mais 6 suffisent à couvrir l'essentiel du spectre."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 5,
+    "enonce": "Départements français dont le nom contient celui d'un fleuve ou d'une rivière",
+    "reponses": [
+      { "text": "Loire", "correct": true },
+      { "text": "Rhône", "correct": true },
+      { "text": "Seine-Maritime", "correct": true },
+      { "text": "Haute-Garonne", "correct": true },
+      { "text": "Dordogne", "correct": true },
+      { "text": "Meuse", "correct": true },
+      { "text": "Bretagne", "correct": false }
+    ],
+    "explication": "La Bretagne est une région, pas un département, et ce n'est pas un fleuve mais une ancienne province."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "renaissance",
+    "difficulte": 5,
+    "enonce": "Grands navigateurs des XVe et XVIe siècles",
+    "reponses": [
+      { "text": "Christophe Colomb", "correct": true },
+      { "text": "Vasco de Gama", "correct": true },
+      { "text": "Ferdinand Magellan", "correct": true },
+      { "text": "Jacques Cartier", "correct": true },
+      { "text": "Amerigo Vespucci", "correct": true },
+      { "text": "Bartolomeu Dias", "correct": true },
+      { "text": "James Cook", "correct": false }
+    ],
+    "explication": "James Cook est un navigateur britannique du XVIIIe siècle (1728-1779), bien postérieur à l'âge des grandes découvertes."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 5,
+    "enonce": "Primates",
+    "reponses": [
+      { "text": "Chimpanzé", "correct": true },
+      { "text": "Gorille", "correct": true },
+      { "text": "Orang-outan", "correct": true },
+      { "text": "Gibbon", "correct": true },
+      { "text": "Babouin", "correct": true },
+      { "text": "Lémurien", "correct": true },
+      { "text": "Koala", "correct": false }
+    ],
+    "explication": "Le koala est un marsupial herbivore d'Australie (famille des Phascolarctidés), pas un primate."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 5,
+    "enonce": "Joueurs ayant remporté le Ballon d'Or au moins 2 fois",
+    "reponses": [
+      { "text": "Lionel Messi", "correct": true },
+      { "text": "Cristiano Ronaldo", "correct": true },
+      { "text": "Michel Platini", "correct": true },
+      { "text": "Johan Cruyff", "correct": true },
+      { "text": "Marco van Basten", "correct": true },
+      { "text": "Alfredo Di Stéfano", "correct": true },
+      { "text": "Zinédine Zidane", "correct": false }
+    ],
+    "explication": "Zinédine Zidane n'a gagné le Ballon d'Or qu'une seule fois, en 1998. Il a cependant été 3 fois joueur FIFA de l'année (1998, 2000, 2003)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "sculpture",
+    "difficulte": 5,
+    "enonce": "Œuvres sculptées par Auguste Rodin",
+    "reponses": [
+      { "text": "Le Penseur", "correct": true },
+      { "text": "Le Baiser", "correct": true },
+      { "text": "Les Bourgeois de Calais", "correct": true },
+      { "text": "La Porte de l'Enfer", "correct": true },
+      { "text": "L'Âge d'airain", "correct": true },
+      { "text": "Monument à Balzac", "correct": true },
+      { "text": "La Petite Danseuse de quatorze ans", "correct": false }
+    ],
+    "explication": "La Petite Danseuse de quatorze ans est une sculpture d'Edgar Degas, contemporain de Rodin mais peintre avant tout."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 5,
+    "enonce": "Catégories de prix Nobel décernés chaque année",
+    "reponses": [
+      { "text": "Physique (depuis 1901)", "correct": true },
+      { "text": "Chimie (depuis 1901)", "correct": true },
+      { "text": "Physiologie ou médecine (depuis 1901)", "correct": true },
+      { "text": "Littérature (depuis 1901)", "correct": true },
+      { "text": "Paix (depuis 1901)", "correct": true },
+      { "text": "Économie (depuis 1969)", "correct": true },
+      { "text": "Mathématiques", "correct": false }
+    ],
+    "explication": "Il n'existe pas de prix Nobel de mathématiques. L'équivalent le plus prestigieux est la médaille Fields, décernée tous les 4 ans."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "geographie",
+    "subcategory_slug": "drapeaux",
+    "difficulte": 5,
+    "enonce": "Pays européens dont le drapeau est strictement tricolore horizontal ou vertical, sans symbole",
+    "reponses": [
+      { "text": "France (bleu-blanc-rouge)", "correct": true },
+      { "text": "Italie (vert-blanc-rouge)", "correct": true },
+      { "text": "Allemagne (noir-rouge-or)", "correct": true },
+      { "text": "Belgique (noir-jaune-rouge)", "correct": true },
+      { "text": "Irlande (vert-blanc-orange)", "correct": true },
+      { "text": "Pays-Bas (rouge-blanc-bleu)", "correct": true },
+      { "text": "Espagne", "correct": false }
+    ],
+    "explication": "Le drapeau espagnol porte les armoiries royales (blason) sur la bande jaune centrale, ce n'est donc pas un tricolore strict sans symbole."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "xixe",
+    "difficulte": 5,
+    "enonce": "Maréchaux d'Empire nommés par Napoléon Bonaparte",
+    "reponses": [
+      { "text": "Michel Ney", "correct": true },
+      { "text": "Joachim Murat", "correct": true },
+      { "text": "Louis-Alexandre Berthier", "correct": true },
+      { "text": "André Masséna", "correct": true },
+      { "text": "Louis-Nicolas Davout", "correct": true },
+      { "text": "Jean Lannes", "correct": true },
+      { "text": "Lazare Carnot", "correct": false }
+    ],
+    "explication": "Lazare Carnot, 'l'Organisateur de la Victoire' sous la Révolution, n'a jamais été fait maréchal d'Empire par Napoléon malgré ses services militaires."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 5,
+    "enonce": "Romans écrits par Fiodor Dostoïevski",
+    "reponses": [
+      { "text": "Crime et Châtiment", "correct": true },
+      { "text": "Les Frères Karamazov", "correct": true },
+      { "text": "L'Idiot", "correct": true },
+      { "text": "Les Démons (Les Possédés)", "correct": true },
+      { "text": "Le Joueur", "correct": true },
+      { "text": "Souvenirs de la maison des morts", "correct": true },
+      { "text": "Anna Karénine", "correct": false }
+    ],
+    "explication": "Anna Karénine est un roman de Léon Tolstoï, contemporain et rival littéraire de Dostoïevski."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 5,
+    "enonce": "Gaz nobles (gaz rares)",
+    "reponses": [
+      { "text": "Hélium (He)", "correct": true },
+      { "text": "Néon (Ne)", "correct": true },
+      { "text": "Argon (Ar)", "correct": true },
+      { "text": "Krypton (Kr)", "correct": true },
+      { "text": "Xénon (Xe)", "correct": true },
+      { "text": "Radon (Rn)", "correct": true },
+      { "text": "Azote (N)", "correct": false }
+    ],
+    "explication": "L'azote (N₂) n'est pas un gaz noble : il peut former de nombreux composés chimiques (ammoniac, acide nitrique, etc.). Les gaz nobles occupent la colonne 18 du tableau périodique."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "series",
+    "difficulte": 5,
+    "enonce": "Séries produites et diffusées par HBO",
+    "reponses": [
+      { "text": "Les Soprano", "correct": true },
+      { "text": "Game of Thrones", "correct": true },
+      { "text": "The Wire (Sur écoute)", "correct": true },
+      { "text": "Succession", "correct": true },
+      { "text": "True Detective", "correct": true },
+      { "text": "Six Feet Under", "correct": true },
+      { "text": "Breaking Bad", "correct": false }
+    ],
+    "explication": "Breaking Bad a été produite par Sony Pictures Television et diffusée sur AMC, pas HBO."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "rap",
+    "difficulte": 4,
+    "enonce": "Rappeurs français issus de Marseille",
+    "reponses": [
+      { "text": "Akhenaton (IAM)", "correct": true },
+      { "text": "Shurik'n (IAM)", "correct": true },
+      { "text": "Soprano", "correct": true },
+      { "text": "Alonzo", "correct": true },
+      { "text": "Jul", "correct": true },
+      { "text": "Keny Arkana", "correct": true },
+      { "text": "Oxmo Puccino", "correct": false }
+    ],
+    "explication": "Oxmo Puccino est un rappeur parisien (né au Mali, grandi à Paris), aucune affiliation à la scène marseillaise."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "actualite",
+    "subcategory_slug": "economie",
+    "difficulte": 5,
+    "enonce": "Pays de l'Union européenne ayant adopté l'euro",
+    "reponses": [
+      { "text": "France", "correct": true },
+      { "text": "Allemagne", "correct": true },
+      { "text": "Italie", "correct": true },
+      { "text": "Espagne", "correct": true },
+      { "text": "Portugal", "correct": true },
+      { "text": "Grèce", "correct": true },
+      { "text": "Suède", "correct": false }
+    ],
+    "explication": "La Suède fait partie de l'UE mais n'a pas adopté l'euro. La couronne suédoise reste la monnaie officielle malgré les engagements du traité d'adhésion."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "contemporain",
+    "difficulte": 5,
+    "enonce": "Premiers ministres de la Ve République sous François Mitterrand (1981-1995)",
+    "reponses": [
+      { "text": "Pierre Mauroy", "correct": true },
+      { "text": "Laurent Fabius", "correct": true },
+      { "text": "Jacques Chirac (cohabitation)", "correct": true },
+      { "text": "Michel Rocard", "correct": true },
+      { "text": "Édith Cresson", "correct": true },
+      { "text": "Pierre Bérégovoy", "correct": true },
+      { "text": "Lionel Jospin", "correct": false }
+    ],
+    "explication": "Lionel Jospin a été Premier ministre de 1997 à 2002, sous la présidence de Jacques Chirac (3e cohabitation)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "geographie",
+    "subcategory_slug": "europe",
+    "difficulte": 5,
+    "enonce": "Micro-États européens (moins de 500 km²)",
+    "reponses": [
+      { "text": "Monaco", "correct": true },
+      { "text": "Vatican", "correct": true },
+      { "text": "Saint-Marin", "correct": true },
+      { "text": "Liechtenstein", "correct": true },
+      { "text": "Andorre", "correct": true },
+      { "text": "Malte", "correct": true },
+      { "text": "Luxembourg", "correct": false }
+    ],
+    "explication": "Le Luxembourg fait environ 2 586 km², bien au-dessus du seuil des 500 km² qui définit les micro-États."
+  }
+]

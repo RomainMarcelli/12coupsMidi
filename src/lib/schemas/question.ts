@@ -17,6 +17,7 @@ export const QUESTION_TYPES = [
   "etoile",
   "face_a_face",
   "coup_maitre",
+  "coup_par_coup",
 ] as const;
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
@@ -108,6 +109,25 @@ export const questionSchema = z
             code: "custom",
             path: ["bonne_reponse"],
             message: "face_a_face : bonne_reponse requise.",
+          });
+        }
+        break;
+
+      case "coup_par_coup":
+        if (countReponses !== 7) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["reponses"],
+            message:
+              "coup_par_coup : exactement 7 propositions requises (6 liées + 1 intrus).",
+          });
+        }
+        if (countCorrect !== 6) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["reponses"],
+            message:
+              "coup_par_coup : exactement 6 propositions correct:true (liées) et 1 correct:false (intrus).",
           });
         }
         break;

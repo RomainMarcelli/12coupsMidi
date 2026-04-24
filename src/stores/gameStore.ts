@@ -8,7 +8,14 @@ import {
 } from "@/lib/game-logic/jeu1";
 import type { LifeState } from "@/components/game/LifeBar";
 
-export type GameMode = "jeu1" | "jeu2" | "face_a_face" | "coup_maitre" | "parcours" | "revision";
+export type GameMode =
+  | "jeu1"
+  | "coup_par_coup"
+  | "etoile"
+  | "face_a_face"
+  | "coup_maitre"
+  | "parcours"
+  | "revision";
 
 export type GameStatus =
   | "idle"

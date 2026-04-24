@@ -1,15 +1,50 @@
-import { Sword } from "lucide-react";
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { createClient } from "@/lib/supabase/server";
+import {
+  FAF_POOL_SIZE,
+  pickFaceAFaceQuestions,
+} from "@/lib/game-logic/faceAFace";
+import { FaceAFaceClient } from "./face-a-face-client";
+import { NoFafQuestions } from "./no-questions";
 
 export const metadata = { title: "Face-à-Face" };
 
-export default function FaceAFacePage() {
+// Tirage aléatoire à chaque chargement.
+export const dynamic = "force-dynamic";
+
+export default async function FaceAFacePage() {
+  const supabase = await createClient();
+
+  const [{ data: pool }, { data: categories }, { data: profile }] =
+    await Promise.all([
+      supabase
+        .from("questions")
+        .select(
+          "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at",
+        )
+        .eq("type", "face_a_face")
+        .limit(200),
+      supabase.from("categories").select("id, nom, couleur"),
+      supabase.from("profiles").select("pseudo").maybeSingle(),
+    ]);
+
+  const categoriesById = new Map(
+    (categories ?? []).map((c) => [c.id, c] as const),
+  );
+
+  const questions = pickFaceAFaceQuestions(
+    pool ?? [],
+    categoriesById,
+    FAF_POOL_SIZE,
+  );
+
+  if (questions.length < 5) {
+    return <NoFafQuestions />;
+  }
+
   return (
-    <ComingSoon
-      title="Face-à-Face"
-      subtitle="60 secondes par joueur, vs bot ou ami — buzzer prêt."
-      phase="Phase 6"
-      icon={Sword}
+    <FaceAFaceClient
+      initialQuestions={questions}
+      userPseudo={profile?.pseudo ?? "Toi"}
     />
   );
 }

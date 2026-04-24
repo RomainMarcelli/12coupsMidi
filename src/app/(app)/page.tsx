@@ -3,7 +3,7 @@ import {
   ChevronRight,
   Crown,
   Dices,
-  RotateCcw,
+  Grid3x3,
   Star,
   Sword,
   Trophy,
@@ -20,11 +20,11 @@ export default function Home() {
       <HeroTile
         href="/parcours"
         title="Lancer le parcours"
-        subtitle="L'émission complète : Jeu 1 → Étoile → Face-à-Face → Coup de Maître"
+        subtitle="L'émission complète : Jeu 1 → Coup par Coup → Face-à-Face → Coup de Maître"
         icon={Crown}
       />
 
-      {/* 4 tuiles de jeux */}
+      {/* 4 tuiles des jeux principaux */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Tile
           href="/jouer/jeu-1"
@@ -35,9 +35,9 @@ export default function Home() {
         />
         <Tile
           href="/jouer/jeu-2"
-          title="Étoile Mystérieuse"
-          subtitle="Devine la personnalité"
-          icon={Star}
+          title="Le Coup par Coup"
+          subtitle="7 propositions, 1 intrus"
+          icon={Grid3x3}
           accent="sky"
         />
         <Tile
@@ -56,27 +56,55 @@ export default function Home() {
         />
       </div>
 
-      {/* Révision */}
-      <Link
-        href="/revision"
-        className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-border bg-card p-5 glow-card transition-all hover:scale-[1.01] hover:border-life-green/60"
-      >
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-life-green/15 text-life-green">
-          <Brain className="h-7 w-7" aria-hidden="true" />
-        </div>
-        <div className="flex-1">
-          <h2 className="font-display text-xl font-bold text-navy">
-            Mode Révision
-          </h2>
-          <p className="text-sm text-navy/70">
-            Rejoue les questions que tu as ratées jusqu'à les maîtriser.
-          </p>
-        </div>
-        <ChevronRight
-          className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-life-green"
-          aria-hidden="true"
-        />
-      </Link>
+      {/* Ligne bonus + révision */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Link
+          href="/revision"
+          className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-border bg-card p-5 glow-card transition-all hover:scale-[1.01] hover:border-life-green/60"
+        >
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-life-green/15 text-life-green">
+            <Brain className="h-7 w-7" aria-hidden="true" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-display text-xl font-bold text-navy">
+              Mode Révision
+            </h2>
+            <p className="text-sm text-navy/70">
+              Rejoue tes questions ratées.
+            </p>
+          </div>
+          <ChevronRight
+            className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-life-green"
+            aria-hidden="true"
+          />
+        </Link>
+
+        <Link
+          href="/jouer/etoile"
+          className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-border bg-card p-5 glow-card transition-all hover:scale-[1.01] hover:border-sky/60"
+        >
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-sky/15 text-sky">
+            <Star className="h-7 w-7" aria-hidden="true" fill="currentColor" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <h2 className="font-display text-xl font-bold text-navy">
+                Étoile Mystérieuse
+              </h2>
+              <span className="rounded-full bg-cream-deep px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy/60">
+                Bonus
+              </span>
+            </div>
+            <p className="text-sm text-navy/70">
+              Devine la célébrité avec 5 indices.
+            </p>
+          </div>
+          <ChevronRight
+            className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-sky"
+            aria-hidden="true"
+          />
+        </Link>
+      </div>
     </main>
   );
 }

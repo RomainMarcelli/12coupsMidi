@@ -411,7 +411,7 @@ function ResultsScreen({
         </h1>
         <p className="text-navy/70 sm:text-lg">
           {gameOver
-            ? "Tu as perdu toutes tes vies. Tu basculeras en Face-à-Face pénalité dès qu'il sera disponible (Phase 6)."
+            ? "Tu as perdu toutes tes vies. Bascule en Face-à-Face pour te racheter."
             : perfect
               ? "10 / 10, pas une seule erreur. Chapeau bas."
               : `Tu as répondu correctement à ${correctCount} question${correctCount > 1 ? "s" : ""} sur ${total}.`}
@@ -452,10 +452,20 @@ function ResultsScreen({
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-3">
-        <Button variant="gold" size="lg" onClick={onReplay}>
-          <Repeat className="h-4 w-4" aria-hidden="true" />
-          Rejouer
-        </Button>
+        {gameOver ? (
+          <Link
+            href="/jouer/face-a-face"
+            className="inline-flex items-center gap-2 rounded-xl bg-buzz px-8 py-4 font-display text-lg font-extrabold uppercase tracking-wide text-cream shadow-[0_6px_0_0_#b5141f] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(230,57,70,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#b5141f]"
+          >
+            <Sword className="h-5 w-5" aria-hidden="true" />
+            Lancer le Face-à-Face
+          </Link>
+        ) : (
+          <Button variant="gold" size="lg" onClick={onReplay}>
+            <Repeat className="h-4 w-4" aria-hidden="true" />
+            Rejouer
+          </Button>
+        )}
         <Link
           href="/revision"
           className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"

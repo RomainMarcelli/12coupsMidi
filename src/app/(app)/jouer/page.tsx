@@ -1,6 +1,7 @@
 import {
   ChevronRight,
   Dices,
+  Grid3x3,
   Star,
   Sword,
   Trophy,
@@ -18,9 +19,10 @@ interface GameItem {
   icon: LucideIcon;
   accent: "gold" | "buzz" | "sky";
   available: boolean;
+  bonus?: boolean;
 }
 
-const GAMES: GameItem[] = [
+const MAIN_GAMES: GameItem[] = [
   {
     href: "/jouer/jeu-1",
     title: "Quizz 1 / 2",
@@ -31,11 +33,11 @@ const GAMES: GameItem[] = [
   },
   {
     href: "/jouer/jeu-2",
-    title: "Étoile Mystérieuse",
-    subtitle: "Trouve la personnalité à partir d'indices progressifs.",
-    icon: Star,
+    title: "Le Coup par Coup",
+    subtitle: "7 propositions par manche, 6 liées, 1 intrus à éviter.",
+    icon: Grid3x3,
     accent: "sky",
-    available: false,
+    available: true,
   },
   {
     href: "/jouer/face-a-face",
@@ -43,7 +45,7 @@ const GAMES: GameItem[] = [
     subtitle: "Vs bot ou ami, 60 s par joueur, sonnerie quand on bloque.",
     icon: Sword,
     accent: "buzz",
-    available: false,
+    available: true,
   },
   {
     href: "/jouer/coup-de-maitre",
@@ -55,24 +57,45 @@ const GAMES: GameItem[] = [
   },
 ];
 
+const BONUS_GAMES: GameItem[] = [
+  {
+    href: "/jouer/etoile",
+    title: "Étoile Mystérieuse",
+    subtitle: "Devine la célébrité à partir de 5 indices progressifs.",
+    icon: Star,
+    accent: "sky",
+    available: true,
+    bonus: true,
+  },
+];
+
 export default function JouerPage() {
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-2">
         <h1 className="font-display text-3xl font-extrabold text-navy sm:text-4xl">
           Choisis ton jeu
         </h1>
         <p className="text-navy/70">
-          Quatre épreuves, comme à la télé. Pour l'émission complète, lance le
+          Les 4 épreuves de l'émission. Pour l'enchaînement complet, lance le
           parcours depuis l'accueil.
         </p>
       </header>
 
-      <div className="flex flex-col gap-3">
-        {GAMES.map((g) => (
+      <section className="flex flex-col gap-3">
+        {MAIN_GAMES.map((g) => (
           <GameRow key={g.href} game={g} />
         ))}
-      </div>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-navy/50">
+          Bonus
+        </h2>
+        {BONUS_GAMES.map((g) => (
+          <GameRow key={g.href} game={g} />
+        ))}
+      </section>
     </main>
   );
 }
@@ -115,6 +138,11 @@ function GameRow({ game }: { game: GameItem }) {
           {!game.available && (
             <span className="rounded-full bg-cream-deep px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy/60">
               Bientôt
+            </span>
+          )}
+          {game.bonus && (
+            <span className="rounded-full bg-sky/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky">
+              Bonus
             </span>
           )}
         </div>

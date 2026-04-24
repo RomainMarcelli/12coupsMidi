@@ -1,0 +1,3017 @@
+[
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "En quelle année fut signé le traité de Verdun qui divisa l'Empire carolingien ?",
+    "reponses": [
+      {
+        "text": "814",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le traité de Verdun (843) partagea l'empire entre les trois petits-fils de Charlemagne : Charles le Chauve, Louis le Germanique et Lothaire Ier.",
+    "autre_reponse": "843"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quelle est la capitale du Kazakhstan ?",
+    "reponses": [
+      {
+        "text": "Astana",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Astana (anciennement Noursoultan) est la capitale du Kazakhstan depuis 1997, remplaçant Almaty."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quel physicien a formulé le principe d'incertitude ?",
+    "reponses": [
+      {
+        "text": "Heisenberg",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Werner Heisenberg formula en 1927 le principe d'incertitude : on ne peut pas connaître simultanément la position et la quantité de mouvement d'une particule."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Dans quel roman de Dostoïevski apparaît le personnage de Raskolnikov ?",
+    "reponses": [
+      {
+        "text": "Crime et Châtiment",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Raskolnikov est le protagoniste de Crime et Châtiment (1866), roman dans lequel il commet un meurtre et est rongé par la culpabilité."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "Combien de symphonies Beethoven a-t-il composées ?",
+    "reponses": [
+      {
+        "text": "7",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Beethoven a composé 9 symphonies. La 9e est célèbre pour son dernier mouvement choral avec l'Ode à la Joie.",
+    "autre_reponse": "9"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "europe",
+    "difficulte": 3,
+    "enonce": "Quel est le plus long fleuve d'Europe ?",
+    "reponses": [
+      {
+        "text": "Le Danube",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La Volga, avec ses 3 690 km, est le plus long fleuve d'Europe. Elle se jette dans la mer Caspienne.",
+    "autre_reponse": "La Volga"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la molécule porteuse d'énergie universelle dans les cellules ?",
+    "reponses": [
+      {
+        "text": "ADP",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'adénosine triphosphate (ATP) est la molécule énergétique universelle utilisée par toutes les cellules vivantes.",
+    "autre_reponse": "ATP"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre espagnol est l'auteur de Guernica ?",
+    "reponses": [
+      {
+        "text": "Picasso",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Picasso peignit Guernica en 1937 en réaction au bombardement de la ville basque du même nom par l'aviation nazie."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel réalisateur a tourné 2001 : L'Odyssée de l'espace ?",
+    "reponses": [
+      {
+        "text": "Stanley Kubrick",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Stanley Kubrick réalisa 2001 : L'Odyssée de l'espace en 1968, considéré comme l'un des chefs-d'œuvre du cinéma de science-fiction."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quel maréchal de Napoléon trahit l'Empereur en avril 1814 en capitulant devant Paris ?",
+    "reponses": [
+      {
+        "text": "Marmont",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le maréchal Marmont, duc de Raguse, capitula et rallia les Bourbons en avril 1814. Le mot 'raguser' devint synonyme de trahir."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel détroit sépare l'Espagne du Maroc ?",
+    "reponses": [
+      {
+        "text": "Gibraltar",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le détroit de Gibraltar, large d'environ 14 km à son point le plus étroit, relie l'Atlantique à la Méditerranée."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "chimie",
+    "difficulte": 3,
+    "enonce": "Quel est le numéro atomique de l'or ?",
+    "reponses": [
+      {
+        "text": "47",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'or (Au) a le numéro atomique 79. Le 47 correspond à l'argent (Ag).",
+    "autre_reponse": "79"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 3,
+    "enonce": "Quel joueur détient le record de victoires en Grand Chelem masculin avec 24 titres ?",
+    "reponses": [
+      {
+        "text": "Novak Djokovic",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Novak Djokovic détient le record avec 24 titres du Grand Chelem, devant Rafael Nadal (22) et Roger Federer (20)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "antique",
+    "difficulte": 3,
+    "enonce": "Quelle œuvre de Platon contient l'allégorie de la caverne ?",
+    "reponses": [
+      {
+        "text": "La République",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'allégorie de la caverne se trouve au livre VII de La République de Platon, illustrant la théorie des Idées."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "En quelle année fut abolie l'esclavage aux États-Unis par le 13e amendement ?",
+    "reponses": [
+      {
+        "text": "1863",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le 13e amendement, ratifié le 6 décembre 1865, abolit officiellement l'esclavage. La proclamation d'émancipation de Lincoln (1863) était un décret de guerre, pas une loi constitutionnelle.",
+    "autre_reponse": "1865"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le pays le plus peuplé d'Afrique ?",
+    "reponses": [
+      {
+        "text": "Éthiopie",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le Nigeria est le pays le plus peuplé d'Afrique avec plus de 220 millions d'habitants.",
+    "autre_reponse": "Nigeria"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "francaise",
+    "difficulte": 3,
+    "enonce": "Quel auteur français a écrit Le Rouge et le Noir ?",
+    "reponses": [
+      {
+        "text": "Stendhal",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Stendhal (Henri Beyle) publia Le Rouge et le Noir en 1830, retraçant l'ascension sociale de Julien Sorel."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la galaxie la plus proche de la Voie Lactée (grande galaxie) ?",
+    "reponses": [
+      {
+        "text": "Magellan",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La galaxie d'Andromède (M31) est la grande galaxie la plus proche, à environ 2,5 millions d'années-lumière.",
+    "autre_reponse": "Andromède"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel général américain commandait les forces alliées lors du débarquement en Normandie ?",
+    "reponses": [
+      {
+        "text": "Patton",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le général Eisenhower était le commandant suprême des forces alliées (SHAEF) lors de l'Opération Overlord du 6 juin 1944.",
+    "autre_reponse": "Eisenhower"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Dans quels pays se trouve le lac Titicaca ?",
+    "reponses": [
+      {
+        "text": "Pérou et Bolivie",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le lac Titicaca est un lac frontière entre le Pérou et la Bolivie, à 3 812 m d'altitude."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "architecture",
+    "difficulte": 3,
+    "enonce": "Quel architecte a conçu le musée Guggenheim de Bilbao ?",
+    "reponses": [
+      {
+        "text": "Renzo Piano",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'architecte canado-américain Frank Gehry a conçu le musée Guggenheim de Bilbao, inauguré en 1997.",
+    "autre_reponse": "Frank Gehry"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "mathematiques",
+    "difficulte": 3,
+    "enonce": "Quel mathématicien a démontré le dernier théorème de Fermat en 1995 ?",
+    "reponses": [
+      {
+        "text": "Grigori Perelman",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Andrew Wiles démontra en 1995 le dernier théorème de Fermat, resté sans preuve pendant 358 ans.",
+    "autre_reponse": "Andrew Wiles"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel peuple a construit le Machu Picchu au XVe siècle ?",
+    "reponses": [
+      {
+        "text": "Les Incas",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le Machu Picchu fut construit par les Incas sous le règne de Pachacutec, à 2 430 m d'altitude dans les Andes péruviennes."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel écrivain colombien est l'auteur de Cent ans de solitude ?",
+    "reponses": [
+      {
+        "text": "García Márquez",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Gabriel García Márquez publia Cent ans de solitude en 1967, chef-d'œuvre du réalisme magique. Prix Nobel 1982."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 3,
+    "enonce": "Quel club détient le record de victoires en Ligue des Champions ?",
+    "reponses": [
+      {
+        "text": "Bayern Munich",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le Real Madrid est le club le plus titré de la Ligue des Champions avec 15 titres, devant le Milan AC (7).",
+    "autre_reponse": "Real Madrid"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du courant océanique chaud qui réchauffe l'Europe de l'Ouest ?",
+    "reponses": [
+      {
+        "text": "Gulf Stream",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le Gulf Stream transporte des eaux tropicales vers l'Europe du Nord-Ouest, adoucissant considérablement son climat."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quel roi de France fut surnommé 'le Roi-Soleil' ?",
+    "reponses": [
+      {
+        "text": "Louis XIV",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Louis XIV (1638–1715), qui régna pendant 72 ans, fut surnommé le Roi-Soleil. Il fit construire le château de Versailles."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Avec qui Francis Crick découvrit-il la structure en double hélice de l'ADN en 1953 ?",
+    "reponses": [
+      {
+        "text": "James Watson",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Watson et Crick proposèrent la double hélice de l'ADN en 1953, en s'appuyant notamment sur les travaux de Rosalind Franklin."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "Dans quelle ville est né Wolfgang Amadeus Mozart ?",
+    "reponses": [
+      {
+        "text": "Vienne",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Mozart naquit à Salzbourg le 27 janvier 1756. Il mourut à Vienne à 35 ans après avoir composé plus de 600 œuvres.",
+    "autre_reponse": "Salzbourg"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur irlandais a écrit Ulysse (1922) ?",
+    "reponses": [
+      {
+        "text": "Samuel Beckett",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "James Joyce publia Ulysse en 1922. Ce roman se déroule en une seule journée à Dublin le 16 juin 1904.",
+    "autre_reponse": "James Joyce"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel sultan ottoman conquit Constantinople en 1453 ?",
+    "reponses": [
+      {
+        "text": "Soliman le Magnifique",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Mehmed II (dit 'le Conquérant') prit Constantinople le 29 mai 1453, mettant fin à l'Empire byzantin.",
+    "autre_reponse": "Mehmed II"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus grand désert froid du monde ?",
+    "reponses": [
+      {
+        "text": "Le Gobi",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'Antarctique est le plus grand désert du monde (14 millions de km²). Le Sahara est le plus grand désert chaud.",
+    "autre_reponse": "L'Antarctique"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "moderne",
+    "difficulte": 3,
+    "enonce": "Quel philosophe a écrit La Critique de la raison pure ?",
+    "reponses": [
+      {
+        "text": "Hegel",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Emmanuel Kant publia La Critique de la raison pure en 1781, analysant les conditions de possibilité de la connaissance humaine.",
+    "autre_reponse": "Kant"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quelle technique picturale consiste à peindre sur un enduit humide ?",
+    "reponses": [
+      {
+        "text": "La tempera",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La fresque consiste à appliquer des pigments sur un enduit de chaux fraîche, permettant leur fixation par carbonatation.",
+    "autre_reponse": "La fresque"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quelle est la vitesse de la lumière dans le vide ?",
+    "reponses": [
+      {
+        "text": "299 792 km/s",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La vitesse de la lumière dans le vide est de 299 792 458 m/s. C'est la vitesse limite de l'univers selon Einstein."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel président américain signa les accords de Paris mettant fin à l'engagement au Vietnam ?",
+    "reponses": [
+      {
+        "text": "Johnson",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Richard Nixon et Henry Kissinger signèrent les accords de Paris en janvier 1973, mettant fin à l'engagement américain au Vietnam.",
+    "autre_reponse": "Nixon"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "francaise",
+    "difficulte": 3,
+    "enonce": "Quel poète français du XIXe siècle écrivit Les Fleurs du mal (1857) ?",
+    "reponses": [
+      {
+        "text": "Verlaine",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Charles Baudelaire publia Les Fleurs du mal en 1857. Certains poèmes furent condamnés pour obscénité.",
+    "autre_reponse": "Baudelaire"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le pays traversé par le plus grand nombre de fuseaux horaires ?",
+    "reponses": [
+      {
+        "text": "La Russie",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La France, avec ses territoires d'outre-mer, couvre 12 fuseaux horaires, devant la Russie (11).",
+    "autre_reponse": "La France"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "chimie",
+    "difficulte": 3,
+    "enonce": "Quel chimiste publia le premier tableau périodique des éléments en 1869 ?",
+    "reponses": [
+      {
+        "text": "Lavoisier",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le chimiste russe Mendeleïev proposa en 1869 le premier tableau périodique, classant les éléments par masse atomique.",
+    "autre_reponse": "Mendeleïev"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel traité mit fin à la Première Guerre mondiale en 1919 ?",
+    "reponses": [
+      {
+        "text": "Traité de Brest-Litovsk",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le traité de Versailles (28 juin 1919) mit fin à la Première Guerre mondiale et imposa de lourdes sanctions à l'Allemagne.",
+    "autre_reponse": "Traité de Versailles"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "cyclisme",
+    "difficulte": 3,
+    "enonce": "Quel coureur a remporté 5 Tours de France consécutifs entre 1991 et 1995 ?",
+    "reponses": [
+      {
+        "text": "Bernard Hinault",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Miguel Indurain a remporté 5 Tours de France consécutifs (1991-1995), rejoignant Anquetil, Merckx et Hinault.",
+    "autre_reponse": "Miguel Indurain"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quel est le département français le plus étendu en superficie ?",
+    "reponses": [
+      {
+        "text": "La Guyane",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La Guyane (département 973) est le plus grand département français avec 83 534 km²."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "sculpture",
+    "difficulte": 3,
+    "enonce": "Quel sculpteur français est l'auteur du Penseur ?",
+    "reponses": [
+      {
+        "text": "Auguste Rodin",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Auguste Rodin créa Le Penseur en 1882, faisant partie de La Porte de l'Enfer, inspirée de Dante."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel pharaon fit construire la grande pyramide de Gizeh ?",
+    "reponses": [
+      {
+        "text": "Khéops",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La grande pyramide de Gizeh fut construite par Khéops vers 2560 av. J.-C. Elle resta le plus haut édifice du monde pendant près de 4 000 ans."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Combien de chromosomes possède une cellule humaine diploïde ?",
+    "reponses": [
+      {
+        "text": "46",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Une cellule humaine diploïde contient 46 chromosomes (23 paires). Les chimpanzés en ont 48 — une confusion fréquente."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "architecture",
+    "difficulte": 3,
+    "enonce": "Dans quelle ville se trouve l'Opéra en coques de bateau, chef-d'œuvre de Jorn Utzon ?",
+    "reponses": [
+      {
+        "text": "Sydney",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'Opéra de Sydney, conçu par l'architecte danois Jorn Utzon, est inscrit au patrimoine mondial de l'UNESCO depuis 2007."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du phénomène par lequel un métal émet des électrons sous l'effet de la lumière ?",
+    "reponses": [
+      {
+        "text": "Effet photoélectrique",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'effet photoélectrique, expliqué par Einstein en 1905, montre que la lumière se comporte comme des photons. Cela lui valut le Nobel de 1921."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel écrivain américain a écrit La Route (The Road) ?",
+    "reponses": [
+      {
+        "text": "Cormac McCarthy",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Cormac McCarthy publia La Route en 2006 (Prix Pulitzer 2007). Ce roman décrit un père et son fils dans un monde dévasté."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quelle mer est la plus salée du monde ?",
+    "reponses": [
+      {
+        "text": "La mer Rouge",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La mer Morte a une salinité d'environ 34%, soit 10 fois plus que l'océan, rendant impossible toute vie aquatique.",
+    "autre_reponse": "La mer Morte"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "antique",
+    "difficulte": 3,
+    "enonce": "Quel philosophe grec a postulé que tout est feu et en perpétuel changement ?",
+    "reponses": [
+      {
+        "text": "Héraclite",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Héraclite d'Éphèse est connu pour sa doctrine du flux universel (panta rhei) et du feu comme principe fondamental."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "Quel compositeur baroque est notamment célèbre pour ses Variations Goldberg ?",
+    "reponses": [
+      {
+        "text": "Bach",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Johann Sebastian Bach composa les Variations Goldberg (BWV 988) vers 1741, chef-d'œuvre du répertoire baroque."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel biologiste britannique a proposé la théorie de l'évolution par sélection naturelle ?",
+    "reponses": [
+      {
+        "text": "Darwin",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Charles Darwin publia L'Origine des espèces en 1859. Lamarck avait proposé une théorie de l'évolution différente (transformisme)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus petit État souverain du monde par superficie ?",
+    "reponses": [
+      {
+        "text": "Le Vatican",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le Vatican (0,44 km²) est le plus petit État souverain du monde. Monaco est le deuxième plus petit avec 2,02 km²."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel groupe de rock a sorti l'album Nevermind en 1991, emblème du grunge ?",
+    "reponses": [
+      {
+        "text": "Pearl Jam",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Nirvana sortit Nevermind en 1991. Le single Smells Like Teen Spirit propulsa le grunge sur la scène mondiale.",
+    "autre_reponse": "Nirvana"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel scientifique polonais a démontré l'héliocentrisme en 1543 ?",
+    "reponses": [
+      {
+        "text": "Galilée",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Copernic publia son modèle héliocentrique en 1543 dans De revolutionibus, remettant en cause le géocentrisme de Ptolémée.",
+    "autre_reponse": "Copernic"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "francaise",
+    "difficulte": 3,
+    "enonce": "Quel auteur français a écrit À la recherche du temps perdu ?",
+    "reponses": [
+      {
+        "text": "André Gide",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Marcel Proust écrivit À la recherche du temps perdu en 7 volumes (1913-1927), soit environ 1,5 million de mots.",
+    "autre_reponse": "Marcel Proust"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "chimie",
+    "difficulte": 3,
+    "enonce": "Quel est l'élément le plus abondant dans la croûte terrestre ?",
+    "reponses": [
+      {
+        "text": "L'oxygène",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'oxygène représente 46% de la masse de la croûte terrestre, suivi du silicium (28%). On le trouve surtout en oxydes et silicates."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Dans quel pays se trouve le mont Kilimandjaro, plus haut sommet d'Afrique ?",
+    "reponses": [
+      {
+        "text": "Kenya",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le Kilimandjaro (5 895 m) est situé en Tanzanie, près de la frontière kényane. C'est un volcan inactif.",
+    "autre_reponse": "Tanzanie"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quelle était la capitale de l'Empire aztèque, détruite par Cortés ?",
+    "reponses": [
+      {
+        "text": "Tenochtitlan",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Tenochtitlan fut fondée en 1325 sur une île du lac Texcoco. Conquise en 1521, elle devint Mexico."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la plus grande lune de Jupiter ?",
+    "reponses": [
+      {
+        "text": "Ganymède",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Ganymède est la plus grande lune de Jupiter et du système solaire entier, plus grande que Mercure (5 268 km de diamètre)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Dans quelle ville américaine est né le jazz au début du XXe siècle ?",
+    "reponses": [
+      {
+        "text": "Chicago",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le jazz naquit à La Nouvelle-Orléans vers 1900, issu du mélange de blues, ragtime et traditions africaines.",
+    "autre_reponse": "La Nouvelle-Orléans"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel romancier britannique est l'auteur de 1984 et La Ferme des animaux ?",
+    "reponses": [
+      {
+        "text": "Aldous Huxley",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "George Orwell publia La Ferme des animaux (1945) et 1984 (1949). Aldous Huxley écrivit Le Meilleur des mondes, également dystopique.",
+    "autre_reponse": "George Orwell"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus haut sommet d'Europe occidentale ?",
+    "reponses": [
+      {
+        "text": "Le Cervin",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le Mont-Blanc (4 808 m) est le plus haut sommet des Alpes. Il fut gravi pour la première fois en 1786.",
+    "autre_reponse": "Le Mont-Blanc"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel programme spatial soviétique envoya le premier homme dans l'espace en 1961 ?",
+    "reponses": [
+      {
+        "text": "Programme Soyouz",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Gagarine fut lancé le 12 avril 1961 à bord de Vostok 1. Le programme Soyouz vint après.",
+    "autre_reponse": "Programme Vostok"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "basket",
+    "difficulte": 3,
+    "enonce": "Quel joueur NBA surnommé 'Black Mamba' remporta 5 titres avec les Lakers ?",
+    "reponses": [
+      {
+        "text": "Shaquille O'Neal",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Kobe Bryant remporta 5 championnats NBA avec les Lakers (2000, 2001, 2002, 2009, 2010). Il mourut en janvier 2020.",
+    "autre_reponse": "Kobe Bryant"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "antique",
+    "difficulte": 3,
+    "enonce": "Quel philosophe grec est le fondateur du stoïcisme ?",
+    "reponses": [
+      {
+        "text": "Épicure",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Zénon de Cittium fonda l'école stoïcienne à Athènes vers 301 av. J.-C., enseignant sous le portique peint (Stoa).",
+    "autre_reponse": "Zénon de Cittium"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel réalisateur japonais est connu pour Les Sept Samouraïs (1954) ?",
+    "reponses": [
+      {
+        "text": "Akira Kurosawa",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Akira Kurosawa réalisa Les Sept Samouraïs en 1954. Ce film inspira Les Sept Mercenaires (1960)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel groupe sanguin est le 'donneur universel' ?",
+    "reponses": [
+      {
+        "text": "O négatif",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le groupe O négatif est le donneur universel car ses globules rouges n'ont pas les antigènes A, B et Rhésus. L'AB positif est le receveur universel."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus long mur de l'histoire ?",
+    "reponses": [
+      {
+        "text": "La Grande Muraille de Chine",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La Grande Muraille s'étend sur environ 21 196 km (toutes sections). Construite entre le IIIe s. av. J.-C. et le XVIIe siècle."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur américain a écrit Le Vieil Homme et la Mer ?",
+    "reponses": [
+      {
+        "text": "Hemingway",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Ernest Hemingway publia Le Vieil Homme et la Mer en 1952 (Pulitzer 1953, Nobel 1954)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "Quel compositeur autrichien a composé 104 symphonies, lui valant le surnom de 'père de la symphonie' ?",
+    "reponses": [
+      {
+        "text": "Joseph Haydn",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Joseph Haydn (1732-1809) composa 104 symphonies, fixant la forme classique en 4 mouvements. Il fut le professeur de Beethoven."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "En quelle année fut fondée l'Organisation des Nations Unies ?",
+    "reponses": [
+      {
+        "text": "1919",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'ONU fut fondée le 24 octobre 1945 avec 51 États membres. La Société des Nations (1919) était son prédécesseur.",
+    "autre_reponse": "1945"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le pays avec le plus long littoral au monde ?",
+    "reponses": [
+      {
+        "text": "La Norvège",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le Canada possède le plus long littoral au monde avec environ 202 080 km de côtes.",
+    "autre_reponse": "Le Canada"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel groupe de rock britannique a sorti Dark Side of the Moon en 1973 ?",
+    "reponses": [
+      {
+        "text": "Pink Floyd",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Pink Floyd publia The Dark Side of the Moon en 1973. Il resta 741 semaines dans le classement Billboard 200."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur russe a écrit Guerre et Paix ?",
+    "reponses": [
+      {
+        "text": "Dostoïevski",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Léon Tolstoï publia Guerre et Paix entre 1865 et 1869, roman-fleuve de plus de 1 500 pages sur les guerres napoléoniennes.",
+    "autre_reponse": "Tolstoï"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre néerlandais du XVIIe siècle est connu pour La Jeune Fille à la perle ?",
+    "reponses": [
+      {
+        "text": "Vermeer",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Johannes Vermeer peignit La Jeune Fille à la perle vers 1665, conservée au musée Mauritshuis à La Haye."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quelle sonde spatiale a été la première à quitter le système solaire ?",
+    "reponses": [
+      {
+        "text": "Pioneer 10",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Voyager 1 (lancée en 1977) a officiellement quitté l'héliosphère en 2012, devenant le premier objet humain en espace interstellaire.",
+    "autre_reponse": "Voyager 1"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quelle bataille napoléonienne est considérée comme son chef-d'œuvre tactique ?",
+    "reponses": [
+      {
+        "text": "Austerlitz",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La bataille d'Austerlitz (2 décembre 1805) est le chef-d'œuvre tactique de Napoléon. Il y vainquit les armées d'Autriche et de Russie."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du canal qui relie la mer Rouge à la Méditerranée ?",
+    "reponses": [
+      {
+        "text": "Canal de Suez",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le canal de Suez (193 km) relie la mer Rouge à la Méditerranée. Inauguré en 1869, il évite le contournement de l'Afrique."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "moderne",
+    "difficulte": 3,
+    "enonce": "Quel philosophe français est l'auteur de L'Être et le Néant ?",
+    "reponses": [
+      {
+        "text": "Sartre",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Jean-Paul Sartre publia L'Être et le Néant en 1943, somme philosophique de l'existentialisme."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "natation",
+    "difficulte": 3,
+    "enonce": "Quel nageur américain détient le record du plus grand nombre de médailles olympiques ?",
+    "reponses": [
+      {
+        "text": "Mark Spitz",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Michael Phelps détient le record avec 28 médailles olympiques (23 or) obtenues de 2000 à 2016.",
+    "autre_reponse": "Michael Phelps"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel pays fut le premier à accorder le droit de vote aux femmes, en 1893 ?",
+    "reponses": [
+      {
+        "text": "La Nouvelle-Zélande",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La Nouvelle-Zélande accorda le droit de vote aux femmes le 19 septembre 1893. La France ne l'accorda qu'en 1944."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur américain a écrit Moby Dick ?",
+    "reponses": [
+      {
+        "text": "Nathaniel Hawthorne",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Herman Melville publia Moby Dick en 1851. Ce roman retrace la quête obsessionnelle du capitaine Achab contre le cachalot blanc.",
+    "autre_reponse": "Herman Melville"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quel boson, prédit par le modèle standard, fut détecté au CERN en 2012 ?",
+    "reponses": [
+      {
+        "text": "Le boson Z",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le boson de Higgs fut détecté au LHC du CERN en juillet 2012. Cette découverte valut le Nobel 2013 à Peter Higgs et François Englert.",
+    "autre_reponse": "Le boson de Higgs"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel film de Coppola basé sur un roman de Mario Puzo sortit en 1972 ?",
+    "reponses": [
+      {
+        "text": "Le Parrain",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le Parrain fut réalisé par Coppola en 1972, d'après le roman de Puzo. Il remporta 3 Oscars dont celui du meilleur film."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel explorateur portugais fut le premier à contourner le cap de Bonne-Espérance en 1488 ?",
+    "reponses": [
+      {
+        "text": "Bartolomeu Dias",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Bartolomeu Dias fut le premier Européen à doubler le cap de Bonne-Espérance en 1488. Vasco de Gama compléta le voyage en 1498."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "moderne",
+    "difficulte": 3,
+    "enonce": "Quel philosophe a théorisé le concept de 'surhomme' (Übermensch) ?",
+    "reponses": [
+      {
+        "text": "Schopenhauer",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Friedrich Nietzsche développa le concept de l'Übermensch dans Ainsi parlait Zarathoustra (1883), désignant celui qui crée ses propres valeurs.",
+    "autre_reponse": "Nietzsche"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quelle sonde photographia la première photo du trou noir en 2019 ?",
+    "reponses": [
+      {
+        "text": "Chandra X-ray",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'Event Horizon Telescope (réseau de radiotélescopes) prit la première image d'un trou noir en 2019 (M87*), à 55 millions d'années-lumière.",
+    "autre_reponse": "Event Horizon Telescope"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur tchèque est l'auteur de L'Insoutenable Légèreté de l'être ?",
+    "reponses": [
+      {
+        "text": "Milan Kundera",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Milan Kundera publia L'Insoutenable Légèreté de l'être en 1984. Exilé en France après le Printemps de Prague."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel est l'animal terrestre le plus rapide sur courte distance ?",
+    "reponses": [
+      {
+        "text": "Le guépard",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le guépard peut atteindre 110-120 km/h sur de courtes distances. Il ne peut maintenir cette vitesse que quelques secondes."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "En quelle année Christophe Colomb débarqua-t-il pour la première fois en Amérique ?",
+    "reponses": [
+      {
+        "text": "1492",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Colomb débarqua sur une île des Bahamas le 12 octobre 1492, lors de son premier voyage financé par les Rois catholiques d'Espagne."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "chimie",
+    "difficulte": 3,
+    "enonce": "Quelle scientifique française a été la première à remporter deux prix Nobel dans deux sciences différentes ?",
+    "reponses": [
+      {
+        "text": "Irène Joliot-Curie",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Marie Curie reçut le Nobel de physique en 1903 et le Nobel de chimie en 1911. Sa fille Irène reçut le Nobel de chimie en 1935.",
+    "autre_reponse": "Marie Curie"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "francaise",
+    "difficulte": 3,
+    "enonce": "Quel auteur français du XIXe siècle a écrit Les Misérables et Notre-Dame de Paris ?",
+    "reponses": [
+      {
+        "text": "Alexandre Dumas",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Victor Hugo (1802-1885), chef de file du romantisme, est l'auteur de Notre-Dame de Paris (1831) et des Misérables (1862).",
+    "autre_reponse": "Victor Hugo"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus grand pays du monde par superficie ?",
+    "reponses": [
+      {
+        "text": "La Russie",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La Russie est le plus grand pays avec 17,1 millions de km². Le Canada est 2e avec 10 millions de km²."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre flamand est connu pour La Ronde de nuit (1642) ?",
+    "reponses": [
+      {
+        "text": "Rembrandt",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Rembrandt van Rijn peignit La Ronde de nuit en 1642. Cette toile représentant une milice d'Amsterdam est conservée au Rijksmuseum."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le pays constitué de plus de 17 000 îles, le plus grand archipel du monde ?",
+    "reponses": [
+      {
+        "text": "L'Indonésie",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'Indonésie est l'archipel le plus grand avec plus de 17 000 îles, s'étendant sur 5 000 km."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre expressionniste norvégien est l'auteur du Cri (1893) ?",
+    "reponses": [
+      {
+        "text": "Ernst Ludwig Kirchner",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Edvard Munch peignit Le Cri en 1893 (4 versions). Cette figure angoissée sous un ciel rouge est l'une des œuvres les plus célèbres du monde.",
+    "autre_reponse": "Edvard Munch"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur est l'auteur de La Métamorphose et du Procès ?",
+    "reponses": [
+      {
+        "text": "Robert Musil",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Franz Kafka, écrivain pragois de langue allemande, est l'auteur de La Métamorphose (1915) et du Procès (1925).",
+    "autre_reponse": "Franz Kafka"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "informatique",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du premier ordinateur électronique à grande échelle, en 1945 ?",
+    "reponses": [
+      {
+        "text": "UNIVAC",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "ENIAC (1945) fut le premier ordinateur électronique à usage général. Il pesait 30 tonnes et occupait 167 m².",
+    "autre_reponse": "ENIAC"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel dirigeant soviétique autorisa la construction du mur de Berlin en 1961 ?",
+    "reponses": [
+      {
+        "text": "Brejnev",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Nikita Khrouchtchev donna son accord pour la construction du mur de Berlin le 13 août 1961.",
+    "autre_reponse": "Khrouchtchev"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre post-impressionniste n'aurait vendu qu'un seul tableau de son vivant ?",
+    "reponses": [
+      {
+        "text": "Van Gogh",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Vincent van Gogh (1853-1890) n'aurait vendu qu'un seul tableau de son vivant. La Nuit étoilée vaut aujourd'hui des dizaines de millions."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel chanteur britannique décédé en 1991 était le leader de Queen ?",
+    "reponses": [
+      {
+        "text": "David Bowie",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Freddie Mercury mourut du SIDA le 24 novembre 1991. David Bowie mourut en 2016 d'un cancer.",
+    "autre_reponse": "Freddie Mercury"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur américain, figure de la Beat Generation, a écrit Sur la route ?",
+    "reponses": [
+      {
+        "text": "Allen Ginsberg",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Jack Kerouac publia Sur la route en 1957. Ginsberg, ami de Kerouac, était poète (Howl, 1956).",
+    "autre_reponse": "Jack Kerouac"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la force responsable de la cohésion des noyaux atomiques ?",
+    "reponses": [
+      {
+        "text": "L'interaction faible",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'interaction forte maintient les quarks en protons/neutrons et ces derniers dans le noyau. L'interaction faible régit la désintégration bêta.",
+    "autre_reponse": "L'interaction forte"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "formule1",
+    "difficulte": 3,
+    "enonce": "Quel pilote brésilien triple champion du monde est mort à Imola en 1994 ?",
+    "reponses": [
+      {
+        "text": "Ayrton Senna",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Ayrton Senna, champion du monde 1988, 1990 et 1991, mourut au virage Tamburello lors du GP de Saint-Marin le 1er mai 1994."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel réalisateur suédois est l'auteur du Septième sceau et de Persona ?",
+    "reponses": [
+      {
+        "text": "Bo Widerberg",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Ingmar Bergman (1918-2007) réalisa Le Septième sceau (1957) et Persona (1966), films existentiels majeurs.",
+    "autre_reponse": "Ingmar Bergman"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel traité fonda l'Union européenne sous ce nom, signé en 1992 ?",
+    "reponses": [
+      {
+        "text": "Traité de Maastricht",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le traité de Maastricht (7 février 1992) créa l'Union européenne et posa les bases de l'euro. Le traité de Rome (1957) avait créé la CEE."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "athletisme",
+    "difficulte": 3,
+    "enonce": "Quel athlète jamaïcain détient le record du monde du 100m avec 9,58 secondes ?",
+    "reponses": [
+      {
+        "text": "Usain Bolt",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Usain Bolt établit le record du 100m (9,58s) aux Mondiaux de Berlin en 2009. Il détient aussi celui du 200m (19,19s)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "rugby",
+    "difficulte": 3,
+    "enonce": "Quel équipe de rugby a remporté le plus de Coupes du Monde (4 titres) ?",
+    "reponses": [
+      {
+        "text": "Afrique du Sud",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'Afrique du Sud a remporté 4 Coupes du Monde (1995, 2007, 2019, 2023), devant la Nouvelle-Zélande (3)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel pays fut le premier à développer et utiliser la bombe atomique en guerre ?",
+    "reponses": [
+      {
+        "text": "L'URSS",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Les États-Unis larguèrent deux bombes atomiques sur Hiroshima (6 août 1945) et Nagasaki (9 août 1945).",
+    "autre_reponse": "Les États-Unis"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel est le nom scientifique de l'espèce humaine moderne ?",
+    "reponses": [
+      {
+        "text": "Homo erectus",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Homo sapiens, classifié par Linné en 1758, est apparu il y a environ 300 000 ans en Afrique. Homo erectus est un ancêtre disparu.",
+    "autre_reponse": "Homo sapiens"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel musicien américain décédé à 27 ans est considéré comme le plus grand guitariste de rock ?",
+    "reponses": [
+      {
+        "text": "Jimi Hendrix",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Jimi Hendrix mourut le 18 septembre 1970 à 27 ans. Clapton est toujours vivant. Hendrix révolutionna la guitare électrique."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Dans quel pays se trouvent les chutes Victoria ?",
+    "reponses": [
+      {
+        "text": "En Tanzanie",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Les chutes Victoria (Mosi-oa-Tunya) se situent à la frontière Zambie-Zimbabwe. David Livingstone les décrivit en 1855.",
+    "autre_reponse": "À la frontière Zambie-Zimbabwe"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quel traité de 1598 mit fin aux guerres de religion en France ?",
+    "reponses": [
+      {
+        "text": "L'Édit de Nantes",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'Édit de Nantes (13 avril 1598), signé par Henri IV, accorda la liberté de culte aux protestants. Louis XIV le révoqua en 1685."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "cinema",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel réalisateur est l'auteur de la trilogie du Dollar avec Clint Eastwood ?",
+    "reponses": [
+      {
+        "text": "Sam Peckinpah",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Sergio Leone réalisa la trilogie du Dollar (1964-1966), créant le genre du western spaghetti.",
+    "autre_reponse": "Sergio Leone"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "informatique",
+    "difficulte": 3,
+    "enonce": "Quel chercheur britannique théorisa en 1936 la 'machine universelle', ancêtre des ordinateurs ?",
+    "reponses": [
+      {
+        "text": "John von Neumann",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Alan Turing décrivit la machine de Turing en 1936. Von Neumann contribua à l'architecture des ordinateurs modernes.",
+    "autre_reponse": "Alan Turing"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la plaque tectonique portant l'Europe et la majeure partie de l'Asie ?",
+    "reponses": [
+      {
+        "text": "Plaque eurasiatique",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La plaque eurasiatique est la plus grande plaque continentale, portant l'Europe et la majeure partie de l'Asie."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel empire médiéval avait pour capitale Bagdad, fondée en 762 ?",
+    "reponses": [
+      {
+        "text": "Le califat omeyyade",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Bagdad fut fondée par le calife abbasside Al-Mansour en 762. Les Omeyyades avaient Damas pour capitale.",
+    "autre_reponse": "Le califat abbasside"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel médecin britannique a découvert la pénicilline en 1928 ?",
+    "reponses": [
+      {
+        "text": "Joseph Lister",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Alexander Fleming découvrit la pénicilline en 1928. Lister avait introduit l'antisepsie en chirurgie au XIXe siècle.",
+    "autre_reponse": "Alexander Fleming"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus long système de montagnes sous-marines du monde ?",
+    "reponses": [
+      {
+        "text": "La dorsale médio-atlantique",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La dorsale médio-atlantique est une chaîne sous-marine de 16 000 km traversant l'Atlantique. La fosse des Mariannes est le point le plus profond."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur espagnol a écrit Don Quichotte, souvent cité comme le premier roman moderne ?",
+    "reponses": [
+      {
+        "text": "Lope de Vega",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Miguel de Cervantes publia Don Quichotte en deux parties (1605 et 1615), parodiant les romans de chevalerie.",
+    "autre_reponse": "Cervantes"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre français est le chef de file du fauvisme (1905) ?",
+    "reponses": [
+      {
+        "text": "André Derain",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Henri Matisse fut le chef de file du fauvisme au Salon d'Automne de 1905. Derain était également fauve.",
+    "autre_reponse": "Henri Matisse"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel archipel inspira la théorie de l'évolution à Darwin lors de son voyage sur le Beagle ?",
+    "reponses": [
+      {
+        "text": "Les îles Canaries",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Darwin visita les Galápagos (Équateur) en 1835. La diversité unique de ses espèces (pinsons, tortues) inspira sa théorie.",
+    "autre_reponse": "Les îles Galápagos"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre espagnol du XVIIe siècle est l'auteur des Ménines (Las Meninas) ?",
+    "reponses": [
+      {
+        "text": "Murillo",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Diego Vélasquez peignit Las Meninas en 1656, représentant l'infante Marguerite. Cette œuvre complexe est un sommet de la peinture baroque.",
+    "autre_reponse": "Velázquez"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel empire persan fut vaincu par Alexandre le Grand à Gaugamèles en 331 av. J.-C. ?",
+    "reponses": [
+      {
+        "text": "L'Empire achéménide",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "À Gaugamèles (331 av. J.-C.), Alexandre vainquit Darius III, mettant fin à l'Empire perse achéménide."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quel est le modèle décrivant les trois premières forces fondamentales sans la gravité ?",
+    "reponses": [
+      {
+        "text": "Le modèle standard",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le modèle standard décrit l'interaction forte, faible et électromagnétique. La gravitation n'y est pas intégrée."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur nigérian, Prix Nobel 1986, est l'auteur de La Route (The Road) ?",
+    "reponses": [
+      {
+        "text": "Wole Soyinka",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Wole Soyinka reçut le Nobel de littérature en 1986, premier Africain à l'obtenir. Achebe est l'auteur de Tout s'effondre."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel nom porte la politique de réforme économique lancée par Deng Xiaoping en Chine en 1978 ?",
+    "reponses": [
+      {
+        "text": "Grand Bond en avant",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La Réforme et Ouverture lancée en 1978 transforma la Chine. Le Grand Bond en avant (1958-1962) était la politique désastreuse de Mao.",
+    "autre_reponse": "Réforme et ouverture"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la théorie sur l'origine de l'univers il y a 13,8 milliards d'années ?",
+    "reponses": [
+      {
+        "text": "L'état stationnaire",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La théorie du Big Bang postule que l'univers naquit d'une singularité il y a 13,8 milliards d'années. L'état stationnaire était la théorie rivale de Fred Hoyle.",
+    "autre_reponse": "Le Big Bang"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel musicien minimaliste américain est l'auteur de Music for 18 Musicians (1976) ?",
+    "reponses": [
+      {
+        "text": "Philip Glass",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Steve Reich composa Music for 18 Musicians en 1976. Philip Glass est aussi un compositeur minimaliste majeur.",
+    "autre_reponse": "Steve Reich"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur japonais fut le premier Prix Nobel de littérature asiatique en 1968 ?",
+    "reponses": [
+      {
+        "text": "Kawabata",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Yasunari Kawabata (1899-1972) fut le premier japonais à recevoir le Nobel de littérature (1968). Mishima fut son contemporain."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quelle chaîne de montagnes forme la frontière géographique entre l'Europe et l'Asie en Russie ?",
+    "reponses": [
+      {
+        "text": "L'Oural",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La chaîne de l'Oural (2 500 km) est la frontière conventionnelle Europe/Asie. Le Caucase sépare aussi les deux continents au sud."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel dirigeant cubain aida Fidel Castro à prendre le pouvoir avant d'être exécuté en Bolivie en 1967 ?",
+    "reponses": [
+      {
+        "text": "Camilo Cienfuegos",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Ernesto 'Che' Guevara, médecin argentin, joua un rôle clé dans la révolution cubaine (1956-1959). Cienfuegos mourut dans un accident d'avion en 1959.",
+    "autre_reponse": "Che Guevara"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "Quel opéra de Verdi basé sur Shakespeare met en scène le maure de Venise ?",
+    "reponses": [
+      {
+        "text": "Falstaff",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Otello (1887) de Verdi est basé sur Othello de Shakespeare. Falstaff (1893) est également une adaptation shakespearienne de Verdi.",
+    "autre_reponse": "Otello"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quel télescope spatial, mis en orbite en 1990, révolutionna notre connaissance de l'univers ?",
+    "reponses": [
+      {
+        "text": "Le télescope Hubble",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le télescope Hubble fut mis en orbite en 1990. Le télescope Kepler (2009) était dédié à la recherche d'exoplanètes."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel roi d'Angleterre signa la Magna Carta en 1215 sous la pression des barons ?",
+    "reponses": [
+      {
+        "text": "Jean sans Terre",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Jean sans Terre signa la Magna Carta le 15 juin 1215, limitant le pouvoir royal. Richard Cœur de Lion était son frère."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quelle sœur de Charlotte Brontë a écrit Les Hauts de Hurlevent ?",
+    "reponses": [
+      {
+        "text": "Emily Brontë",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Emily Brontë publia Les Hauts de Hurlevent (1847) sous le pseudonyme Ellis Bell. Anne Brontë écrivit La Locataire de Wildfell Hall."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel dirigeant chinois a fondé la République populaire de Chine le 1er octobre 1949 ?",
+    "reponses": [
+      {
+        "text": "Deng Xiaoping",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Mao Zedong proclama la RPC le 1er octobre 1949. Deng Xiaoping lui succéda comme leader de facto à partir de 1978.",
+    "autre_reponse": "Mao Zedong"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel est l'enzyme qui copie l'ADN lors de la réplication cellulaire ?",
+    "reponses": [
+      {
+        "text": "L'ARN polymérase",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'ADN polymérase synthétise un nouveau brin d'ADN. L'ARN polymérase transcrit l'ADN en ARN messager.",
+    "autre_reponse": "L'ADN polymérase"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel groupe de Liverpool, dissous en 1970, reste le plus influent de l'histoire du rock ?",
+    "reponses": [
+      {
+        "text": "Les Beatles",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Les Beatles (1962-1970) ont révolutionné la musique populaire. Les Rolling Stones, formés en 1962, sont toujours actifs."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel auteur argentin, maître de la métafiction, a écrit Fictions et L'Aleph ?",
+    "reponses": [
+      {
+        "text": "Jorge Luis Borges",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Jorge Luis Borges (1899-1986) écrivit Fictions (1944) et L'Aleph (1949). Cortázar est l'auteur de Marelle (1963)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sport",
+    "subcategory_slug": "athletisme",
+    "difficulte": 3,
+    "enonce": "Quel athlète jamaïcain remporta 8 médailles d'or en sprint aux JO de 2008 et 2012 ?",
+    "reponses": [
+      {
+        "text": "Yohan Blake",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Usain Bolt remporta 8 médailles d'or olympiques en sprint (100m, 200m, 4x100m) aux JO de 2008 (Pékin) et 2012 (Londres).",
+    "autre_reponse": "Usain Bolt"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la première grande peste ravageant l'Europe au XIVe siècle ?",
+    "reponses": [
+      {
+        "text": "La Peste noire",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "La Peste noire (1347-1353) tua entre 25 et 50 millions de personnes en Europe. La peste de Justinien frappa l'Empire byzantin au VIe siècle."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le pays le plus visité au monde avant la pandémie ?",
+    "reponses": [
+      {
+        "text": "L'Espagne",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La France est traditionnellement le pays le plus visité avec plus de 90 millions de touristes par an.",
+    "autre_reponse": "La France"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel révolutionnaire fonda le Parti communiste soviétique et dirigea la révolution d'Octobre 1917 ?",
+    "reponses": [
+      {
+        "text": "Lénine",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Vladimir Lénine dirigea la révolution bolchevique d'Octobre 1917 et fonda l'URSS. Trotski était son principal lieutenant."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "physique",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de l'expérience de 1887 qui démontra la constance de la vitesse de la lumière ?",
+    "reponses": [
+      {
+        "text": "Expérience de Michelson-Morley",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'expérience de Michelson-Morley (1887) ne trouva pas l'éther supposé, ouvrant la voie à la relativité restreinte. L'expérience de Young concerne les interférences lumineuses."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "mathematiques",
+    "difficulte": 3,
+    "enonce": "Quel calligraphe arabe inventa l'algèbre au IXe siècle, donnant son nom à cette science ?",
+    "reponses": [
+      {
+        "text": "Ibn Rushd (Averroès)",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Muhammad ibn Musa Al-Khwarizmi écrivit Kitab al-mukhtasar fi hisab al-jabr (816). Le mot 'algèbre' vient de 'al-jabr', et 'algorithme' de son nom.",
+    "autre_reponse": "Al-Khwarizmi"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre a réalisé La Naissance de Vénus vers 1485 ?",
+    "reponses": [
+      {
+        "text": "Raphaël",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Sandro Botticelli peignit La Naissance de Vénus vers 1484-1486. Cette œuvre de la Renaissance florentine est conservée aux Offices de Florence.",
+    "autre_reponse": "Botticelli"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le plus haut volcan d'Europe ?",
+    "reponses": [
+      {
+        "text": "L'Etna",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "L'Etna (3 329 m), en Sicile, est le plus haut volcan actif d'Europe. Le Vésuve (1 281 m) est célèbre pour avoir détruit Pompéi en 79 ap. J.-C."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "francaise",
+    "difficulte": 3,
+    "enonce": "Quel écrivain français, exilé à Guernesey, écrivit Les Misérables ?",
+    "reponses": [
+      {
+        "text": "Victor Hugo",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Victor Hugo écrivit Les Misérables (1862) en exil à Guernesey après le coup d'État de Napoléon III en 1851."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la guerre civile espagnole qui opposa républicains et nationalistes de 1936 à 1939 ?",
+    "reponses": [
+      {
+        "text": "La Reconquista",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La guerre civile espagnole (1936-1939) opposa le gouvernement républicain aux nationalistes de Franco, soutenus par Hitler et Mussolini.",
+    "autre_reponse": "Guerre civile espagnole"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "biologie",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du processus de division cellulaire qui produit des cellules filles génétiquement identiques ?",
+    "reponses": [
+      {
+        "text": "La méiose",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "La mitose produit deux cellules filles identiques à la cellule mère (même nombre de chromosomes). La méiose produit des gamètes avec moitié moins de chromosomes.",
+    "autre_reponse": "La mitose"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "Quel compositeur français est l'auteur du Boléro (1928) ?",
+    "reponses": [
+      {
+        "text": "Ravel",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Maurice Ravel composa le Boléro en 1928 pour la danseuse Ida Rubinstein. Cette œuvre d'une crescendo ininterrompu est parmi les plus jouées au monde."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel empire asiatique, fondé par Gengis Khan, fut le plus grand empire terrestre contigu de l'histoire ?",
+    "reponses": [
+      {
+        "text": "L'Empire timouride",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "L'Empire mongol, fondé par Gengis Khan en 1206, s'étendit sur 24 millions de km². C'est le plus grand empire terrestre contigu de l'histoire.",
+    "autre_reponse": "L'Empire mongol"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel écrivain américain est l'auteur de Le Bruit et la Fureur (1929) ?",
+    "reponses": [
+      {
+        "text": "William Faulkner",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "William Faulkner publia Le Bruit et la Fureur en 1929. Fitzgerald est l'auteur de Gatsby le Magnifique (1925)."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "philosophie",
+    "subcategory_slug": "moderne",
+    "difficulte": 3,
+    "enonce": "Quel philosophe britannique est l'auteur de Léviathan (1651), théorisant le contrat social ?",
+    "reponses": [
+      {
+        "text": "Thomas Hobbes",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Thomas Hobbes publia Léviathan en 1651, théorisant un État absolu né du contrat social. Locke défendit une vision plus libérale du contrat social."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom de la première station spatiale habitée de l'URSS, lancée en 1971 ?",
+    "reponses": [
+      {
+        "text": "Saliout 1",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Saliout 1, lancée le 19 avril 1971, fut la première station spatiale de l'histoire. Mir (1986) fut la première station modulaire permanente."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du détroit entre l'Alaska et la Sibérie, par lequel les premiers hommes arrivèrent en Amérique ?",
+    "reponses": [
+      {
+        "text": "Détroit de Davis",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Le détroit de Béring (88 km) sépare l'Alaska de la Sibérie. Il y a environ 15 000-20 000 ans, un pont terrestre (Béringie) permettait de passer à pied.",
+    "autre_reponse": "Détroit de Béring"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "sciences",
+    "subcategory_slug": "mathematiques",
+    "difficulte": 3,
+    "enonce": "Quel mathématicien français du XIXe siècle inventa la théorie des groupes avant de mourir en duel à 20 ans ?",
+    "reponses": [
+      {
+        "text": "Évariste Galois",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Évariste Galois (1811-1832) créa la théorie des groupes, fondement de l'algèbre moderne. Il mourut en duel à 20 ans. Poincaré vécut jusqu'à 58 ans."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Quel peintre italien de la Renaissance est l'auteur du plafond de la Chapelle Sixtine ?",
+    "reponses": [
+      {
+        "text": "Michel-Ange",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Michel-Ange peignit le plafond de la Chapelle Sixtine entre 1508 et 1512 sur commande du pape Jules II. Raphaël décora les chambres vaticanes."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "histoire",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel accord de 1987 interdit les missiles nucléaires à portée intermédiaire entre USA et URSS ?",
+    "reponses": [
+      {
+        "text": "Traité INF",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le traité INF fut signé par Reagan et Gorbatchev en 1987. Les États-Unis s'en retirèrent unilatéralement en 2019."
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "litterature",
+    "subcategory_slug": "mondiale",
+    "difficulte": 3,
+    "enonce": "Quel écrivain américain Beat a écrit Howl (1956), poème emblématique de la contreculture ?",
+    "reponses": [
+      {
+        "text": "William Burroughs",
+        "correct": false
+      },
+      {
+        "text": "L'autre",
+        "correct": true
+      }
+    ],
+    "explication": "Allen Ginsberg publia Howl en 1956, poème-manifeste de la Beat Generation. Burroughs écrivit Le Festin nu (1959).",
+    "autre_reponse": "Allen Ginsberg"
+  },
+  {
+    "type": "quizz_2",
+    "category_slug": "musique",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "Quel est le pays d'origine du tango, inscrit au patrimoine immatériel de l'UNESCO ?",
+    "reponses": [
+      {
+        "text": "L'Argentine",
+        "correct": true
+      },
+      {
+        "text": "L'autre",
+        "correct": false
+      }
+    ],
+    "explication": "Le tango est né à Buenos Aires (Argentine) dans les années 1880. Il est aussi pratiqué en Uruguay, mais l'Argentine en est reconnue le berceau."
+  }
+]
