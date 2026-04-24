@@ -9,6 +9,7 @@ import {
   Trophy,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,19 +38,19 @@ export default function Home() {
           title="Étoile Mystérieuse"
           subtitle="Devine la personnalité"
           icon={Star}
-          accent="gold"
+          accent="sky"
         />
         <Tile
           href="/jouer/face-a-face"
           title="Face-à-Face"
-          subtitle="Vs bot ou ami, 60s"
+          subtitle="Vs bot ou ami, 60 s"
           icon={Sword}
           accent="buzz"
         />
         <Tile
           href="/jouer/coup-de-maitre"
           title="Coup de Maître"
-          subtitle="4 célébrités, 45s"
+          subtitle="4 célébrités, 45 s"
           icon={Trophy}
           accent="gold"
         />
@@ -58,21 +59,21 @@ export default function Home() {
       {/* Révision */}
       <Link
         href="/revision"
-        className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-white/10 bg-card p-5 transition-all hover:scale-[1.01] hover:border-gold/40 hover:bg-card/80"
+        className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-border bg-card p-5 glow-card transition-all hover:scale-[1.01] hover:border-life-green/60"
       >
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-life-green/20 text-life-green">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-life-green/15 text-life-green">
           <Brain className="h-7 w-7" aria-hidden="true" />
         </div>
         <div className="flex-1">
-          <h2 className="font-display text-xl font-bold text-cream">
+          <h2 className="font-display text-xl font-bold text-navy">
             Mode Révision
           </h2>
-          <p className="text-sm text-cream/70">
+          <p className="text-sm text-navy/70">
             Rejoue les questions que tu as ratées jusqu'à les maîtriser.
           </p>
         </div>
         <ChevronRight
-          className="h-6 w-6 text-cream/40 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+          className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-life-green"
           aria-hidden="true"
         />
       </Link>
@@ -89,28 +90,36 @@ interface HeroTileProps {
   icon: LucideIcon;
 }
 
-function HeroTile({ href, title, subtitle, icon: Icon }: HeroTileProps) {
+function HeroTile({ href, title, subtitle }: HeroTileProps) {
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-br from-gold/20 via-midnight to-midnight-deep p-8 transition-all hover:scale-[1.02] hover:border-gold glow-midnight sm:p-10"
+      className="group relative overflow-hidden rounded-3xl border border-gold/40 bg-gradient-to-br from-gold-pale via-cream to-sky-pale p-8 transition-all hover:scale-[1.01] hover:border-gold glow-sun sm:p-10"
     >
-      <div className="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-gold/20 blur-3xl transition-opacity group-hover:opacity-80" />
+      <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full bg-gold/35 blur-3xl animate-sun-pulse" />
+      <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-sky/15 blur-3xl" />
       <div className="relative flex items-start gap-6">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gold text-midnight shadow-[0_0_32px_rgba(245,197,24,0.6)]">
-          <Icon className="h-9 w-9" aria-hidden="true" />
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white shadow-[0_8px_32px_rgba(245,183,0,0.45)]">
+          <Image
+            src="/logo.svg"
+            alt=""
+            width={64}
+            height={64}
+            className="h-14 w-14"
+            priority
+          />
         </div>
         <div className="flex-1">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold">
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
             Parcours complet
           </p>
-          <h1 className="mt-1 font-display text-3xl font-extrabold text-cream sm:text-4xl">
+          <h1 className="mt-1 font-display text-3xl font-extrabold text-navy sm:text-4xl">
             {title}
           </h1>
-          <p className="mt-2 text-cream/70 sm:text-lg">{subtitle}</p>
+          <p className="mt-2 text-navy/75 sm:text-lg">{subtitle}</p>
         </div>
         <ChevronRight
-          className="h-8 w-8 text-gold transition-transform group-hover:translate-x-2"
+          className="h-8 w-8 text-gold-warm transition-transform group-hover:translate-x-2"
           aria-hidden="true"
         />
       </div>
@@ -125,33 +134,48 @@ interface TileProps {
   title: string;
   subtitle: string;
   icon: LucideIcon;
-  accent: "gold" | "buzz";
+  accent: "gold" | "buzz" | "sky";
 }
 
 function Tile({ href, title, subtitle, icon: Icon, accent }: TileProps) {
+  const accentClass = {
+    gold: {
+      hoverBorder: "hover:border-gold/60",
+      hoverShadow: "hover:shadow-[0_0_32px_rgba(245,183,0,0.25)]",
+      iconBg: "bg-gold/15 text-gold-warm",
+    },
+    sky: {
+      hoverBorder: "hover:border-sky/60",
+      hoverShadow: "hover:shadow-[0_0_32px_rgba(43,142,230,0.25)]",
+      iconBg: "bg-sky/15 text-sky",
+    },
+    buzz: {
+      hoverBorder: "hover:border-buzz/60",
+      hoverShadow: "hover:shadow-[0_0_32px_rgba(230,57,70,0.25)]",
+      iconBg: "bg-buzz/15 text-buzz",
+    },
+  }[accent];
+
   return (
     <Link
       href={href}
       className={cn(
-        "group relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/10 bg-card p-5 transition-all hover:scale-[1.02]",
-        accent === "gold"
-          ? "hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,197,24,0.25)]"
-          : "hover:border-buzz/60 hover:shadow-[0_0_32px_rgba(230,57,70,0.25)]",
+        "group relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-border bg-card p-5 glow-card transition-all hover:scale-[1.02]",
+        accentClass.hoverBorder,
+        accentClass.hoverShadow,
       )}
     >
       <div
         className={cn(
           "flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-110",
-          accent === "gold"
-            ? "bg-gold/20 text-gold"
-            : "bg-buzz/20 text-buzz",
+          accentClass.iconBg,
         )}
       >
         <Icon className="h-6 w-6" aria-hidden="true" />
       </div>
       <div className="flex-1">
-        <h3 className="font-display text-lg font-bold text-cream">{title}</h3>
-        <p className="text-sm text-cream/60">{subtitle}</p>
+        <h3 className="font-display text-lg font-bold text-navy">{title}</h3>
+        <p className="text-sm text-navy/60">{subtitle}</p>
       </div>
     </Link>
   );

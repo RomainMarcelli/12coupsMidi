@@ -33,7 +33,7 @@ export default async function AppLayout({
   const role = profile?.role ?? "user";
 
   return (
-    <div className="flex min-h-full flex-col bg-midnight">
+    <div className="flex min-h-full flex-col">
       <Navbar pseudo={pseudo} role={role} />
       <div className="flex flex-1 flex-col">{children}</div>
     </div>

@@ -71,22 +71,22 @@ export function ImportForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <div className="rounded-xl border border-dashed border-white/20 bg-card/30 p-6 text-center">
+      <div className="rounded-xl border border-dashed border-border bg-card/30 p-6 text-center">
         <Upload
           className="mx-auto h-8 w-8 text-gold opacity-60"
           aria-hidden="true"
         />
-        <p className="mt-2 text-sm text-cream/70">Sélectionne un fichier .json</p>
+        <p className="mt-2 text-sm text-navy/70">Sélectionne un fichier .json</p>
         <input
           type="file"
           accept="application/json,.json"
           onChange={onFileChange}
-          className="mt-3 block w-full cursor-pointer text-sm text-cream file:mr-4 file:rounded-md file:border-0 file:bg-gold file:px-4 file:py-2 file:font-semibold file:text-midnight hover:file:bg-gold/90"
+          className="mt-3 block w-full cursor-pointer text-sm text-navy file:mr-4 file:rounded-md file:border-0 file:bg-gold file:px-4 file:py-2 file:font-semibold file:text-midnight hover:file:bg-gold/90"
         />
       </div>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-cream/70">
+        <span className="text-xs font-semibold uppercase tracking-wider text-navy/70">
           … ou colle le contenu JSON
         </span>
         <textarea
@@ -97,7 +97,7 @@ export function ImportForm() {
           }}
           rows={12}
           placeholder='[ { "type": "quizz_2", ... } ]'
-          className="w-full rounded-md border border-white/15 bg-card p-3 font-mono text-xs text-cream focus:border-gold focus:outline-none"
+          className="w-full rounded-md border border-border bg-card p-3 font-mono text-xs text-navy focus:border-gold focus:outline-none"
         />
       </label>
 
@@ -107,9 +107,9 @@ export function ImportForm() {
           <p className="text-sm font-semibold text-life-green">
             Prêt à importer : {parsed.data.length} questions
           </p>
-          <ul className="mt-2 flex flex-wrap gap-2 text-xs text-cream/70">
+          <ul className="mt-2 flex flex-wrap gap-2 text-xs text-navy/70">
             {Object.entries(countByType(parsed.data)).map(([t, n]) => (
-              <li key={t} className="rounded bg-white/5 px-2 py-1">
+              <li key={t} className="rounded bg-cream-deep/50 px-2 py-1">
                 {t} : {n}
               </li>
             ))}
@@ -143,7 +143,7 @@ export function ImportForm() {
             <p className="mt-1">{result.skipped} ignorée(s).</p>
           )}
           {result.warnings.length > 0 && (
-            <ul className="mt-2 list-disc pl-5 text-xs text-cream/70">
+            <ul className="mt-2 list-disc pl-5 text-xs text-navy/70">
               {result.warnings.slice(0, 5).map((w, i) => (
                 <li key={i}>{w}</li>
               ))}

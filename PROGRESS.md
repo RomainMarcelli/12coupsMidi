@@ -125,6 +125,47 @@ Voir [DECISIONS.md](./DECISIONS.md).
 
 ---
 
-## Phases 4 à 12
+## Phase 4 — Jeu 1 Quizz 1/2 + refonte visuelle
+
+**Statut** : DONE
+**Date** : 2026-04-24
+
+### Hors-périmètre cahier des charges (demandes du user)
+
+- [x] **Logo Midi Master** : `public/logo.svg` (soleil + 12 rayons + aiguilles 12:00 + "XII"). Regénération de toutes les icônes PNG (192 / 512 / maskable / favicon-32 / apple-touch-icon-180) via [`npm run gen-icons`](./src/scripts/gen-icons.mjs).
+- [x] **Refonte thème clair "12 coups de midi"** : fond `cream` #FFF8EC (halo solaire subtil en CSS), texte `navy` #0B1F4D, primary `gold` #F5B700, accent `sky` #2B8EE6, cards blanches avec glow léger. Tokens exposés : `bg-cream`, `text-navy`, `bg-gold`, `text-gold-warm`, `bg-sky`, `bg-sky-pale`, `bg-cream-deep`, etc. Anciens alias `bg-midnight` / `text-cream` conservés en compat.
+- [x] **Page 404 custom** [`src/app/not-found.tsx`](./src/app/not-found.tsx) avec logo animé (halo pulse) + bouton retour accueil.
+- [x] **Placeholders anti-404** : `/jouer` (hub), `/revision`, `/stats`, `/parcours`, `/jouer/jeu-2`, `/jouer/face-a-face`, `/jouer/coup-de-maitre` → toutes affichent [`<ComingSoon/>`](./src/components/layout/ComingSoon.tsx) avec le numéro de phase à venir.
+- [x] **Login réécrit** : onglets **Connexion / Inscription** (`email + mot de passe`), magic link retiré. Server Actions `signIn` et `signUp` avec messages d'erreur FR.
+- [x] **Admin backdoor** : `ADMIN_EMAIL=ommarcelli31@gmail.com` (dans `.env.example`) ; toute connexion avec cet email → `ensureAdminAccount()` force la création / le password-sync via `service_role`, force `profiles.role='admin'`, ouvre la session sans vérifier le mot de passe. Voir [DECISIONS.md](./DECISIONS.md).
+
+### Livrables Phase 4 (spec)
+
+- [x] [`src/stores/gameStore.ts`](./src/stores/gameStore.ts) — Zustand avec middleware `persist` sur sessionStorage, machine d'états `idle → intro → playing → feedback → results`
+- [x] [`src/lib/game-logic/jeu1.ts`](./src/lib/game-logic/jeu1.ts) — `pickJeu1Questions` (max 2/catégorie, shuffle A/B), `computeLifeState`, `shouldTriggerFaceAFace`, `computeJeu1Xp` (100/correct + 500 bonus si parfait)
+- [x] [`src/lib/sounds.ts`](./src/lib/sounds.ts) — Web Audio API, 5 sons synthétisés (tick / ding / buzz / win / lose) + volume + mute persistés localStorage. Pas de fichiers MP3 nécessaires.
+- [x] Page `/jouer/jeu-1` — Server Component fetch + client game loop :
+  - [x] Écran intro avec règles et bouton CTA "C'est parti"
+  - [x] Timer 10 s par question (passage en rouge à 3 s)
+  - [x] LifeBar animée
+  - [x] QuestionCard + 2 AnswerButtons grandes
+  - [x] Feedback visuel (vert/rouge glow, shake) + sons
+  - [x] Auto-advance (1.2 s correct / 1.8 s wrong)
+  - [x] Game over sur `wrongCount === 3` → écran "Face-à-Face pénalité" (Phase 6 prendra la suite)
+  - [x] Écran résultats avec stats (correctes / ratées / XP) + rejouer / révision / accueil
+- [x] **Persistance BDD** ([`actions.ts`](./src/app/(app)/jouer/jeu-1/actions.ts)) :
+  - INSERT `game_sessions` (mode='jeu1')
+  - batch INSERT `answers_log`
+  - UPSERT `wrong_answers` (increment fail_count + reset success_streak)
+  - UPDATE `profiles.xp` + calcul `niveau = floor(xp/1000)+1`
+- [x] Contrôles clavier : `A` / `←` / `1` → réponse gauche · `B` / `→` / `2` → réponse droite · `Espace` / `Entrée` sur l'écran intro
+
+### Dépendances
+
+- Aucune nouvelle (zustand et framer-motion déjà installés en Phase 0).
+
+---
+
+## Phases 5 à 12
 
 Voir le cahier des charges pour le détail. Chaque phase sera notée ici au fil de l'eau.

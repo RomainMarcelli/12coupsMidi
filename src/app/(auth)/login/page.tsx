@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { LoginForm } from "./login-form";
-import { Trophy } from "lucide-react";
 
 export const metadata = {
   title: "Connexion",
@@ -7,20 +7,32 @@ export const metadata = {
 
 export default function LoginPage() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-8 bg-[#0B1F4D] p-6 text-[#F1FAEE]">
+    <main className="flex flex-1 flex-col items-center justify-center gap-8 p-6">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Trophy className="h-12 w-12 text-[#F5C518]" aria-hidden="true" />
-        <h1 className="text-3xl font-bold text-[#F5C518]">Midi Master</h1>
-        <p className="text-sm opacity-70">
-          Connecte-toi avec un lien magique envoyé par email.
+        <div className="relative">
+          <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
+          <Image
+            src="/logo.svg"
+            alt=""
+            width={80}
+            height={80}
+            className="h-20 w-20"
+            priority
+          />
+        </div>
+        <h1 className="font-display text-3xl font-extrabold text-navy">
+          Midi <span className="text-gold-warm">Master</span>
+        </h1>
+        <p className="text-sm text-navy/70">
+          Entraîne-toi aux 12 Coups de Midi.
         </p>
       </div>
 
       <LoginForm />
 
-      <p className="max-w-xs text-center text-xs opacity-50">
-        Pas de mot de passe. On t&apos;envoie un lien à usage unique sur ton
-        email. Clique dessus depuis le même navigateur.
+      <p className="max-w-xs text-center text-xs text-navy/50">
+        En t'inscrivant, tu acceptes que cette app soit purement personnelle —
+        pas de données revendues, pas de pub.
       </p>
     </main>
   );

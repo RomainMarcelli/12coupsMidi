@@ -5,15 +5,25 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ===========================================================================
-   MIDI MASTER — Design system "Reichmann" (12 Coups de Midi)
+   MIDI MASTER — Design system "12 Coups de Midi" (version claire)
+
    Palette :
-     midnight  #0B1F4D   bleu nuit TV
-     gold      #F5C518   or midi
-     buzz      #E63946   rouge buzz
-     cream     #F1FAEE   blanc cassé
-     life-green  #2ECC71   vie pleine
-     life-yellow #F5C518   vie moyenne (= gold)
-     life-red    #E63946   vie critique (= buzz)
+     cream       #FFF8EC   fond (lumière de midi, doux)
+     cream-deep  #F5EBD1   surfaces/sections
+     navy        #0B1F4D   texte principal, contraste
+     navy-soft   #1E3A7A   titres, gradients
+     gold        #F5B700   primary, soleil
+     gold-warm   #E89E00   hover / ombre gold
+     gold-pale   #FFE8A8   halos doux
+     sky         #2B8EE6   accent froid (ciel de midi)
+     sky-pale    #D6EBFB   cartes accent
+     buzz        #E63946   rouge buzz
+     life-green  #2ECC71
+     life-yellow #F5B700 (= gold)
+     life-red    #E63946 (= buzz)
+
+   Note : l'app est en light theme "sunny". Pour une future dark mode,
+   ajouter un scope `.dark` plus tard.
    =========================================================================== */
 
 @theme inline {
@@ -24,18 +34,26 @@
   --font-display: var(--font-montserrat);
   --font-heading: var(--font-montserrat);
 
-  /* Couleurs Midi Master (utilisables via bg-midnight, text-gold, …) */
-  --color-midnight: #0b1f4d;
-  --color-midnight-deep: #081638;
-  --color-gold: #f5c518;
-  --color-gold-dim: #c99e0d;
+  /* Couleurs Midi Master */
+  --color-cream: #fff8ec;
+  --color-cream-deep: #f5ebd1;
+  --color-navy: #0b1f4d;
+  --color-navy-soft: #1e3a7a;
+  --color-gold: #f5b700;
+  --color-gold-warm: #e89e00;
+  --color-gold-pale: #ffe8a8;
+  --color-sky: #2b8ee6;
+  --color-sky-pale: #d6ebfb;
   --color-buzz: #e63946;
-  --color-cream: #f1faee;
   --color-life-green: #2ecc71;
-  --color-life-yellow: #f5c518;
+  --color-life-yellow: #f5b700;
   --color-life-red: #e63946;
 
-  /* shadcn tokens (mappés aux variables CSS) */
+  /* Compat : anciens alias utilisés dans les composants de la Phase 2 */
+  --color-midnight: var(--color-navy);
+  --color-midnight-deep: #061233;
+
+  /* shadcn tokens */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -75,40 +93,40 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ----- Thème Midi Master par défaut : bleu nuit + or (dark-by-default) ----- */
+/* ----- Thème light "12 coups de midi" ----- */
 :root {
-  --background: #0b1f4d; /* midnight */
-  --foreground: #f1faee; /* cream */
-  --card: #112a63;
-  --card-foreground: #f1faee;
-  --popover: #112a63;
-  --popover-foreground: #f1faee;
-  --primary: #f5c518; /* gold */
+  --background: #fff8ec; /* cream */
+  --foreground: #0b1f4d; /* navy */
+  --card: #ffffff;
+  --card-foreground: #0b1f4d;
+  --popover: #ffffff;
+  --popover-foreground: #0b1f4d;
+  --primary: #f5b700; /* gold */
   --primary-foreground: #0b1f4d;
-  --secondary: #1a3578;
-  --secondary-foreground: #f1faee;
-  --muted: #1a3578;
-  --muted-foreground: #a8b5d1;
-  --accent: #f5c518;
-  --accent-foreground: #0b1f4d;
+  --secondary: #d6ebfb; /* sky-pale */
+  --secondary-foreground: #0b1f4d;
+  --muted: #f5ebd1; /* cream-deep */
+  --muted-foreground: #4a5a7a;
+  --accent: #2b8ee6; /* sky */
+  --accent-foreground: #ffffff;
   --destructive: #e63946; /* buzz */
-  --border: rgb(255 255 255 / 0.12);
-  --input: rgb(255 255 255 / 0.12);
-  --ring: #f5c518;
-  --chart-1: #f5c518;
+  --border: rgb(11 31 77 / 0.1);
+  --input: rgb(11 31 77 / 0.12);
+  --ring: #f5b700;
+  --chart-1: #f5b700;
   --chart-2: #2ecc71;
-  --chart-3: #e63946;
-  --chart-4: #f1faee;
-  --chart-5: #1a3578;
+  --chart-3: #2b8ee6;
+  --chart-4: #e63946;
+  --chart-5: #0b1f4d;
   --radius: 0.75rem;
-  --sidebar: #0b1f4d;
-  --sidebar-foreground: #f1faee;
-  --sidebar-primary: #f5c518;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0b1f4d;
+  --sidebar-primary: #f5b700;
   --sidebar-primary-foreground: #0b1f4d;
-  --sidebar-accent: #1a3578;
-  --sidebar-accent-foreground: #f1faee;
-  --sidebar-border: rgb(255 255 255 / 0.12);
-  --sidebar-ring: #f5c518;
+  --sidebar-accent: #f5ebd1;
+  --sidebar-accent-foreground: #0b1f4d;
+  --sidebar-border: rgb(11 31 77 / 0.1);
+  --sidebar-ring: #f5b700;
 }
 
 @layer base {
@@ -117,6 +135,18 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    background-image:
+      radial-gradient(
+        ellipse at top,
+        rgba(245, 183, 0, 0.12) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse at bottom right,
+        rgba(43, 142, 230, 0.08) 0%,
+        transparent 50%
+      );
+    background-attachment: fixed;
   }
   html {
     @apply h-full font-sans;
@@ -132,21 +162,27 @@
   }
 }
 
-/* ----- Utilitaires custom Midi Master ----- */
+/* ----- Utilitaires ----- */
 @layer utilities {
-  /* Glow or — pour boutons gold en hover / focus */
+  /* Glow or — boutons gold, boutons d'action */
   .glow-gold {
     box-shadow:
-      0 0 0 2px rgba(245, 197, 24, 0.35),
-      0 0 24px rgba(245, 197, 24, 0.55);
+      0 0 0 2px rgba(245, 183, 0, 0.35),
+      0 0 24px rgba(245, 183, 0, 0.55);
   }
-  /* Glow bleu — pour cartes actives */
-  .glow-midnight {
+  /* Glow soft — cartes */
+  .glow-card {
     box-shadow:
-      0 0 0 1px rgba(245, 197, 24, 0.2),
-      0 8px 32px rgba(11, 31, 77, 0.6);
+      0 1px 2px rgba(11, 31, 77, 0.04),
+      0 8px 24px rgba(11, 31, 77, 0.08);
   }
-  /* Shake pour mauvaise réponse (fallback CSS si Framer Motion off) */
+  /* Halo solaire — décor de section */
+  .glow-sun {
+    box-shadow:
+      0 0 40px rgba(245, 183, 0, 0.3),
+      0 8px 40px rgba(11, 31, 77, 0.12);
+  }
+  /* Shake — mauvaise réponse */
   @keyframes mm-shake {
     0%, 100% { transform: translateX(0); }
     20% { transform: translateX(-8px); }
@@ -156,5 +192,13 @@
   }
   .animate-shake {
     animation: mm-shake 0.4s ease-in-out;
+  }
+  /* Pulse halo — étoile / coup de maître */
+  @keyframes mm-sun-pulse {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50%      { opacity: 0.6; transform: scale(1.05); }
+  }
+  .animate-sun-pulse {
+    animation: mm-sun-pulse 3s ease-in-out infinite;
   }
 }

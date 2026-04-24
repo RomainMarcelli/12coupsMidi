@@ -59,7 +59,7 @@ export function LifeBar({ state, className }: LifeBarProps) {
             }}
             transition={{ type: "spring", stiffness: 320, damping: 20 }}
             className={cn(
-              "block h-4 w-4 rounded-full ring-1 ring-white/20",
+              "block h-4 w-4 rounded-full ring-1 ring-navy/20",
               cfg.bg,
               isActive && cfg.glow,
             )}

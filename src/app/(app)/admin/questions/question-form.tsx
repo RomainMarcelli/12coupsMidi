@@ -203,10 +203,10 @@ export function QuestionForm({
         <select
           value={state.type}
           onChange={(e) => setType(e.target.value as QuestionType)}
-          className="h-10 w-full rounded-md border border-white/15 bg-card px-3 text-sm text-cream focus:border-gold focus:outline-none"
+          className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-navy focus:border-gold focus:outline-none"
         >
           {QUESTION_TYPES.map((t) => (
-            <option key={t} value={t} className="bg-midnight-deep">
+            <option key={t} value={t} className="bg-cream-deep">
               {t}
             </option>
           ))}
@@ -226,13 +226,13 @@ export function QuestionForm({
               }))
             }
             required
-            className="h-10 w-full rounded-md border border-white/15 bg-card px-3 text-sm text-cream focus:border-gold focus:outline-none"
+            className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-navy focus:border-gold focus:outline-none"
           >
-            <option value="" className="bg-midnight-deep">
+            <option value="" className="bg-cream-deep">
               — Choisir —
             </option>
             {categories.map((c) => (
-              <option key={c.slug} value={c.slug} className="bg-midnight-deep">
+              <option key={c.slug} value={c.slug} className="bg-cream-deep">
                 {c.nom}
               </option>
             ))}
@@ -245,13 +245,13 @@ export function QuestionForm({
               setState((s) => ({ ...s, subcategory_slug: e.target.value }))
             }
             disabled={availableSubcats.length === 0}
-            className="h-10 w-full rounded-md border border-white/15 bg-card px-3 text-sm text-cream focus:border-gold focus:outline-none disabled:opacity-50"
+            className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-navy focus:border-gold focus:outline-none disabled:opacity-50"
           >
-            <option value="" className="bg-midnight-deep">
+            <option value="" className="bg-cream-deep">
               — Aucune —
             </option>
             {availableSubcats.map((s) => (
-              <option key={s.slug} value={s.slug} className="bg-midnight-deep">
+              <option key={s.slug} value={s.slug} className="bg-cream-deep">
                 {s.nom}
               </option>
             ))}
@@ -281,7 +281,7 @@ export function QuestionForm({
           rows={3}
           required
           minLength={3}
-          className="w-full rounded-md border border-white/15 bg-card p-3 text-sm text-cream focus:border-gold focus:outline-none"
+          className="w-full rounded-md border border-border bg-card p-3 text-sm text-navy focus:border-gold focus:outline-none"
         />
       </Field>
 
@@ -298,7 +298,7 @@ export function QuestionForm({
                   className={
                     r.correct
                       ? "flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-life-green text-midnight"
-                      : "flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-white/20 text-cream/40 hover:border-life-green"
+                      : "flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-navy/40 hover:border-life-green"
                   }
                 >
                   {r.correct && (
@@ -356,7 +356,7 @@ export function QuestionForm({
               setState((s) => ({ ...s, indices: e.target.value }))
             }
             rows={6}
-            className="w-full rounded-md border border-white/15 bg-card p-3 font-mono text-sm text-cream focus:border-gold focus:outline-none"
+            className="w-full rounded-md border border-border bg-card p-3 font-mono text-sm text-navy focus:border-gold focus:outline-none"
           />
         </Field>
       )}
@@ -381,7 +381,7 @@ export function QuestionForm({
             setState((s) => ({ ...s, explication: e.target.value }))
           }
           rows={2}
-          className="w-full rounded-md border border-white/15 bg-card p-3 text-sm text-cream focus:border-gold focus:outline-none"
+          className="w-full rounded-md border border-border bg-card p-3 text-sm text-navy focus:border-gold focus:outline-none"
         />
       </Field>
 
@@ -438,11 +438,11 @@ function Field({
 }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-xs font-semibold uppercase tracking-wider text-cream/70">
+      <span className="text-xs font-semibold uppercase tracking-wider text-navy/70">
         {label}
       </span>
       {children}
-      {hint && <span className="text-xs text-cream/50">{hint}</span>}
+      {hint && <span className="text-xs text-navy/50">{hint}</span>}
     </label>
   );
 }

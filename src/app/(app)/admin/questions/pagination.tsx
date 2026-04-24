@@ -29,13 +29,13 @@ export function Pagination({ page, totalPages }: PaginationProps) {
       {page > 1 ? (
         <Link
           href={href(page - 1)}
-          className="flex items-center gap-1 rounded-md border border-white/20 px-3 py-1.5 text-sm text-cream/80 transition-colors hover:border-gold hover:text-gold"
+          className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm text-navy/80 transition-colors hover:border-gold hover:text-gold"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           Précédente
         </Link>
       ) : (
-        <span className="flex items-center gap-1 rounded-md border border-white/10 px-3 py-1.5 text-sm text-cream/30">
+        <span className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm text-navy/30">
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           Précédente
         </span>
@@ -52,13 +52,13 @@ export function Pagination({ page, totalPages }: PaginationProps) {
       {page < totalPages ? (
         <Link
           href={href(page + 1)}
-          className="flex items-center gap-1 rounded-md border border-white/20 px-3 py-1.5 text-sm text-cream/80 transition-colors hover:border-gold hover:text-gold"
+          className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm text-navy/80 transition-colors hover:border-gold hover:text-gold"
         >
           Suivante
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       ) : (
-        <span className="flex items-center gap-1 rounded-md border border-white/10 px-3 py-1.5 text-sm text-cream/30">
+        <span className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm text-navy/30">
           Suivante
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </span>
