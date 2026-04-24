@@ -30,6 +30,9 @@ export type QuestionType =
   | "coup_maitre"
   | "coup_par_coup";
 
+/** Sous-format optionnel pour quizz_2 (Coup d'Envoi). */
+export type QuestionFormat = "vrai_faux" | "ou" | "plus_moins";
+
 export type UserRole = "user" | "admin";
 
 export type GameMode =
@@ -39,7 +42,8 @@ export type GameMode =
   | "face_a_face"
   | "coup_maitre"
   | "parcours"
-  | "revision";
+  | "revision"
+  | "douze_coups";
 
 export interface Database {
   public: {
@@ -116,6 +120,7 @@ export interface Database {
           explication: string | null;
           author_id: string | null;
           created_at: string;
+          format: QuestionFormat | null;
         };
         Insert: {
           id?: string;
@@ -132,6 +137,7 @@ export interface Database {
           explication?: string | null;
           author_id?: string | null;
           created_at?: string;
+          format?: QuestionFormat | null;
         };
         Update: Partial<Database["public"]["Tables"]["questions"]["Insert"]>;
         Relationships: [];

@@ -6,6 +6,8 @@ import {
   Brain,
   Crown,
   Home,
+  Keyboard,
+  Mic,
   Play,
   Repeat,
   SkipForward,
@@ -20,6 +22,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { QuestionCard } from "@/components/game/QuestionCard";
 import { VoiceInput } from "@/components/game/VoiceInput";
 import { Button } from "@/components/ui/button";
+import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import {
   BOT_PROFILES,
   FAF_DURATION_MS,
@@ -49,7 +52,15 @@ interface FaceAFaceClientProps {
   userPseudo: string;
 }
 
-const TRANSITION_FEEDBACK_MS = 900;
+type FlashKind = "wrong" | "pass";
+
+interface FlashState {
+  kind: FlashKind;
+  who: "user" | "bot" | "ami";
+  correctAnswer: string;
+}
+
+const TRANSITION_FEEDBACK_MS = 1400;
 
 export function FaceAFaceClient({
   initialQuestions,
@@ -63,6 +74,7 @@ export function FaceAFaceClient({
   const [phase, setPhase] = useState<Phase>("mode-select");
   const [mode, setMode] = useState<FafMode>("vs_bot");
   const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>("moyen");
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [p1Name, setP1Name] = useState(userPseudo);
   const [p2Name, setP2Name] = useState("");
 
@@ -76,11 +88,11 @@ export function FaceAFaceClient({
   const usedIdxRef = useRef<Set<number>>(new Set([0]));
   const [answers, setAnswers] = useState<FafAnswerLog[]>([]);
   const [winnerIdx, setWinnerIdx] = useState<0 | 1 | null>(null);
-
-  // Brief UI flash after wrong/pass (before question change)
-  const [flash, setFlash] = useState<
-    { kind: "wrong" | "pass"; who: "user" | "bot" | "ami" } | null
-  >(null);
+  const [flash, setFlash] = useState<FlashState | null>(null);
+  // Verrou anti double-submission / double-advance pendant le flash feedback
+  // et pendant le démarrage d'un tour après transition.
+  const isTransitioningRef = useRef<boolean>(false);
+  const pendingAdvanceTimerRef = useRef<number | null>(null);
 
   // Persistance BDD
   const [saveResult, setSaveResult] = useState<SaveFafResult | null>(null);
@@ -95,6 +107,15 @@ export function FaceAFaceClient({
   const activeIsBot = activeIdx === 0 ? false : p2IsBot;
 
   const currentQuestion = initialQuestions[currentQIdx];
+
+  // Cleanup du timer pendant au unmount
+  useEffect(() => {
+    return () => {
+      if (pendingAdvanceTimerRef.current !== null) {
+        window.clearTimeout(pendingAdvanceTimerRef.current);
+      }
+    };
+  }, []);
 
   // -----------------------------
   // Ticker : décrément du chrono du joueur actif (RAF)
@@ -136,17 +157,45 @@ export function FaceAFaceClient({
   // -----------------------------
   // Avance à la question suivante (sans switcher de joueur)
   // -----------------------------
-  const advanceQuestion = useCallback(() => {
-    const nextIdx = nextQuestionIndex(
-      initialQuestions.length,
-      usedIdxRef.current,
-    );
-    if (nextIdx >= 0) {
-      usedIdxRef.current.add(nextIdx);
-      setCurrentQIdx(nextIdx);
-    }
-    questionStartedAtRef.current = performance.now();
-  }, [initialQuestions.length]);
+  const advanceQuestion = useCallback(
+    (reason: "wrong" | "pass" | "switch" | "bot-wrong" | "bot-pass") => {
+      const prev = currentQIdx;
+      const nextIdx = nextQuestionIndex(
+        initialQuestions.length,
+        usedIdxRef.current,
+      );
+      if (nextIdx >= 0) {
+        usedIdxRef.current.add(nextIdx);
+        setCurrentQIdx(nextIdx);
+      }
+      questionStartedAtRef.current = performance.now();
+      if (typeof window !== "undefined") {
+        // eslint-disable-next-line no-console
+        console.debug(
+          `[coup-fatal] question change: ${prev} → ${nextIdx} (reason: ${reason})`,
+        );
+      }
+    },
+    [initialQuestions.length, currentQIdx],
+  );
+
+  /** Pose le verrou, planifie l'avance avec feedback, puis lève le verrou. */
+  const scheduleAdvanceAfterFeedback = useCallback(
+    (reason: "wrong" | "pass" | "bot-wrong" | "bot-pass") => {
+      if (isTransitioningRef.current) return;
+      isTransitioningRef.current = true;
+      if (pendingAdvanceTimerRef.current !== null) {
+        window.clearTimeout(pendingAdvanceTimerRef.current);
+      }
+      pendingAdvanceTimerRef.current = window.setTimeout(() => {
+        setFlash(null);
+        advanceQuestion(reason);
+        isTransitioningRef.current = false;
+        pendingAdvanceTimerRef.current = null;
+      }, TRANSITION_FEEDBACK_MS);
+    },
+    [advanceQuestion],
+  );
 
   // -----------------------------
   // Soumission de réponse (user ou ami) — vient du VoiceInput
@@ -154,6 +203,9 @@ export function FaceAFaceClient({
   const handleHumanAnswer = useCallback(
     (raw: string) => {
       if (phase !== "playing" || activeIsBot || !currentQuestion) return;
+      // Verrou : pas de double-submission pendant le feedback
+      if (isTransitioningRef.current) return;
+
       const value = raw.trim();
       if (!value) return;
 
@@ -178,34 +230,50 @@ export function FaceAFaceClient({
 
       if (isCorrect) {
         playSound("ding");
+        // Lock pendant la transition pour éviter qu'un clic « Lancer le tour »
+        // ne déclenche quoi que ce soit avant que la phase soit réellement figée
+        isTransitioningRef.current = true;
         setPhase("transition");
       } else {
         playSound("buzz");
-        setFlash({ kind: "wrong", who: by });
-        window.setTimeout(() => {
-          setFlash(null);
-          advanceQuestion();
-        }, TRANSITION_FEEDBACK_MS);
+        const correctAnswer = currentQuestion.bonne_reponse;
+        setFlash({ kind: "wrong", who: by, correctAnswer });
+        scheduleAdvanceAfterFeedback("wrong");
       }
     },
-    [phase, activeIsBot, currentQuestion, activeIdx, mode, advanceQuestion],
+    [
+      phase,
+      activeIsBot,
+      currentQuestion,
+      activeIdx,
+      mode,
+      scheduleAdvanceAfterFeedback,
+    ],
   );
 
   // -----------------------------
   // Passer — sans compter une réponse
   // -----------------------------
   const handlePass = useCallback(() => {
-    if (phase !== "playing" || activeIsBot) return;
+    if (phase !== "playing" || activeIsBot || !currentQuestion) return;
+    if (isTransitioningRef.current) return;
     playSound("tick");
+    const who =
+      activeIdx === 0 ? "user" : mode === "vs_ami" ? "ami" : "user";
     setFlash({
       kind: "pass",
-      who: activeIdx === 0 ? "user" : mode === "vs_ami" ? "ami" : "user",
+      who,
+      correctAnswer: currentQuestion.bonne_reponse,
     });
-    window.setTimeout(() => {
-      setFlash(null);
-      advanceQuestion();
-    }, TRANSITION_FEEDBACK_MS / 2);
-  }, [phase, activeIsBot, activeIdx, mode, advanceQuestion]);
+    scheduleAdvanceAfterFeedback("pass");
+  }, [
+    phase,
+    activeIsBot,
+    activeIdx,
+    mode,
+    currentQuestion,
+    scheduleAdvanceAfterFeedback,
+  ]);
 
   // -----------------------------
   // Tour du bot : tire un délai, puis simule sa réponse
@@ -214,9 +282,12 @@ export function FaceAFaceClient({
     if (phase !== "playing") return;
     if (!activeIsBot) return;
     if (!currentQuestion) return;
+    if (isTransitioningRef.current) return;
 
     const delay = botResponseDelayMs(botDifficulty);
     const timer = window.setTimeout(() => {
+      // Ré-évalue le verrou au moment du tir (sécurité)
+      if (isTransitioningRef.current) return;
       const correct = botAnswersCorrectly(botDifficulty);
       setAnswers((a) => [
         ...a,
@@ -229,14 +300,16 @@ export function FaceAFaceClient({
       ]);
       if (correct) {
         playSound("ding");
+        isTransitioningRef.current = true;
         setPhase("transition");
       } else {
         playSound("buzz");
-        setFlash({ kind: "pass", who: "bot" });
-        window.setTimeout(() => {
-          setFlash(null);
-          advanceQuestion();
-        }, TRANSITION_FEEDBACK_MS);
+        setFlash({
+          kind: "pass",
+          who: "bot",
+          correctAnswer: currentQuestion.bonne_reponse,
+        });
+        scheduleAdvanceAfterFeedback("bot-wrong");
       }
     }, delay);
 
@@ -247,14 +320,13 @@ export function FaceAFaceClient({
     currentQIdx,
     currentQuestion,
     botDifficulty,
-    advanceQuestion,
+    scheduleAdvanceAfterFeedback,
   ]);
 
   // -----------------------------
   // Démarrer une partie
   // -----------------------------
   const startGame = useCallback(() => {
-    // Reset des états de jeu
     setP1TimeLeft(FAF_DURATION_MS);
     setP2TimeLeft(FAF_DURATION_MS);
     setActiveIdx(0);
@@ -265,6 +337,11 @@ export function FaceAFaceClient({
     setWinnerIdx(null);
     setFlash(null);
     setSaveResult(null);
+    isTransitioningRef.current = false;
+    if (pendingAdvanceTimerRef.current !== null) {
+      window.clearTimeout(pendingAdvanceTimerRef.current);
+      pendingAdvanceTimerRef.current = null;
+    }
     startedAtRef.current = performance.now();
     questionStartedAtRef.current = performance.now();
     setPhase("playing");
@@ -274,10 +351,13 @@ export function FaceAFaceClient({
   // Reprise après transition : switch actif + nouvelle question
   // -----------------------------
   const continueAfterTransition = useCallback(() => {
+    // Empêche un double-clic ou un déclenchement concurrent
+    if (phase !== "transition") return;
     setActiveIdx((prev) => (prev === 0 ? 1 : 0));
-    advanceQuestion();
+    advanceQuestion("switch");
+    isTransitioningRef.current = false;
     setPhase("playing");
-  }, [advanceQuestion]);
+  }, [phase, advanceQuestion]);
 
   // -----------------------------
   // Sauvegarde BDD à la fin
@@ -311,8 +391,10 @@ export function FaceAFaceClient({
       <ModeSelectScreen
         mode={mode}
         botDifficulty={botDifficulty}
+        voiceEnabled={voiceEnabled}
         onPickMode={setMode}
         onPickDifficulty={setBotDifficulty}
+        onToggleVoice={setVoiceEnabled}
         onContinue={() => {
           if (mode === "vs_ami") setPhase("ami-pseudos");
           else setPhase("intro");
@@ -341,6 +423,7 @@ export function FaceAFaceClient({
       <IntroScreen
         mode={mode}
         botDifficulty={botDifficulty}
+        voiceEnabled={voiceEnabled}
         p1Name={p1Name}
         p2Name={mode === "vs_bot" ? `Bot ${BOT_PROFILES[botDifficulty].label}` : p2Name}
         onStart={startGame}
@@ -350,20 +433,26 @@ export function FaceAFaceClient({
   }
 
   if (phase === "results") {
-    const userWon = winnerIdx === 0;
-    const winnerName = winnerIdx === 0
-      ? p1Name
-      : mode === "vs_bot"
-        ? `Bot ${BOT_PROFILES[botDifficulty].label}`
-        : p2Name;
+    const p2DisplayName =
+      mode === "vs_bot" ? `Bot ${BOT_PROFILES[botDifficulty].label}` : p2Name;
+    const userCorrect = answers.filter(
+      (a) => a.by === "user" && a.isCorrect,
+    ).length;
+    const p2Correct = answers.filter(
+      (a) => a.by !== "user" && a.isCorrect,
+    ).length;
     return (
       <ResultsScreen
-        userWon={userWon}
-        winnerName={winnerName}
+        userWon={winnerIdx === 0}
+        mode={mode}
+        p1Name={p1Name}
+        p2Name={p2DisplayName}
+        p1Correct={userCorrect}
+        p2Correct={p2Correct}
+        p1TimeLeftMs={p1TimeLeft}
+        p2TimeLeftMs={p2TimeLeft}
         xpResult={saveResult}
         isSaving={isSaving}
-        userCorrect={answers.filter((a) => a.by === "user" && a.isCorrect).length}
-        mode={mode}
         onReplay={() => {
           setPhase("mode-select");
           router.refresh();
@@ -423,7 +512,6 @@ export function FaceAFaceClient({
               />
             )}
 
-            {/* Flash feedback (wrong / pass) */}
             <AnimatePresence>
               {flash && (
                 <motion.div
@@ -432,25 +520,35 @@ export function FaceAFaceClient({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   className={cn(
-                    "mx-auto rounded-full px-4 py-1.5 text-sm font-bold",
+                    "mx-auto flex max-w-xl flex-col items-center gap-1 rounded-xl border px-4 py-2.5 text-center",
                     flash.kind === "wrong"
-                      ? "bg-buzz/15 text-buzz"
-                      : "bg-navy/10 text-navy/70",
+                      ? "border-buzz/40 bg-buzz/10"
+                      : "border-navy/15 bg-navy/5",
                   )}
                   role="status"
                 >
-                  {flash.kind === "wrong"
-                    ? flash.who === "bot"
-                      ? `Le bot se trompe — question suivante`
-                      : "Mauvaise réponse — question suivante"
-                    : flash.who === "bot"
-                      ? "Le bot passe — question suivante"
-                      : "Passé — question suivante"}
+                  <span
+                    className={cn(
+                      "text-xs font-bold uppercase tracking-wider",
+                      flash.kind === "wrong" ? "text-buzz" : "text-navy/60",
+                    )}
+                  >
+                    {flash.kind === "wrong"
+                      ? flash.who === "bot"
+                        ? "Le bot s'est trompé"
+                        : "Mauvaise réponse"
+                      : flash.who === "bot"
+                        ? "Le bot passe"
+                        : "Passé"}
+                  </span>
+                  <span className="text-sm text-navy">
+                    La bonne réponse était :{" "}
+                    <strong className="text-navy">{flash.correctAnswer}</strong>
+                  </span>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Zone de saisie : user/ami → VoiceInput ; bot → thinking indicator */}
             {activeIsBot ? (
               <BotThinking difficulty={botDifficulty} />
             ) : (
@@ -459,6 +557,8 @@ export function FaceAFaceClient({
                   onSubmit={handleHumanAnswer}
                   placeholder="Ta réponse…"
                   disabled={phase !== "playing"}
+                  hideVoice={!voiceEnabled}
+                  focusKey={`${activeIdx}-${currentQIdx}`}
                 />
                 <button
                   type="button"
@@ -485,14 +585,18 @@ export function FaceAFaceClient({
 function ModeSelectScreen({
   mode,
   botDifficulty,
+  voiceEnabled,
   onPickMode,
   onPickDifficulty,
+  onToggleVoice,
   onContinue,
 }: {
   mode: FafMode;
   botDifficulty: BotDifficulty;
+  voiceEnabled: boolean;
   onPickMode: (m: FafMode) => void;
   onPickDifficulty: (d: BotDifficulty) => void;
+  onToggleVoice: (v: boolean) => void;
   onContinue: () => void;
 }) {
   return (
@@ -502,10 +606,10 @@ function ModeSelectScreen({
       </div>
       <div className="flex flex-col gap-1.5">
         <p className="text-sm font-bold uppercase tracking-widest text-buzz">
-          Jeu 3
+          Jeu final
         </p>
         <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
-          Face-à-Face
+          Le Coup Fatal
         </h1>
         <p className="text-navy/70 sm:text-lg">
           60 s par joueur. Bonne réponse fige ton chrono, l&apos;adversaire
@@ -557,6 +661,41 @@ function ModeSelectScreen({
           </div>
         </div>
       )}
+
+      {/* Toggle voix */}
+      <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-white p-4">
+        <div className="flex items-center gap-3">
+          <div
+            className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-lg",
+              voiceEnabled
+                ? "bg-gold/20 text-gold-warm"
+                : "bg-navy/10 text-navy/60",
+            )}
+          >
+            {voiceEnabled ? (
+              <Mic className="h-5 w-5" aria-hidden="true" />
+            ) : (
+              <Keyboard className="h-5 w-5" aria-hidden="true" />
+            )}
+          </div>
+          <div className="text-left">
+            <p className="font-display text-sm font-bold text-navy">
+              Reconnaissance vocale
+            </p>
+            <p className="text-xs text-navy/60">
+              {voiceEnabled
+                ? "Dicte ta réponse au micro"
+                : "Clavier uniquement (focus auto)"}
+            </p>
+          </div>
+        </div>
+        <ToggleSwitch
+          checked={voiceEnabled}
+          onChange={onToggleVoice}
+          label="Activer la reconnaissance vocale"
+        />
+      </div>
 
       <Button variant="gold" size="lg" onClick={onContinue}>
         <Play className="h-5 w-5" aria-hidden="true" fill="currentColor" />
@@ -679,6 +818,7 @@ function PseudosScreen({
 function IntroScreen({
   mode,
   botDifficulty,
+  voiceEnabled,
   p1Name,
   p2Name,
   onStart,
@@ -686,6 +826,7 @@ function IntroScreen({
 }: {
   mode: FafMode;
   botDifficulty: BotDifficulty;
+  voiceEnabled: boolean;
   p1Name: string;
   p2Name: string;
   onStart: () => void;
@@ -699,11 +840,14 @@ function IntroScreen({
 
       <div className="flex flex-col gap-2">
         <p className="font-display text-sm font-bold uppercase tracking-widest text-buzz">
-          Face-à-Face · {mode === "vs_bot" ? `Bot ${BOT_PROFILES[botDifficulty].label}` : "vs Ami"}
+          Coup Fatal · {mode === "vs_bot" ? `Bot ${BOT_PROFILES[botDifficulty].label}` : "vs Ami"}
         </p>
         <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
           {p1Name} <span className="text-navy/30">vs</span> {p2Name}
         </h1>
+        <p className="text-xs uppercase tracking-widest text-navy/40">
+          {voiceEnabled ? "Voix + Clavier" : "Clavier uniquement"}
+        </p>
       </div>
 
       <ul className="flex flex-col gap-2 rounded-xl border border-border bg-white p-5 text-left text-sm text-navy/80 glow-card">
@@ -717,6 +861,7 @@ function IntroScreen({
           <SkipForward className="mt-1 h-4 w-4 shrink-0 text-sky" aria-hidden="true" />
           <span>
             Mauvaise réponse ou passer : question suivante, ton chrono continue.
+            La bonne réponse s&apos;affiche.
           </span>
         </li>
         <li className="flex items-start gap-2">
@@ -760,7 +905,10 @@ function PlayerCard({
   timeLeftMs: number;
   active: boolean;
 }) {
-  const seconds = Math.max(0, Math.ceil(timeLeftMs / 1000));
+  // Affichage s.t (tenths) avec padding pour éviter le saut de layout.
+  const total = Math.max(0, timeLeftMs);
+  const whole = Math.floor(total / 1000);
+  const tenths = Math.floor((total % 1000) / 100);
   const critical = timeLeftMs <= 10_000;
   const ratio = Math.max(0, Math.min(1, timeLeftMs / FAF_DURATION_MS));
 
@@ -802,10 +950,15 @@ function PlayerCard({
       <div
         className={cn(
           "mt-2 font-display text-3xl font-extrabold tabular-nums sm:text-4xl",
-          critical ? "text-buzz animate-pulse" : active ? "text-navy" : "text-navy/60",
+          critical
+            ? "animate-pulse text-buzz"
+            : active
+              ? "text-navy"
+              : "text-navy/60",
         )}
       >
-        {seconds}
+        {whole}
+        <span className="text-xl">.{tenths}</span>
         <span className="text-base text-navy/40">s</span>
       </div>
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-navy/10">
@@ -904,25 +1057,40 @@ function TransitionPanel({
   );
 }
 
+function formatSecondsTenths(ms: number): string {
+  const total = Math.max(0, ms);
+  const whole = Math.floor(total / 1000);
+  const tenths = Math.floor((total % 1000) / 100);
+  return `${whole}.${tenths}s`;
+}
+
 function ResultsScreen({
   userWon,
-  winnerName,
+  mode,
+  p1Name,
+  p2Name,
+  p1Correct,
+  p2Correct,
+  p1TimeLeftMs,
+  p2TimeLeftMs,
   xpResult,
   isSaving,
-  userCorrect,
-  mode,
   onReplay,
 }: {
   userWon: boolean;
-  winnerName: string;
+  mode: FafMode;
+  p1Name: string;
+  p2Name: string;
+  p1Correct: number;
+  p2Correct: number;
+  p1TimeLeftMs: number;
+  p2TimeLeftMs: number;
   xpResult: SaveFafResult | null;
   isSaving: boolean;
-  userCorrect: number;
-  mode: FafMode;
   onReplay: () => void;
 }) {
-  const xpGained =
-    xpResult?.status === "ok" ? xpResult.xpGained : null;
+  const winnerName = userWon ? p1Name : p2Name;
+  const xpGained = xpResult?.status === "ok" ? xpResult.xpGained : null;
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
@@ -938,7 +1106,11 @@ function ResultsScreen({
         )}
       >
         {userWon ? (
-          <Trophy className="h-14 w-14 text-gold-warm" aria-hidden="true" fill="currentColor" />
+          <Trophy
+            className="h-14 w-14 text-gold-warm"
+            aria-hidden="true"
+            fill="currentColor"
+          />
         ) : (
           <Sword className="h-14 w-14 text-buzz" aria-hidden="true" />
         )}
@@ -946,32 +1118,46 @@ function ResultsScreen({
 
       <div className="flex flex-col gap-2">
         <h1 className="font-display text-4xl font-extrabold text-navy">
-          {userWon ? "Victoire !" : mode === "vs_ami" ? `${winnerName} l'emporte` : "Défaite"}
+          {userWon ? "Victoire !" : mode === "vs_ami" ? "Défaite" : "Le bot l'emporte"}
         </h1>
-        <p className="text-navy/70">
-          {userWon
-            ? "Tu as fait tomber l'adversaire avant 0. Beau duel."
-            : mode === "vs_bot"
-              ? "Le bot t'a eu cette fois. Retente."
-              : "Tu as grillé ton chrono. Reviens plus affûté."}
+        <p className="text-navy/70 sm:text-lg">
+          <strong className="text-navy">{winnerName}</strong> fait tomber
+          {" "}
+          <strong>{userWon ? p2Name : p1Name}</strong>.
         </p>
       </div>
 
+      {/* Comparatif 2 joueurs */}
       <div className="grid w-full grid-cols-2 gap-3">
-        <StatCell label="Tes bonnes" value={String(userCorrect)} tone="green" />
-        <StatCell
-          label="XP gagnés"
-          value={
-            isSaving
-              ? "…"
-              : xpGained !== null
-                ? `+${xpGained}`
-                : xpResult?.status === "error"
-                  ? "—"
-                  : "…"
-          }
-          tone="gold"
+        <PlayerStatCard
+          name={p1Name}
+          correct={p1Correct}
+          timeLeftMs={p1TimeLeftMs}
+          isWinner={userWon}
         />
+        <PlayerStatCard
+          name={p2Name}
+          correct={p2Correct}
+          timeLeftMs={p2TimeLeftMs}
+          isWinner={!userWon}
+        />
+      </div>
+
+      <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-6 py-3 glow-card">
+        <Trophy
+          className="h-6 w-6 text-gold-warm"
+          aria-hidden="true"
+          fill="currentColor"
+        />
+        <span className="font-display text-lg font-bold text-navy">
+          {isSaving
+            ? "Enregistrement…"
+            : xpGained !== null
+              ? `+${xpGained} XP`
+              : xpResult?.status === "error"
+                ? "— XP"
+                : "…"}
+        </span>
       </div>
 
       {xpResult?.status === "error" && (
@@ -997,28 +1183,57 @@ function ResultsScreen({
   );
 }
 
-function StatCell({
-  label,
-  value,
-  tone,
+function PlayerStatCard({
+  name,
+  correct,
+  timeLeftMs,
+  isWinner,
 }: {
-  label: string;
-  value: string;
-  tone: "gold" | "green" | "buzz";
+  name: string;
+  correct: number;
+  timeLeftMs: number;
+  isWinner: boolean;
 }) {
-  const bg = {
-    gold: "bg-gold/15 text-gold-warm",
-    green: "bg-life-green/15 text-life-green",
-    buzz: "bg-buzz/15 text-buzz",
-  }[tone];
   return (
-    <div className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 glow-card">
-      <div
-        className={`mx-auto flex h-10 w-10 items-center justify-center rounded-lg ${bg} font-display text-sm font-bold`}
-      >
-        {value}
+    <div
+      className={cn(
+        "flex flex-col gap-2 rounded-xl border p-4 glow-card",
+        isWinner
+          ? "border-gold bg-gold/10 shadow-[0_0_32px_rgba(245,183,0,0.25)]"
+          : "border-border bg-card",
+      )}
+    >
+      <div className="flex items-center justify-center gap-2">
+        {isWinner && (
+          <Trophy
+            className="h-4 w-4 text-gold-warm"
+            aria-hidden="true"
+            fill="currentColor"
+          />
+        )}
+        <span className="truncate font-display text-sm font-bold text-navy">
+          {name}
+        </span>
       </div>
-      <p className="text-xs uppercase tracking-wider text-navy/60">{label}</p>
+      <div className="flex flex-col gap-1 text-xs">
+        <div className="flex items-center justify-between">
+          <span className="uppercase tracking-wider text-navy/50">Bonnes</span>
+          <span className="font-display text-lg font-extrabold text-life-green">
+            {correct}
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="uppercase tracking-wider text-navy/50">Restant</span>
+          <span
+            className={cn(
+              "font-display text-lg font-extrabold tabular-nums",
+              timeLeftMs <= 0 ? "text-buzz" : "text-navy",
+            )}
+          >
+            {formatSecondsTenths(timeLeftMs)}
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

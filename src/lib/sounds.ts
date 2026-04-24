@@ -11,7 +11,7 @@
  *   playSound("ding");
  */
 
-type SoundName = "tick" | "ding" | "buzz" | "win" | "lose";
+type SoundName = "tick" | "ding" | "buzz" | "win" | "lose" | "tension" | "duel";
 
 let ctx: AudioContext | null = null;
 
@@ -108,6 +108,21 @@ const SOUNDS: Record<SoundName, () => void> = {
       { freq: 440, duration: 0.25, type: "triangle", gain: 0.35 },
       { freq: 330, duration: 0.25, type: "triangle", gain: 0.35, delay: 0.25 },
       { freq: 220, duration: 0.5, type: "triangle", gain: 0.35, delay: 0.5 },
+    ]),
+  // Tension — basse pulsante pour l'annonce du rouge / de l'élimination.
+  tension: () =>
+    playTones([
+      { freq: 110, duration: 0.25, type: "sawtooth", gain: 0.3 },
+      { freq: 130, duration: 0.25, type: "sawtooth", gain: 0.3, delay: 0.3 },
+      { freq: 110, duration: 0.25, type: "sawtooth", gain: 0.3, delay: 0.6 },
+      { freq: 150, duration: 0.4, type: "sawtooth", gain: 0.35, delay: 0.9 },
+    ]),
+  // Duel — flash dramatique, 2 coups secs + bourdon grave.
+  duel: () =>
+    playTones([
+      { freq: 880, duration: 0.12, type: "square", gain: 0.35 },
+      { freq: 440, duration: 0.12, type: "square", gain: 0.35, delay: 0.15 },
+      { freq: 110, duration: 0.6, type: "sawtooth", gain: 0.3, delay: 0.3 },
     ]),
 };
 

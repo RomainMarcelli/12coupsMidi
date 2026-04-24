@@ -146,3 +146,54 @@ export function reponsesToJson(
 ): Json {
   return props.map((p) => ({ text: p.text, correct: p.isValid })) as Json;
 }
+
+/**
+ * Probabilité qu'un bot clique correctement (proposition valide non cliquée)
+ * au lieu de tomber sur l'intrus. Plus le niveau est élevé, moins il se trompe.
+ */
+const CPC_BOT_CORRECT_PROBA: Record<
+  "facile" | "moyen" | "difficile",
+  number
+> = {
+  facile: 0.7,
+  moyen: 0.85,
+  difficile: 0.95,
+};
+
+/**
+ * Sélectionne l'index de la proposition que le bot va cliquer ce tour.
+ *  - Ne clique jamais une proposition déjà cliquée.
+ *  - Avec proba `CPC_BOT_CORRECT_PROBA[difficulty]`, choisit parmi les valides
+ *    non cliquées. Sinon clique l'intrus (si non cliqué).
+ *  - Retourne -1 si aucune proposition n'est cliquable.
+ */
+export function botPickCpcProposition(
+  propositions: CpcProposition[],
+  clicked: ReadonlySet<string>,
+  difficulty: "facile" | "moyen" | "difficile",
+  rng: () => number = Math.random,
+): number {
+  const unclicked = propositions
+    .map((p, i) => ({ prop: p, idx: i }))
+    .filter(({ prop }) => !clicked.has(prop.text));
+
+  if (unclicked.length === 0) return -1;
+
+  const remainingValids = unclicked.filter(({ prop }) => prop.isValid);
+  const remainingIntrus = unclicked.filter(({ prop }) => !prop.isValid);
+
+  // Cas triviaux
+  if (remainingValids.length === 0) return remainingIntrus[0]?.idx ?? -1;
+  if (remainingIntrus.length === 0) {
+    const pick = remainingValids[Math.floor(rng() * remainingValids.length)];
+    return pick?.idx ?? -1;
+  }
+
+  // Tirage pondéré
+  const goCorrect = rng() < CPC_BOT_CORRECT_PROBA[difficulty];
+  if (goCorrect) {
+    const pick = remainingValids[Math.floor(rng() * remainingValids.length)];
+    return pick?.idx ?? -1;
+  }
+  return remainingIntrus[0]?.idx ?? -1;
+}

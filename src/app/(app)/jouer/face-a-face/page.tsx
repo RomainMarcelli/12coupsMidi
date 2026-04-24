@@ -6,7 +6,7 @@ import {
 import { FaceAFaceClient } from "./face-a-face-client";
 import { NoFafQuestions } from "./no-questions";
 
-export const metadata = { title: "Face-à-Face" };
+export const metadata = { title: "Le Coup Fatal" };
 
 // Tirage aléatoire à chaque chargement.
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export default async function FaceAFacePage() {
       supabase
         .from("questions")
         .select(
-          "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at",
+          "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at, format",
         )
         .eq("type", "face_a_face")
         .limit(200),

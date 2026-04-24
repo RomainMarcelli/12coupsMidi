@@ -197,6 +197,93 @@ describe("questionSchema — coup_par_coup", () => {
   });
 });
 
+describe("questionSchema — format (Coup d'Envoi)", () => {
+  it("accepte format vrai_faux avec réponses Vrai/Faux", () => {
+    const input = baseInput({
+      type: "quizz_2",
+      format: "vrai_faux",
+      reponses: [
+        { text: "Vrai", correct: true },
+        { text: "Faux", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(true);
+  });
+
+  it("rejette format vrai_faux avec réponses qui ne sont pas Vrai/Faux", () => {
+    const input = baseInput({
+      type: "quizz_2",
+      format: "vrai_faux",
+      reponses: [
+        { text: "Oui", correct: true },
+        { text: "Non", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("accepte format plus_moins avec réponses Plus/Moins", () => {
+    const input = baseInput({
+      type: "quizz_2",
+      format: "plus_moins",
+      reponses: [
+        { text: "Plus", correct: true },
+        { text: "Moins", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(true);
+  });
+
+  it("rejette format plus_moins avec réponses qui ne sont pas Plus/Moins", () => {
+    const input = baseInput({
+      type: "quizz_2",
+      format: "plus_moins",
+      reponses: [
+        { text: "Oui", correct: true },
+        { text: "Non", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("accepte format 'ou' avec n'importe quelles réponses", () => {
+    const input = baseInput({
+      type: "quizz_2",
+      format: "ou",
+      reponses: [
+        { text: "Hugo", correct: true },
+        { text: "Zola", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(true);
+  });
+
+  it("rejette format défini sur un type autre que quizz_2", () => {
+    const input = baseInput({
+      type: "quizz_4",
+      format: "vrai_faux",
+      reponses: [
+        { text: "A", correct: true },
+        { text: "B", correct: false },
+        { text: "C", correct: false },
+        { text: "D", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("accepte quizz_2 sans format (legacy)", () => {
+    const input = baseInput({
+      type: "quizz_2",
+      reponses: [
+        { text: "A", correct: true },
+        { text: "B", correct: false },
+      ],
+    });
+    expect(questionSchema.safeParse(input).success).toBe(true);
+  });
+});
+
 describe("questionSchema — champs communs", () => {
   it("rejette un énoncé trop court", () => {
     const input = baseInput({ enonce: "a" });

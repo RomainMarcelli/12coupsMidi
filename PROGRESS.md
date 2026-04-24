@@ -251,6 +251,188 @@ Voir [DECISIONS.md](./DECISIONS.md).
 
 ---
 
+## Phase 6.1 — Refonte multijoueur + renommages
+
+**Statut** : DONE
+**Date** : 2026-04-24
+
+Gros incrément demandé par le user : la V1 était solo, on passe en multijoueur **tour par tour** sur le Coup d'Envoi et le Coup par Coup, avec déclenchement du **Duel** (nouveau jeu) quand un joueur passe au rouge.
+
+### Renommages
+
+- **« Quizz 1 / 2 »** → **« Le Coup d'Envoi »** (UI et metadata, route `/jouer/jeu-1` inchangée).
+- **« Face-à-Face »** → **« Le Coup Fatal »** (UI et metadata, route `/jouer/face-a-face` inchangée).
+- Le **Duel** est un jeu distinct (≠ Coup Fatal) introduit par le rouge.
+
+### Améliorations Coup Fatal (ex Face-à-Face)
+
+- [x] **Focus auto** sur l'input texte à chaque changement de joueur actif ([`VoiceInput`](./src/components/game/VoiceInput.tsx) accepte un prop `focusKey`).
+- [x] **Toggle vocal on/off** avant la partie (pré-sélectionnable dans l'écran mode-select ; `hideVoice` passe alors sur le `VoiceInput`).
+- [x] **Timer en secondes.dixièmes** sur chaque chrono joueur (e.g. `42.3s`).
+- [x] **Affichage de la bonne réponse** à chaque mauvaise réponse et à chaque « Passer » (flash feedback).
+- [x] **Écran résultats détaillé** : qui gagne + bonnes réponses par candidat + temps restant des 2 (cartes P1/P2 comparatives, gagnant en or).
+
+### Migration 0004 — `format` sur questions
+
+- [x] Nouvelle colonne `questions.format text` (`vrai_faux` / `ou` / `plus_moins`) — réservée à `type='quizz_2'`.
+- [x] [`supabase/migrations/0004_question_format.sql`](./supabase/migrations/0004_question_format.sql).
+- [x] Schéma zod mis à jour ([`src/lib/schemas/question.ts`](./src/lib/schemas/question.ts)) avec validation cohérence (ex: `vrai_faux` requiert « Vrai » + « Faux »).
+- [x] Types TS (`QuestionFormat` dans `types/database.ts`).
+- [x] Seed et admin actions transmettent le champ.
+
+### Nouveau JSON exemple — Coup d'Envoi
+
+- [x] [`src/data/coup-d-envoi.json`](./src/data/coup-d-envoi.json) — 12 questions couvrant les 3 formats (Vrai/Faux, L'un ou l'autre, Plus ou moins). Le script `npm run seed` les charge automatiquement.
+
+### Composant `PlayerSetup` + helpers multijoueur
+
+- [x] [`src/lib/game-logic/players.ts`](./src/lib/game-logic/players.ts) — types `MultiConfig`, `PlayerConfig`, `MultiMode` + helpers `validateMultiConfig`, `nextActivePlayerIdx`, `defaultBotName`, `newPlayerId` + constantes `MIN_PLAYERS=2`, `OFFICIAL_MAX_PLAYERS=4`, `FREE_MAX_PLAYERS=8`.
+- [x] [`src/components/game/PlayerSetup.tsx`](./src/components/game/PlayerSetup.tsx) — écran de config réutilisable :
+  1. Choix **Contre des Bots** / **Contre des humains**
+  2. (Humains) **En local** (actif) / **En ligne** (désactivé, badge « Bientôt »)
+  3. Toggle **règles officielles** (4 max) vs **libre** (jusqu'à 8)
+  4. Difficulté des bots (si vs Bots)
+  5. Saisie des pseudos + roster avec +/- joueurs
+  6. Validation (doublons, pseudos vides, bornes)
+
+### Jeu 1 — Le Coup d'Envoi multijoueur
+
+- [x] [`src/lib/game-logic/coup-d-envoi.ts`](./src/lib/game-logic/coup-d-envoi.ts) — `prepareCeQuestion` (Vrai/Plus toujours en premier), `shuffleCePool`, `ceLifeState`, `ceIsPlayerOut`, `stripFormatPrefix`, `formatLabel`, `computeCeXp`. Constantes : `CE_MAX_ERRORS=2`, `CE_XP_PER_CORRECT=50`, `CE_TIMER_SECONDS=10`.
+- [x] [`page.tsx`](./src/app/(app)/jouer/jeu-1/page.tsx) — fetch quizz_2 + quizz_4 (pool Duel) + catégories + pseudo user.
+- [x] [`coup-d-envoi-client.tsx`](./src/app/(app)/jouer/jeu-1/coup-d-envoi-client.tsx) — state machine `setup → intro → playing ⇄ feedback → rouge-announce → duel → results`.
+  - Tour par tour avec rotation sur `players.length`.
+  - LifeBar par joueur (vert 0 / orange 1 / rouge 2), animations spring sur changement.
+  - Détection `cpcIsPlayerOut` (2 erreurs) → déclenche l'écran rouge.
+  - Écran « Qui dit "rouge" dit… **DUEL !** » : halo pulsant, texte scale-bounce (3,2 s).
+  - Bot : `botResponseDelayMs` + `botAnswersCorrectly` pour simuler ses réponses.
+  - Focus clavier (`A/← = gauche`, `B/→ = droite`) pour le user humain actif.
+- [x] [`actions.ts`](./src/app/(app)/jouer/jeu-1/actions.ts) — `saveCeSession` (mode='jeu1') : ne log que les réponses du user authentifié.
+
+### Nouveau jeu — Le Duel
+
+- [x] [`src/lib/game-logic/duel.ts`](./src/lib/game-logic/duel.ts) — `buildDuelThemes` (groupe les quizz_4 par catégorie), `pickDuelThemes` (1 ou 2 selon 1er/2e Duel), `shuffleDuelAnswers`, `resolveDuel`, `computeDuelXp`. Constantes : `DUEL_TIMER_SECONDS=15`, `DUEL_XP_WIN=300`.
+- [x] [`src/components/game/DuelPanel.tsx`](./src/components/game/DuelPanel.tsx) — composant inline réutilisable (utilisé par Coup d'Envoi et Coup par Coup), state machine `choose-adversary → choose-theme → question → feedback → result`.
+  - Rouge désigne son adversaire (bot auto-pick).
+  - Adversaire choisit un thème parmi 2 (ou 1 imposé si `isSecondDuel=true`).
+  - Question quizz_4 sur le thème, timer 15 s.
+  - Bonne réponse → adversaire gagne, rouge éliminé. Mauvaise → adversaire éliminé, rouge sauvé.
+  - Écran résultat avec bonne réponse dévoilée.
+
+### Jeu 2 — Le Coup par Coup multijoueur
+
+- [x] [`page.tsx`](./src/app/(app)/jouer/jeu-2/page.tsx) — fetch aussi quizz_4 pour le pool Duel.
+- [x] [`coup-par-coup-client.tsx`](./src/app/(app)/jouer/jeu-2/coup-par-coup-client.tsx) — refonte multijoueur complète.
+  - `PlayerSetup` au lancement.
+  - **Tour par tour** : chaque joueur clique **une** proposition à son tour.
+  - Si proposition valide → tour suivant (même round, proposition reste barrée pour tous).
+  - Si intrus → ce joueur prend une erreur personnelle + fin du round.
+  - Si 6 valides cliquées → round parfait.
+  - Joueur à 2 intrus → rouge → **Duel 2e occurrence** (`isSecondDuel=true`, un seul thème imposé).
+  - Nouveau helper [`botPickCpcProposition`](./src/lib/game-logic/coup-par-coup.ts) avec proba de bonne pick par difficulté (70/85/95 %).
+
+### Tests unitaires ajoutés
+
+- [x] [`src/lib/game-logic/coup-d-envoi.test.ts`](./src/lib/game-logic/coup-d-envoi.test.ts) — `prepareCeQuestion` (Vrai/Plus en premier), `stripFormatPrefix`, `ceLifeState`, `formatLabel`, `shuffleCePool` déterminisme.
+- [x] [`src/lib/game-logic/players.test.ts`](./src/lib/game-logic/players.test.ts) — `validateMultiConfig` (bornes, doublons, casse), `nextActivePlayerIdx` (rotation + joueurs éliminés).
+- [x] [`src/lib/game-logic/duel.test.ts`](./src/lib/game-logic/duel.test.ts) — `buildDuelThemes` (groupage par cat), `pickDuelThemes`, `resolveDuel` (qui gagne selon réponse), `computeDuelXp`.
+- [x] Complément [`coup-par-coup.test.ts`](./src/lib/game-logic/coup-par-coup.test.ts) — `botPickCpcProposition` (jamais re-cliquer, proba ≥ 90 % en difficile, clique intrus si seul restant).
+- [x] Complément [`schemas/question.test.ts`](./src/lib/schemas/question.test.ts) — validation du champ `format` (vrai_faux et plus_moins avec bonnes réponses, format interdit hors quizz_2).
+
+**Total tests : 178 tests sur 9 fichiers, tous passent.**
+
+### Ce qui n'est PAS fait (hors scope V1)
+
+- **Mode En ligne** : bouton présent mais désactivé (nécessite Supabase Realtime, à voir post-V1).
+- **Cagnotte virtuelle** : concept présent en spec TV mais choix user d'une version locale uniquement — pas de colonne `profiles.cagnotte_virtuelle` (à rajouter en Phase 10 Stats si besoin de persistance).
+- **Page standalone `/jouer/duel`** : pas créée — le Duel est uniquement déclenché en inline depuis Coup d'Envoi et Coup par Coup.
+
+### À faire côté Supabase après ce jet
+
+- [ ] Passer la migration [`0004_question_format.sql`](./supabase/migrations/0004_question_format.sql) dans SQL Editor.
+- [ ] Relancer `npm run seed` (le script charge automatiquement `coup-d-envoi.json`).
+- [ ] Avoir au moins 2 catégories avec questions `quizz_4` en base pour que le Duel ait de vrais thèmes à proposer.
+
+---
+
+## Phase 6.2 — Mode « 12 Coups de Midi » (parcours multijoueur)
+
+**Statut** : DONE
+**Date** : 2026-04-24
+
+Nouveau mode complet qui enchaîne **Coup d'Envoi → Duel → Coup par Coup → Duel → Face-à-Face final**, avec une **cagnotte** qui circule entre joueurs et 2 **thèmes de duel** tirés au démarrage.
+
+### Bug fix prioritaire — Coup Fatal
+
+Avant d'attaquer le mode, correction du bug signalé (« une question apparaissait sans qu'on puisse répondre à la précédente ») :
+
+- [x] Audit du cycle de vie dans [`face-a-face-client.tsx`](./src/app/(app)/jouer/face-a-face/face-a-face-client.tsx) — le trou : pendant les 1 400 ms de flash feedback, rien n'empêchait une seconde soumission (Enter/clic) qui empilait un nouveau `setTimeout → advanceQuestion`, provoquant un double saut.
+- [x] **Verrou `isTransitioningRef`** + **`pendingAdvanceTimerRef`** : toute soumission est bloquée tant qu'une transition est en cours, et le timer en attente est annulé en cas de re-planification.
+- [x] Helper `scheduleAdvanceAfterFeedback(reason)` : centralise la pose du verrou + la planification. Utilisé pour wrong / pass / bot-wrong.
+- [x] `advanceQuestion(reason)` log un `console.debug('[coup-fatal] question change: X → Y (reason: ...)')` pour pouvoir tracer si ça réapparaît.
+- [x] `continueAfterTransition` vérifie `phase === 'transition'` pour éviter un double-clic sur « Lancer le tour ».
+- [x] Cleanup du timer au unmount du composant.
+- [x] Le même pattern `isTransitioningRef` est repris dans les stages du mode 12 Coups (Jeu 1, Jeu 2, Face-à-Face final).
+
+### Architecture du mode
+
+- **Route** : [`/jouer/douze-coups`](./src/app/(app)/jouer/douze-coups/page.tsx).
+- **Store Zustand** : [`src/stores/douzeCoupsStore.ts`](./src/stores/douzeCoupsStore.ts) — tient phase, joueurs, cagnottes, thèmes de duel, duel en cours.
+- **Logique pure** : [`src/lib/game-logic/douze-coups.ts`](./src/lib/game-logic/douze-coups.ts) — types, constantes, helpers purs (transfert cagnotte, rotation tour, consommation thèmes).
+- **Client orchestrateur** : [`douze-coups-client.tsx`](./src/app/(app)/jouer/douze-coups/douze-coups-client.tsx) — route le rendu en fonction de `phase` (setup / intro / jeu1 / duel / jeu2 / faceaface / results).
+- **Sous-écrans** : `setup-screen.tsx`, `intro-screen.tsx`, stages inline dans le client.
+- **Réutilisation** : `DuelPanel` existant pour le duel ; `QuestionCard`, `Timer`, `LifeBar`, `AnswerButton`, `VoiceInput` pour les rendus ; `prepareCeQuestion`, `botPickCpcProposition`, `botAnswersCorrectly`, `isMatch`, `nextQuestionIndex` pour la logique.
+
+### Règles implémentées (validées avec le user)
+
+- 2 à 4 joueurs (règle TV). Choix **Bots** ou **Humains local**. « En ligne » = bouton désactivé + badge « Bientôt ».
+- Mix possible humains + bots en local (par slot : toggle Humain/Bot + sélecteur difficulté).
+- **Cagnotte** : 10 000 € de départ par joueur. +100 € par bonne réponse en Jeu 1 / Jeu 2. Cagnotte du perdant d'un duel / du face-à-face final transférée **entièrement** au vainqueur. Pas de persistance profil (reset à chaque partie, confirmé user).
+- **2 thèmes de duel** tirés au démarrage parmi les catégories ayant des `quizz_4`. Chaque duel consomme un thème ; si les 2 sont consommés, re-tirage à la volée côté store.
+- **Jeu 1** : tour par tour, questions `quizz_2` (les 3 formats vrai_faux / ou / plus_moins mixés). 2 erreurs = rouge → **duel**. Pas de max de tours (on joue **jusqu'à** une élimination, confirmé user).
+- **Duel** : one-shot, question `quizz_4` sur le thème choisi par l'adversaire. L'adversaire répond seul (le rouge attend). Bon → rouge éliminé. Faux → adversaire éliminé. Cagnotte transférée.
+- **Jeu 2** : si encore 3+ survivants après le 1ᵉʳ duel, on joue le Coup par Coup multijoueur (chacun clique une proposition à son tour). Sinon on saute au Face-à-Face.
+- **Face-à-Face final** : 2 derniers joueurs, 60 s chacun. Saisie clavier (vocal forcé OFF pour simplicité), passer / répondre. Le premier à 0 s perd.
+- **Résultats** : podium (vivants d'abord par cagnotte décroissante, puis éliminés), XP = `min(2000, cagnotte / 100)`, sauvegarde `game_sessions` avec `mode='douze_coups'` et `score` = cagnotte finale du user.
+
+### Écrans
+
+- **Setup** ([`setup-screen.tsx`](./src/app/(app)/jouer/douze-coups/setup-screen.tsx)) : 3 sous-phases (mode → subpick humain → roster). Validation pseudos uniques, bornes 2–4.
+- **Intro cinématique** ([`intro-screen.tsx`](./src/app/(app)/jouer/douze-coups/intro-screen.tsx)) : halo gold animé + logo couronne scale-bounce + titre « LES 12 COUPS DE MIDI » + sous-titre « 1ᵉʳ Jeu · Le Coup d'Envoi ». Jingle `win` joué. Auto-transition après 3,2 s.
+- **Bandeau joueurs permanent** : grille 2–4 cols avec cagnotte (police or TV), LifeBar, badge `Éliminé` rotaté, pulse sur le joueur actif.
+- **Annonce rouge** : halo buzz pulsant + gros texte bounce « Qui dit "rouge" dit… **DUEL !** » (2,5 s) + son `duel`.
+- **Podium final** : couronne + cagnotte gagnée en grand, classement détaillé (stats + cagnotte + badge KO).
+
+### Sons ajoutés
+
+- [`src/lib/sounds.ts`](./src/lib/sounds.ts) — 2 nouveaux tones Web Audio synthétisés :
+  - `tension` : basse pulsante sawtooth 110–150 Hz (4 pulses)
+  - `duel` : 2 coups secs square (880/440 Hz) + bourdon grave sawtooth
+
+### Tests ajoutés
+
+- [x] [`src/lib/game-logic/douze-coups.test.ts`](./src/lib/game-logic/douze-coups.test.ts) — 30+ tests sur les helpers purs : lifeState, `pickDuelCategories`, `makeInitialDuelThemes`, `availableDuelThemes`/`consumeDuelTheme`, rotation `dcNextActiveIdx`, `applyDuelResult` (3 scénarios), `applyCorrectAnswer`/`applyWrongAnswer`, `resetErrorsForNewGame`, `nextPhaseAfter`, `dcPodium`.
+- [x] [`src/stores/douzeCoupsStore.test.ts`](./src/stores/douzeCoupsStore.test.ts) — 10 tests store : validation joueurs, init cagnottes, tirage thèmes, recordCorrect/recordWrong, bascule duel à 2 erreurs, `resolveDuel` (2 scénarios), `finalizeFaceAFace`, `reset`.
+
+**Total tests : 11 fichiers, 215 tests, tous passent.** `npm run typecheck` clean. `npm run build` 20 routes (ajout `/jouer/douze-coups`).
+
+### Ce qui n'est PAS fait (TODO explicites)
+
+- **Coup de Maître** : non intégré au parcours pour cette phase (laissé en TODO comme demandé).
+- **Mode en ligne** : bouton désactivé (Supabase Realtime, Phase post-V1).
+- **Vocal dans Face-à-Face final** : désactivé (focus clavier forcé) pour garder le tour par tour propre en local. À ré-activer si tu veux.
+- **Thème re-tiré à la volée** : si les 2 thèmes initiaux sont consommés et qu'un 3ᵉ duel arrive, le composant signale « pas de thème dispo » et skippe au résultat (rare en pratique car on est déjà à 1–2 vivants). Peut être amélioré en re-tirant 2 nouvelles catégories côté store.
+
+### Accueil
+
+- [x] HeroTile de la page d'accueil pointe maintenant vers `/jouer/douze-coups` (parcours multijoueur) au lieu de l'ancien `/parcours` (placeholder Phase 8).
+
+### À faire côté user avant de jouer
+
+- [ ] Avoir au moins 10 `quizz_2`, 3 `coup_par_coup`, 2 catégories avec `quizz_4`, 5 `face_a_face` en base (sinon l'écran `NoQuestionsScreen` affiche les compteurs manquants).
+- [ ] Tester : partie 4 bots, partie 2 humains + 2 bots, partie 4 humains ; vérifier cycle Jeu 1 → Duel → Jeu 2 → Duel → Face-à-Face → Results ; vérifier cas « 2 vivants après Jeu 1 → skip Jeu 2 direct Face-à-Face ».
+
+---
+
 ## Phases 7 à 12
 
 Voir le cahier des charges pour le détail. Chaque phase sera notée ici au fil de l'eau.

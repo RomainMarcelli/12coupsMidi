@@ -16,11 +16,11 @@ import { cn } from "@/lib/utils";
 export default function Home() {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
-      {/* Hero — parcours complet */}
+      {/* Hero — parcours complet (mode 12 Coups multijoueur) */}
       <HeroTile
-        href="/parcours"
-        title="Lancer le parcours"
-        subtitle="L'émission complète : Jeu 1 → Coup par Coup → Face-à-Face → Coup de Maître"
+        href="/jouer/douze-coups"
+        title="Les 12 Coups de Midi"
+        subtitle="Parcours multijoueur : Coup d'Envoi → Duel → Coup par Coup → Face-à-Face"
         icon={Crown}
       />
 
@@ -28,8 +28,8 @@ export default function Home() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Tile
           href="/jouer/jeu-1"
-          title="Quizz 1 / 2"
-          subtitle="10 questions, 3 vies"
+          title="Le Coup d'Envoi"
+          subtitle="Vrai / Faux, l'un ou l'autre"
           icon={Dices}
           accent="gold"
         />
@@ -42,8 +42,8 @@ export default function Home() {
         />
         <Tile
           href="/jouer/face-a-face"
-          title="Face-à-Face"
-          subtitle="Vs bot ou ami, 60 s"
+          title="Le Coup Fatal"
+          subtitle="Duel 60 s, voix ou clavier"
           icon={Sword}
           accent="buzz"
         />

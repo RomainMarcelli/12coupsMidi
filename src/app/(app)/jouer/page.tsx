@@ -25,8 +25,8 @@ interface GameItem {
 const MAIN_GAMES: GameItem[] = [
   {
     href: "/jouer/jeu-1",
-    title: "Quizz 1 / 2",
-    subtitle: "10 questions, 3 vies. 10 secondes par question.",
+    title: "Le Coup d'Envoi",
+    subtitle: "Vrai / Faux, L'un ou l'autre, Plus ou moins. 2 erreurs = Duel.",
     icon: Dices,
     accent: "gold",
     available: true,
@@ -41,8 +41,8 @@ const MAIN_GAMES: GameItem[] = [
   },
   {
     href: "/jouer/face-a-face",
-    title: "Face-à-Face",
-    subtitle: "Vs bot ou ami, 60 s par joueur, sonnerie quand on bloque.",
+    title: "Le Coup Fatal",
+    subtitle: "60 s par joueur, vs bot ou ami, voix ou clavier.",
     icon: Sword,
     accent: "buzz",
     available: true,

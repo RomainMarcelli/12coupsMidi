@@ -73,6 +73,7 @@ async function main() {
   const sources = [
     "src/data/seed-questions.json",
     "src/data/coup-par-coup.json",
+    "src/data/coup-d-envoi.json",
   ];
 
   const rawAll: unknown[] = [];
@@ -187,6 +188,7 @@ async function main() {
       indices: q.indices ?? null,
       image_url: q.image_url ?? null,
       explication: q.explication ?? null,
+      format: q.format ?? null,
     });
   }
 

@@ -28,6 +28,7 @@ export function makeQuestion(overrides: Partial<QuestionRow>): QuestionRow {
     explication: overrides.explication ?? null,
     author_id: overrides.author_id ?? null,
     created_at: overrides.created_at ?? new Date("2026-01-01").toISOString(),
+    format: overrides.format ?? null,
   };
 }
 

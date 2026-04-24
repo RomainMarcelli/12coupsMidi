@@ -3,6 +3,7 @@ import {
   CPC_ROUNDS_PER_GAME,
   pickCoupParCoupRounds,
 } from "@/lib/game-logic/coup-par-coup";
+import { buildDuelThemes } from "@/lib/game-logic/duel";
 import { CoupParCoupClient } from "./coup-par-coup-client";
 import { NoRoundsPlaceholder } from "./no-rounds";
 
@@ -12,15 +13,28 @@ export const dynamic = "force-dynamic";
 export default async function Jeu2Page() {
   const supabase = await createClient();
 
-  const [{ data: pool }, { data: categories }] = await Promise.all([
+  const [
+    { data: pool },
+    { data: quizz4Pool },
+    { data: categories },
+    { data: profile },
+  ] = await Promise.all([
     supabase
       .from("questions")
       .select(
-        "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at",
+        "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at, format",
       )
       .eq("type", "coup_par_coup")
       .limit(200),
-    supabase.from("categories").select("id, nom, couleur"),
+    supabase
+      .from("questions")
+      .select(
+        "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at, format",
+      )
+      .eq("type", "quizz_4")
+      .limit(300),
+    supabase.from("categories").select("id, nom, slug, couleur"),
+    supabase.from("profiles").select("pseudo").maybeSingle(),
   ]);
 
   const categoriesById = new Map(
@@ -36,5 +50,13 @@ export default async function Jeu2Page() {
     return <NoRoundsPlaceholder />;
   }
 
-  return <CoupParCoupClient rounds={rounds} />;
+  const duelThemes = buildDuelThemes(quizz4Pool ?? [], categories ?? []);
+
+  return (
+    <CoupParCoupClient
+      rounds={rounds}
+      duelThemes={duelThemes}
+      userPseudo={profile?.pseudo ?? "Toi"}
+    />
+  );
 }

@@ -1,0 +1,158 @@
+[
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 2,
+    "enonce": "Vrai ou faux : Napoléon Bonaparte est né en Corse.",
+    "reponses": [
+      { "text": "Vrai", "correct": true },
+      { "text": "Faux", "correct": false }
+    ],
+    "explication": "Né à Ajaccio le 15 août 1769."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 1,
+    "enonce": "Vrai ou faux : Lisbonne est la capitale de l'Espagne.",
+    "reponses": [
+      { "text": "Vrai", "correct": false },
+      { "text": "Faux", "correct": true }
+    ],
+    "explication": "Lisbonne est la capitale du Portugal. L'Espagne a pour capitale Madrid."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 2,
+    "enonce": "Vrai ou faux : le corps humain adulte contient 206 os.",
+    "reponses": [
+      { "text": "Vrai", "correct": true },
+      { "text": "Faux", "correct": false }
+    ],
+    "explication": "206 os exactement chez l'adulte (plus chez le nouveau-né)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 2,
+    "enonce": "Qui a réalisé Le Fabuleux Destin d'Amélie Poulain ?",
+    "reponses": [
+      { "text": "Jean-Pierre Jeunet", "correct": true },
+      { "text": "Luc Besson", "correct": false }
+    ],
+    "explication": "Jean-Pierre Jeunet, sorti en 2001."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 3,
+    "enonce": "Qui a chanté « La Bohème » ?",
+    "reponses": [
+      { "text": "Charles Aznavour", "correct": true },
+      { "text": "Jacques Brel", "correct": false }
+    ],
+    "explication": "Charles Aznavour, 1965."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "En quelle année la France a-t-elle remporté sa première Coupe du monde de football ?",
+    "reponses": [
+      { "text": "1998", "correct": true },
+      { "text": "2002", "correct": false }
+    ],
+    "explication": "1998, finale à Saint-Denis contre le Brésil (3-0)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "La Terre fait-elle plus ou moins de 40 000 km de circonférence à l'équateur ?",
+    "reponses": [
+      { "text": "Plus", "correct": true },
+      { "text": "Moins", "correct": false }
+    ],
+    "explication": "40 075 km exactement à l'équateur."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 2,
+    "enonce": "Un éléphant d'Afrique pèse-t-il plus ou moins de 4 tonnes à l'âge adulte ?",
+    "reponses": [
+      { "text": "Plus", "correct": true },
+      { "text": "Moins", "correct": false }
+    ],
+    "explication": "Un mâle adulte pèse en moyenne 5 à 6 tonnes."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "actualite",
+    "subcategory_slug": "societe",
+    "difficulte": 3,
+    "enonce": "La population de la France compte-t-elle plus ou moins de 70 millions d'habitants ?",
+    "reponses": [
+      { "text": "Plus", "correct": false },
+      { "text": "Moins", "correct": true }
+    ],
+    "explication": "Environ 68 millions en 2024 (France métropolitaine + outre-mer)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : La Joconde est peinte sur une toile.",
+    "reponses": [
+      { "text": "Vrai", "correct": false },
+      { "text": "Faux", "correct": true }
+    ],
+    "explication": "Peinte sur un panneau de bois de peuplier."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Qui est l'auteur des Misérables ?",
+    "reponses": [
+      { "text": "Victor Hugo", "correct": true },
+      { "text": "Émile Zola", "correct": false }
+    ],
+    "explication": "Victor Hugo, publié en 1862."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "La Lune se trouve-t-elle à plus ou moins de 400 000 km de la Terre ?",
+    "reponses": [
+      { "text": "Plus", "correct": false },
+      { "text": "Moins", "correct": true }
+    ],
+    "explication": "Environ 384 400 km en moyenne."
+  }
+]

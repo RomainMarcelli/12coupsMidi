@@ -13,7 +13,7 @@ export default async function EtoilePage() {
     supabase
       .from("questions")
       .select(
-        "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at",
+        "id, type, category_id, subcategory_id, difficulte, enonce, reponses, bonne_reponse, alias, indices, image_url, explication, author_id, created_at, format",
       )
       .eq("type", "etoile")
       .limit(200),

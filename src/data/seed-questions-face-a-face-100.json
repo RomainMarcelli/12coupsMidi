@@ -1,0 +1,1313 @@
+[
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 3,
+    "enonce": "Quelle est la capitale de l'Australie ?",
+    "bonne_reponse": "Canberra",
+    "alias": [],
+    "reponses": [],
+    "explication": "Canberra et non Sydney, qui est la plus grande ville mais pas la capitale."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 4,
+    "enonce": "Quelle est la capitale du Kazakhstan ?",
+    "bonne_reponse": "Astana",
+    "alias": [
+      "Astaná",
+      "Noursoultan",
+      "Nur-Sultan"
+    ],
+    "reponses": [],
+    "explication": "Astana, renommée Nur-Sultan en 2019 puis redevenue Astana en 2022."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 3,
+    "enonce": "Quelle est la capitale de la Turquie ?",
+    "bonne_reponse": "Ankara",
+    "alias": [],
+    "reponses": [],
+    "explication": "Ankara depuis 1923 (avant, c'était Constantinople/Istanbul sous l'Empire ottoman)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 4,
+    "enonce": "Quelle est la capitale de la Nouvelle-Zélande ?",
+    "bonne_reponse": "Wellington",
+    "alias": [],
+    "reponses": [],
+    "explication": "Wellington, située à la pointe sud de l'île du Nord. Auckland est la plus peuplée."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "fleuves-montagnes",
+    "difficulte": 3,
+    "enonce": "Quel est le plus long fleuve du monde ?",
+    "bonne_reponse": "Nil",
+    "alias": [
+      "le Nil"
+    ],
+    "reponses": [],
+    "explication": "Le Nil (environ 6 650 km) devance de peu l'Amazone selon la plupart des estimations."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "fleuves-montagnes",
+    "difficulte": 4,
+    "enonce": "Quelle est la plus haute montagne d'Afrique ?",
+    "bonne_reponse": "Kilimandjaro",
+    "alias": [
+      "Kilimanjaro",
+      "Mont Kilimandjaro"
+    ],
+    "reponses": [],
+    "explication": "Le Kilimandjaro culmine à 5 895 m en Tanzanie."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Dans quel pays se trouve la cité inca du Machu Picchu ?",
+    "bonne_reponse": "Pérou",
+    "alias": [
+      "le Pérou"
+    ],
+    "reponses": [],
+    "explication": "Au Pérou, dans les Andes, redécouvert par Hiram Bingham en 1911."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 4,
+    "enonce": "Quel détroit sépare l'Europe de l'Afrique ?",
+    "bonne_reponse": "Détroit de Gibraltar",
+    "alias": [
+      "Gibraltar",
+      "le détroit de Gibraltar"
+    ],
+    "reponses": [],
+    "explication": "Le détroit de Gibraltar, 14 km de large entre l'Espagne et le Maroc."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quelle est la plus haute montagne de France métropolitaine ?",
+    "bonne_reponse": "Mont Blanc",
+    "alias": [
+      "le Mont Blanc"
+    ],
+    "reponses": [],
+    "explication": "Le Mont Blanc culmine à 4 808 mètres dans les Alpes."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Quel est le plus long fleuve de France ?",
+    "bonne_reponse": "Loire",
+    "alias": [
+      "la Loire"
+    ],
+    "reponses": [],
+    "explication": "La Loire, environ 1 006 km, de l'Ardèche à l'Atlantique."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "contemporain",
+    "difficulte": 3,
+    "enonce": "En quelle année le mur de Berlin est-il tombé ?",
+    "bonne_reponse": "1989",
+    "alias": [],
+    "reponses": [],
+    "explication": "Le 9 novembre 1989, dans un contexte de chute des régimes communistes en Europe de l'Est."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 3,
+    "enonce": "Qui était le chef des armées françaises libres pendant la Seconde Guerre mondiale ?",
+    "bonne_reponse": "Charles de Gaulle",
+    "alias": [
+      "de Gaulle",
+      "Général de Gaulle"
+    ],
+    "reponses": [],
+    "explication": "Le général Charles de Gaulle, depuis Londres après son appel du 18 juin 1940."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 4,
+    "enonce": "Qui a franchi le Rubicon en 49 av. J.-C. ?",
+    "bonne_reponse": "Jules César",
+    "alias": [
+      "César",
+      "Julius Caesar"
+    ],
+    "reponses": [],
+    "explication": "Jules César franchit le Rubicon, déclenchant la guerre civile contre Pompée. D'où l'expression 'le sort en est jeté' (alea jacta est)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "xixe",
+    "difficulte": 3,
+    "enonce": "Où Napoléon a-t-il été définitivement vaincu en 1815 ?",
+    "bonne_reponse": "Waterloo",
+    "alias": [
+      "à Waterloo",
+      "Bataille de Waterloo"
+    ],
+    "reponses": [],
+    "explication": "À Waterloo (Belgique), le 18 juin 1815, face à Wellington et Blücher."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "moyen-age",
+    "difficulte": 4,
+    "enonce": "En quelle année Jeanne d'Arc a-t-elle été brûlée à Rouen ?",
+    "bonne_reponse": "1431",
+    "alias": [],
+    "reponses": [],
+    "explication": "Le 30 mai 1431, après un procès en hérésie. Elle sera réhabilitée en 1456 puis canonisée en 1920."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "revolution",
+    "difficulte": 3,
+    "enonce": "Quelle forteresse parisienne a été prise le 14 juillet 1789 ?",
+    "bonne_reponse": "Bastille",
+    "alias": [
+      "la Bastille"
+    ],
+    "reponses": [],
+    "explication": "La Bastille, symbole de l'arbitraire royal. La prise marque le début symbolique de la Révolution française."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 4,
+    "enonce": "Quel empereur romain a construit un mur fortifié au nord de l'Angleterre ?",
+    "bonne_reponse": "Hadrien",
+    "alias": [
+      "Empereur Hadrien"
+    ],
+    "reponses": [],
+    "explication": "Hadrien, au IIe siècle. Le mur d'Hadrien marquait la frontière nord de l'Empire romain."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 3,
+    "enonce": "Quelle année marque la fin de la Première Guerre mondiale ?",
+    "bonne_reponse": "1918",
+    "alias": [],
+    "reponses": [],
+    "explication": "L'armistice est signé le 11 novembre 1918 à Rethondes, dans la forêt de Compiègne."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 4,
+    "enonce": "Quel traité a été signé en 1919 pour mettre fin à la Première Guerre mondiale avec l'Allemagne ?",
+    "bonne_reponse": "Traité de Versailles",
+    "alias": [
+      "Versailles",
+      "le traité de Versailles"
+    ],
+    "reponses": [],
+    "explication": "Le traité de Versailles, signé le 28 juin 1919 dans la galerie des Glaces."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Qui a écrit 'Les Misérables' ?",
+    "bonne_reponse": "Victor Hugo",
+    "alias": [
+      "Hugo"
+    ],
+    "reponses": [],
+    "explication": "Victor Hugo, publié en 1862."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 4,
+    "enonce": "Quel est le nom du capitaine du Nautilus dans '20 000 lieues sous les mers' ?",
+    "bonne_reponse": "Capitaine Nemo",
+    "alias": [
+      "Nemo"
+    ],
+    "reponses": [],
+    "explication": "Le capitaine Nemo, personnage de Jules Verne (1870). 'Nemo' signifie 'personne' en latin."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 3,
+    "enonce": "Qui a écrit 'Cent ans de solitude' ?",
+    "bonne_reponse": "Gabriel García Márquez",
+    "alias": [
+      "García Márquez",
+      "Garcia Marquez",
+      "Marquez"
+    ],
+    "reponses": [],
+    "explication": "L'écrivain colombien Gabriel García Márquez (Nobel 1982), chef-d'œuvre du réalisme magique."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 3,
+    "enonce": "Qui a écrit 'Harry Potter' ?",
+    "bonne_reponse": "J.K. Rowling",
+    "alias": [
+      "Rowling",
+      "Joanne Rowling",
+      "Joanne Kathleen Rowling"
+    ],
+    "reponses": [],
+    "explication": "Joanne Kathleen Rowling, romancière britannique."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 4,
+    "enonce": "Qui a écrit 'Le Petit Prince' ?",
+    "bonne_reponse": "Antoine de Saint-Exupéry",
+    "alias": [
+      "Saint-Exupéry",
+      "Saint-Exupery",
+      "Saint-Ex"
+    ],
+    "reponses": [],
+    "explication": "Antoine de Saint-Exupéry, publié en 1943. Aviateur et écrivain, disparu en mission en 1944."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "theatre",
+    "difficulte": 4,
+    "enonce": "Qui a écrit 'Le Cid' ?",
+    "bonne_reponse": "Pierre Corneille",
+    "alias": [
+      "Corneille"
+    ],
+    "reponses": [],
+    "explication": "Pierre Corneille (1637), tragi-comédie inspirée de la vie de Rodrigue Díaz de Vivar."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "litterature",
+    "subcategory_slug": "poesie",
+    "difficulte": 4,
+    "enonce": "Qui a écrit 'Les Fleurs du mal' ?",
+    "bonne_reponse": "Charles Baudelaire",
+    "alias": [
+      "Baudelaire"
+    ],
+    "reponses": [],
+    "explication": "Charles Baudelaire (1857), recueil poétique majeur, poursuivi pour 'outrage aux bonnes mœurs' à sa parution."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 3,
+    "enonce": "Quel pays a remporté la Coupe du monde de football 2022 ?",
+    "bonne_reponse": "Argentine",
+    "alias": [
+      "l'Argentine"
+    ],
+    "reponses": [],
+    "explication": "L'Argentine, vainqueur de la France en finale au Qatar (4-2 aux tirs au but)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 4,
+    "enonce": "Combien de Ballons d'Or Lionel Messi a-t-il remportés ?",
+    "bonne_reponse": "8",
+    "alias": [
+      "huit"
+    ],
+    "reponses": [],
+    "explication": "8 Ballons d'Or (2009, 2010, 2011, 2012, 2015, 2019, 2021, 2023), record absolu."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 4,
+    "enonce": "Sur quelle surface se joue Roland-Garros ?",
+    "bonne_reponse": "Terre battue",
+    "alias": [
+      "la terre battue"
+    ],
+    "reponses": [],
+    "explication": "Sur terre battue. C'est l'unique tournoi du Grand Chelem joué sur cette surface."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 3,
+    "enonce": "Dans quelle ville se sont déroulés les Jeux olympiques d'été 2024 ?",
+    "bonne_reponse": "Paris",
+    "alias": [
+      "à Paris"
+    ],
+    "reponses": [],
+    "explication": "Paris, 100 ans après ses derniers JO en 1924."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "cyclisme",
+    "difficulte": 4,
+    "enonce": "Quel maillot porte le leader du classement général du Tour de France ?",
+    "bonne_reponse": "Maillot jaune",
+    "alias": [
+      "le maillot jaune",
+      "jaune"
+    ],
+    "reponses": [],
+    "explication": "Le maillot jaune, couleur des pages de L'Auto, journal fondateur du Tour en 1903."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "rugby",
+    "difficulte": 4,
+    "enonce": "Comment s'appelle la célèbre danse maorie exécutée avant les matchs par l'équipe de Nouvelle-Zélande ?",
+    "bonne_reponse": "Haka",
+    "alias": [
+      "le haka"
+    ],
+    "reponses": [],
+    "explication": "Le haka, danse rituelle maorie exécutée par les All Blacks."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "sport",
+    "subcategory_slug": "autres-sports",
+    "difficulte": 5,
+    "enonce": "Dans quel sport Michael Phelps a-t-il remporté 23 médailles d'or olympiques ?",
+    "bonne_reponse": "Natation",
+    "alias": [
+      "la natation"
+    ],
+    "reponses": [],
+    "explication": "Natation. Record absolu tous sports confondus."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 3,
+    "enonce": "Qui a réalisé 'Titanic' (1997) ?",
+    "bonne_reponse": "James Cameron",
+    "alias": [
+      "Cameron"
+    ],
+    "reponses": [],
+    "explication": "James Cameron, également réalisateur d'Avatar et de Terminator."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "realisateurs",
+    "difficulte": 4,
+    "enonce": "Quel réalisateur a créé les films 'Kill Bill' et 'Pulp Fiction' ?",
+    "bonne_reponse": "Quentin Tarantino",
+    "alias": [
+      "Tarantino"
+    ],
+    "reponses": [],
+    "explication": "Quentin Tarantino, connu pour son style ultra-référencé."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 4,
+    "enonce": "Dans quel film Tom Hanks incarne-t-il un naufragé sur une île déserte avec un ballon nommé Wilson ?",
+    "bonne_reponse": "Seul au monde",
+    "alias": [
+      "Cast Away",
+      "Castaway"
+    ],
+    "reponses": [],
+    "explication": "Seul au monde (Cast Away), film de Robert Zemeckis (2000)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "series",
+    "difficulte": 3,
+    "enonce": "Dans quelle série suit-on les familles Stark, Lannister et Targaryen ?",
+    "bonne_reponse": "Game of Thrones",
+    "alias": [
+      "GoT",
+      "Le Trône de fer"
+    ],
+    "reponses": [],
+    "explication": "Game of Thrones (HBO), adaptation des romans de George R.R. Martin."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 4,
+    "enonce": "Quel acteur britannique a joué James Bond dans 'GoldenEye', 'Demain ne meurt jamais' et 'Die Another Day' ?",
+    "bonne_reponse": "Pierce Brosnan",
+    "alias": [
+      "Brosnan"
+    ],
+    "reponses": [],
+    "explication": "Pierce Brosnan, qui a incarné James Bond de 1995 à 2002 dans 4 films."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "animation",
+    "difficulte": 3,
+    "enonce": "Quel est le nom du royaume dans 'La Reine des Neiges' ?",
+    "bonne_reponse": "Arendelle",
+    "alias": [],
+    "reponses": [],
+    "explication": "Arendelle, royaume fictif inspiré de la Norvège."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 3,
+    "enonce": "Qui chante 'Non, je ne regrette rien' ?",
+    "bonne_reponse": "Édith Piaf",
+    "alias": [
+      "Edith Piaf",
+      "Piaf"
+    ],
+    "reponses": [],
+    "explication": "Édith Piaf, chanson écrite par Charles Dumont et Michel Vaucaire en 1960."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 4,
+    "enonce": "Quel est le vrai nom de Johnny Hallyday ?",
+    "bonne_reponse": "Jean-Philippe Smet",
+    "alias": [
+      "Smet"
+    ],
+    "reponses": [],
+    "explication": "Jean-Philippe Smet, né en 1943 à Paris."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 3,
+    "enonce": "Quel groupe a interprété 'Bohemian Rhapsody' ?",
+    "bonne_reponse": "Queen",
+    "alias": [
+      "les Queen"
+    ],
+    "reponses": [],
+    "explication": "Queen, morceau de 1975 écrit par Freddie Mercury."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 4,
+    "enonce": "Dans quelle ville britannique les Beatles ont-ils été formés ?",
+    "bonne_reponse": "Liverpool",
+    "alias": [
+      "à Liverpool"
+    ],
+    "reponses": [],
+    "explication": "Liverpool, en 1960. Le club mythique du Cavern Club en fut le berceau."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 4,
+    "enonce": "Qui a composé les 'Quatre Saisons' ?",
+    "bonne_reponse": "Antonio Vivaldi",
+    "alias": [
+      "Vivaldi"
+    ],
+    "reponses": [],
+    "explication": "Antonio Vivaldi, composés vers 1725. Chaque concerto est accompagné d'un sonnet descriptif."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 3,
+    "enonce": "De quelle nationalité était le compositeur Ludwig van Beethoven ?",
+    "bonne_reponse": "Allemande",
+    "alias": [
+      "Allemand",
+      "Allemagne"
+    ],
+    "reponses": [],
+    "explication": "Allemand, né à Bonn en 1770. Il a fait l'essentiel de sa carrière à Vienne."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Qui a peint 'La Joconde' ?",
+    "bonne_reponse": "Léonard de Vinci",
+    "alias": [
+      "Leonardo da Vinci",
+      "Vinci",
+      "Da Vinci"
+    ],
+    "reponses": [],
+    "explication": "Léonard de Vinci, entre 1503 et 1519. Exposée au Louvre."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 4,
+    "enonce": "Qui a peint 'La Nuit étoilée' (1889) ?",
+    "bonne_reponse": "Vincent van Gogh",
+    "alias": [
+      "Van Gogh"
+    ],
+    "reponses": [],
+    "explication": "Vincent van Gogh, peint durant son séjour à l'asile de Saint-Rémy-de-Provence."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "Quel peintre norvégien est l'auteur du tableau 'Le Cri' ?",
+    "bonne_reponse": "Edvard Munch",
+    "alias": [
+      "Munch",
+      "Edward Munch"
+    ],
+    "reponses": [],
+    "explication": "Edvard Munch (1893), œuvre emblématique de l'expressionnisme."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "sculpture",
+    "difficulte": 4,
+    "enonce": "Qui a sculpté 'Le Penseur' ?",
+    "bonne_reponse": "Auguste Rodin",
+    "alias": [
+      "Rodin"
+    ],
+    "reponses": [],
+    "explication": "Auguste Rodin, initialement conçu pour 'La Porte de l'Enfer'."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "architecture",
+    "difficulte": 3,
+    "enonce": "Qui a dessiné la tour Eiffel ?",
+    "bonne_reponse": "Gustave Eiffel",
+    "alias": [
+      "Eiffel"
+    ],
+    "reponses": [],
+    "explication": "Gustave Eiffel et ses ingénieurs (dont Maurice Koechlin et Émile Nouguier). Inaugurée en 1889."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 3,
+    "enonce": "Combien d'os compte le corps humain adulte ?",
+    "bonne_reponse": "206",
+    "alias": [
+      "deux cent six"
+    ],
+    "reponses": [],
+    "explication": "206 os chez l'adulte (300 environ à la naissance, certains fusionnent avec la croissance)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 3,
+    "enonce": "Quel est le plus grand organe du corps humain ?",
+    "bonne_reponse": "Peau",
+    "alias": [
+      "la peau"
+    ],
+    "reponses": [],
+    "explication": "La peau, environ 1,5 à 2 m² chez l'adulte."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 4,
+    "enonce": "Combien de chromosomes possède un être humain ?",
+    "bonne_reponse": "46",
+    "alias": [
+      "quarante-six",
+      "23 paires",
+      "vingt-trois paires"
+    ],
+    "reponses": [],
+    "explication": "46 chromosomes (23 paires) dans chaque cellule somatique."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 3,
+    "enonce": "Quel est le plus grand animal vivant sur Terre ?",
+    "bonne_reponse": "Baleine bleue",
+    "alias": [
+      "la baleine bleue",
+      "rorqual bleu"
+    ],
+    "reponses": [],
+    "explication": "La baleine bleue (rorqual bleu), jusqu'à 30 m et 170 tonnes."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 4,
+    "enonce": "Combien de cœurs possède une pieuvre ?",
+    "bonne_reponse": "3",
+    "alias": [
+      "trois"
+    ],
+    "reponses": [],
+    "explication": "3 cœurs : un cœur principal et deux cœurs branchiaux qui pompent le sang dans les branchies."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Combien de planètes compte le système solaire ?",
+    "bonne_reponse": "8",
+    "alias": [
+      "huit"
+    ],
+    "reponses": [],
+    "explication": "8 planètes depuis la rétrogradation de Pluton en planète naine en 2006."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quelle est la plus grande planète du système solaire ?",
+    "bonne_reponse": "Jupiter",
+    "alias": [],
+    "reponses": [],
+    "explication": "Jupiter, plus de 11 fois le diamètre de la Terre."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 4,
+    "enonce": "Comment s'appelle la galaxie à laquelle appartient le système solaire ?",
+    "bonne_reponse": "Voie lactée",
+    "alias": [
+      "la Voie lactée"
+    ],
+    "reponses": [],
+    "explication": "La Voie lactée, galaxie spirale barrée contenant 100 à 400 milliards d'étoiles."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 4,
+    "enonce": "Qui a énoncé la loi de la gravitation universelle ?",
+    "bonne_reponse": "Isaac Newton",
+    "alias": [
+      "Newton"
+    ],
+    "reponses": [],
+    "explication": "Isaac Newton en 1687 dans ses 'Principia Mathematica'."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 4,
+    "enonce": "Qui est l'auteur de la théorie de la relativité ?",
+    "bonne_reponse": "Albert Einstein",
+    "alias": [
+      "Einstein"
+    ],
+    "reponses": [],
+    "explication": "Albert Einstein : restreinte en 1905, générale en 1915."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Quel est le symbole chimique de l'or ?",
+    "bonne_reponse": "Au",
+    "alias": [],
+    "reponses": [],
+    "explication": "Au, du latin 'Aurum'."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Quel est le symbole chimique de l'eau ?",
+    "bonne_reponse": "H2O",
+    "alias": [
+      "H₂O"
+    ],
+    "reponses": [],
+    "explication": "H2O : deux atomes d'hydrogène et un atome d'oxygène."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 4,
+    "enonce": "Quel est l'élément chimique le plus abondant dans l'univers ?",
+    "bonne_reponse": "Hydrogène",
+    "alias": [
+      "l'hydrogène",
+      "H"
+    ],
+    "reponses": [],
+    "explication": "L'hydrogène représente environ 75 % de la masse baryonique de l'univers."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 3,
+    "enonce": "Quel gaz respirons-nous principalement (78 % de l'air) ?",
+    "bonne_reponse": "Azote",
+    "alias": [
+      "l'azote",
+      "N2",
+      "diazote"
+    ],
+    "reponses": [],
+    "explication": "L'azote (diazote N₂), environ 78 %. L'oxygène n'en représente que 21 %."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 3,
+    "enonce": "Quelle est la mascotte de Nintendo ?",
+    "bonne_reponse": "Mario",
+    "alias": [
+      "Super Mario"
+    ],
+    "reponses": [],
+    "explication": "Mario, plombier italien créé par Shigeru Miyamoto en 1981 (Donkey Kong)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 4,
+    "enonce": "Dans quel jeu vidéo doit-on collecter des Pokédollars et combattre un certain 'professeur Chen' ?",
+    "bonne_reponse": "Pokémon",
+    "alias": [
+      "Pokemon"
+    ],
+    "reponses": [],
+    "explication": "Pokémon (Game Freak / Nintendo), lancé en 1996 sur Game Boy."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "retro",
+    "difficulte": 4,
+    "enonce": "Quelle entreprise a créé la console PlayStation ?",
+    "bonne_reponse": "Sony",
+    "alias": [],
+    "reponses": [],
+    "explication": "Sony. La première PlayStation est sortie en 1994 au Japon, 1995 en Europe."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 3,
+    "enonce": "De quelle région française est originaire la choucroute ?",
+    "bonne_reponse": "Alsace",
+    "alias": [
+      "l'Alsace"
+    ],
+    "reponses": [],
+    "explication": "L'Alsace, même si la recette vient d'Europe centrale. 'Sauerkraut' en allemand."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "vins",
+    "difficulte": 4,
+    "enonce": "Quel cépage est majoritaire dans le champagne ?",
+    "bonne_reponse": "Chardonnay",
+    "alias": [
+      "le Chardonnay"
+    ],
+    "reponses": [],
+    "explication": "Le Chardonnay est l'un des 3 cépages principaux avec le Pinot Noir et le Pinot Meunier. Le Chardonnay est le seul cépage blanc majeur de l'appellation."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "fromages",
+    "difficulte": 4,
+    "enonce": "De quelle région vient le fromage roquefort ?",
+    "bonne_reponse": "Aveyron",
+    "alias": [
+      "l'Aveyron",
+      "Roquefort-sur-Soulzon"
+    ],
+    "reponses": [],
+    "explication": "L'Aveyron. Plus précisément Roquefort-sur-Soulzon, avec affinage obligatoire dans ses caves."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-monde",
+    "difficulte": 3,
+    "enonce": "De quel pays est originaire le sushi ?",
+    "bonne_reponse": "Japon",
+    "alias": [
+      "le Japon"
+    ],
+    "reponses": [],
+    "explication": "Japon, même si des techniques similaires existaient en Asie du Sud-Est."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 4,
+    "enonce": "Qui est le dieu grec du tonnerre et roi de l'Olympe ?",
+    "bonne_reponse": "Zeus",
+    "alias": [],
+    "reponses": [],
+    "explication": "Zeus, équivalent du Jupiter romain."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 5,
+    "enonce": "Quel héros grec a tué le Minotaure dans le labyrinthe ?",
+    "bonne_reponse": "Thésée",
+    "alias": [],
+    "reponses": [],
+    "explication": "Thésée, aidé par Ariane et son fil."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 4,
+    "enonce": "Qui a inventé le premier vaccin (contre la rage) ?",
+    "bonne_reponse": "Louis Pasteur",
+    "alias": [
+      "Pasteur"
+    ],
+    "reponses": [],
+    "explication": "Louis Pasteur, en 1885. Avant lui Edward Jenner avait inoculé la variole (1796) mais Pasteur formalise le concept de vaccin."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "langues",
+    "difficulte": 3,
+    "enonce": "Quelle est la langue la plus parlée au monde comme langue maternelle ?",
+    "bonne_reponse": "Mandarin",
+    "alias": [
+      "le mandarin",
+      "chinois mandarin",
+      "chinois"
+    ],
+    "reponses": [],
+    "explication": "Le mandarin, avec environ 900 millions de locuteurs natifs."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "religions",
+    "difficulte": 3,
+    "enonce": "Dans quelle ville se trouve le Vatican ?",
+    "bonne_reponse": "Rome",
+    "alias": [
+      "à Rome"
+    ],
+    "reponses": [],
+    "explication": "Rome, même si le Vatican est un État souverain enclavé dans la ville."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "actualite",
+    "subcategory_slug": "politique",
+    "difficulte": 3,
+    "enonce": "Comment s'appelle le siège du gouvernement américain à Washington ?",
+    "bonne_reponse": "Maison Blanche",
+    "alias": [
+      "la Maison Blanche",
+      "White House"
+    ],
+    "reponses": [],
+    "explication": "La Maison Blanche, résidence officielle et bureau du président des États-Unis depuis 1800."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "actualite",
+    "subcategory_slug": "international",
+    "difficulte": 4,
+    "enonce": "Dans quelle ville siège l'ONU ?",
+    "bonne_reponse": "New York",
+    "alias": [
+      "à New York"
+    ],
+    "reponses": [],
+    "explication": "New York, au bord de l'East River. D'autres bureaux existent à Genève, Vienne et Nairobi."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "entrepreneurs-tech",
+    "difficulte": 3,
+    "enonce": "Qui est le fondateur de l'entreprise SpaceX ?",
+    "bonne_reponse": "Elon Musk",
+    "alias": [
+      "Musk"
+    ],
+    "reponses": [],
+    "explication": "Elon Musk, qui a fondé SpaceX en 2002."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "politique-contemporaine",
+    "difficulte": 3,
+    "enonce": "Qui a été élu président de la République française en 2017 puis réélu en 2022 ?",
+    "bonne_reponse": "Emmanuel Macron",
+    "alias": [
+      "Macron"
+    ],
+    "reponses": [],
+    "explication": "Emmanuel Macron, premier président à être réélu hors cohabitation depuis Jacques Chirac."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "animaux",
+    "difficulte": 4,
+    "enonce": "Compléter l'expression : 'Appeler un chat un ...'",
+    "bonne_reponse": "Chat",
+    "alias": [
+      "un chat"
+    ],
+    "reponses": [],
+    "explication": "'Appeler un chat un chat' signifie parler franchement, sans détour. Expression attribuée à Boileau."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "origines-historiques",
+    "difficulte": 5,
+    "enonce": "Quel empereur romain a prononcé 'Alea jacta est' (Les dés sont jetés) ?",
+    "bonne_reponse": "Jules César",
+    "alias": [
+      "César",
+      "Julius Caesar"
+    ],
+    "reponses": [],
+    "explication": "Jules César, en franchissant le Rubicon en 49 av. J.-C."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "vocabulaire",
+    "difficulte": 4,
+    "enonce": "Quel est le synonyme le plus courant du mot 'éphémère' ?",
+    "bonne_reponse": "Passager",
+    "alias": [
+      "temporaire",
+      "fugace",
+      "bref"
+    ],
+    "reponses": [],
+    "explication": "Passager, temporaire ou fugace sont des synonymes courants. 'Éphémère' vient du grec (un jour)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "vocabulaire",
+    "difficulte": 4,
+    "enonce": "Comment appelle-t-on la peur des araignées ?",
+    "bonne_reponse": "Arachnophobie",
+    "alias": [
+      "l'arachnophobie"
+    ],
+    "reponses": [],
+    "explication": "Arachnophobie, du grec 'arachnê' (araignée)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "etymologie",
+    "difficulte": 5,
+    "enonce": "De quelle langue vient le mot 'bistrot' ?",
+    "bonne_reponse": "Russe",
+    "alias": [
+      "le russe"
+    ],
+    "reponses": [],
+    "explication": "Selon une théorie populaire, du russe 'bystro' (vite), crié par les cosaques en 1814 à Paris. L'origine reste débattue par les linguistes."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "orthographe",
+    "difficulte": 5,
+    "enonce": "Comment appelle-t-on un mot qui peut se lire dans les deux sens (ex : 'kayak') ?",
+    "bonne_reponse": "Palindrome",
+    "alias": [
+      "un palindrome"
+    ],
+    "reponses": [],
+    "explication": "Palindrome, du grec 'palin' (à nouveau) et 'dromos' (course)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 4,
+    "enonce": "Quel désert est le plus grand du monde (désert chaud) ?",
+    "bonne_reponse": "Sahara",
+    "alias": [
+      "le Sahara"
+    ],
+    "reponses": [],
+    "explication": "Le Sahara, environ 9 millions de km². Le plus grand désert tous types confondus reste l'Antarctique (désert froid)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 4,
+    "enonce": "Quel pays compte le plus grand nombre de fuseaux horaires ?",
+    "bonne_reponse": "France",
+    "alias": [
+      "la France"
+    ],
+    "reponses": [],
+    "explication": "La France, avec 12 fuseaux horaires grâce à ses territoires d'outre-mer (de Saint-Pierre-et-Miquelon à Wallis-et-Futuna)."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 5,
+    "enonce": "Quelle est la capitale de la Bolivie (siège du gouvernement) ?",
+    "bonne_reponse": "La Paz",
+    "alias": [
+      "Sucre"
+    ],
+    "reponses": [],
+    "explication": "La Paz est le siège du gouvernement (capitale administrative). Sucre est la capitale constitutionnelle. Les deux réponses sont acceptées."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 4,
+    "enonce": "En quelle année l'Homme a-t-il marché sur la Lune pour la première fois ?",
+    "bonne_reponse": "1969",
+    "alias": [],
+    "reponses": [],
+    "explication": "Le 21 juillet 1969 (20 juillet en heure locale US) avec la mission Apollo 11."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "realisateurs",
+    "difficulte": 4,
+    "enonce": "Quel réalisateur est célèbre pour ses films d'animation 'Mon voisin Totoro' et 'Le Voyage de Chihiro' ?",
+    "bonne_reponse": "Hayao Miyazaki",
+    "alias": [
+      "Miyazaki"
+    ],
+    "reponses": [],
+    "explication": "Hayao Miyazaki, cofondateur du studio Ghibli. Oscar du meilleur film d'animation en 2003."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 4,
+    "enonce": "Quel chanteur était surnommé 'Le King' ?",
+    "bonne_reponse": "Elvis Presley",
+    "alias": [
+      "Elvis",
+      "Presley"
+    ],
+    "reponses": [],
+    "explication": "Elvis Presley, 'The King of Rock and Roll', mort en 1977."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "musique",
+    "subcategory_slug": "rap",
+    "difficulte": 4,
+    "enonce": "Quel rappeur français est membre du groupe NTM avec Kool Shen ?",
+    "bonne_reponse": "Joey Starr",
+    "alias": [
+      "JoeyStarr"
+    ],
+    "reponses": [],
+    "explication": "Joey Starr (Didier Morville) et Kool Shen (Bruno Lopes) forment NTM depuis 1989."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "Quel peintre espagnol a créé le mouvement cubiste avec Georges Braque ?",
+    "bonne_reponse": "Pablo Picasso",
+    "alias": [
+      "Picasso"
+    ],
+    "reponses": [],
+    "explication": "Pablo Picasso. Le cubisme naît vers 1907 avec 'Les Demoiselles d'Avignon'."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 5,
+    "enonce": "Quel animal est considéré comme le plus rapide terrestre ?",
+    "bonne_reponse": "Guépard",
+    "alias": [
+      "le guépard"
+    ],
+    "reponses": [],
+    "explication": "Le guépard, jusqu'à environ 110 km/h sur de courtes distances."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "svt",
+    "subcategory_slug": "plantes",
+    "difficulte": 4,
+    "enonce": "Quel est l'arbre le plus grand du monde ?",
+    "bonne_reponse": "Séquoia",
+    "alias": [
+      "le séquoia",
+      "séquoia à feuilles d'if",
+      "sequoia"
+    ],
+    "reponses": [],
+    "explication": "Le séquoia à feuilles d'if (Sequoia sempervirens) peut dépasser 115 m. 'Hyperion' est le plus haut connu."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 4,
+    "enonce": "Quelle est la planète la plus proche du Soleil ?",
+    "bonne_reponse": "Mercure",
+    "alias": [],
+    "reponses": [],
+    "explication": "Mercure, à environ 58 millions de km en moyenne."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 4,
+    "enonce": "Qui a inventé le téléphone ?",
+    "bonne_reponse": "Alexander Graham Bell",
+    "alias": [
+      "Graham Bell",
+      "Bell"
+    ],
+    "reponses": [],
+    "explication": "Alexander Graham Bell, brevet déposé en 1876. L'italien Antonio Meucci est parfois reconnu comme inventeur antérieur."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "geographie",
+    "subcategory_slug": "europe",
+    "difficulte": 5,
+    "enonce": "Quel est le plus petit pays du monde par superficie ?",
+    "bonne_reponse": "Vatican",
+    "alias": [
+      "le Vatican",
+      "Cité du Vatican",
+      "Saint-Siège"
+    ],
+    "reponses": [],
+    "explication": "Le Vatican, 0,44 km². État souverain enclavé dans Rome."
+  },
+  {
+    "type": "face_a_face",
+    "category_slug": "histoire",
+    "subcategory_slug": "renaissance",
+    "difficulte": 4,
+    "enonce": "En quelle année Christophe Colomb a-t-il découvert l'Amérique ?",
+    "bonne_reponse": "1492",
+    "alias": [],
+    "reponses": [],
+    "explication": "Le 12 octobre 1492, il aborde l'île de Guanahani aux Bahamas."
+  }
+]

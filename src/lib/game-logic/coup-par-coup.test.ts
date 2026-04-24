@@ -7,10 +7,12 @@ import {
   CPC_XP_GAME_PERFECT_BONUS,
   CPC_XP_PER_CORRECT,
   CPC_XP_ROUND_PERFECT_BONUS,
+  botPickCpcProposition,
   computeCpcXp,
   cpcIsGameOver,
   cpcLifeState,
   pickCoupParCoupRounds,
+  type CpcProposition,
   type CpcRoundResult,
 } from "./coup-par-coup";
 import { SAMPLE_CATEGORIES, makeQuestion } from "./_test-fixtures";
@@ -97,6 +99,58 @@ describe("pickCoupParCoupRounds", () => {
     const [round] = pickCoupParCoupRounds(pool, SAMPLE_CATEGORIES, 1);
     expect(round!.theme).toBe("Thème q1");
     expect(round!.category?.nom).toBe("Sport");
+  });
+});
+
+describe("botPickCpcProposition", () => {
+  const props: CpcProposition[] = [
+    { text: "V1", isValid: true },
+    { text: "V2", isValid: true },
+    { text: "V3", isValid: true },
+    { text: "INTRUS", isValid: false },
+  ];
+
+  it("retourne -1 si tout est cliqué", () => {
+    const clicked = new Set(props.map((p) => p.text));
+    expect(botPickCpcProposition(props, clicked, "moyen")).toBe(-1);
+  });
+
+  it("ne re-clique jamais une proposition déjà cliquée", () => {
+    const clicked = new Set(["V1"]);
+    for (let i = 0; i < 50; i++) {
+      const idx = botPickCpcProposition(props, clicked, "facile");
+      expect(props[idx]?.text).not.toBe("V1");
+    }
+  });
+
+  it("sur un bot difficile, tape très majoritairement des valides (≥ 90%)", () => {
+    const clicked = new Set<string>();
+    let validCount = 0;
+    const trials = 1000;
+    for (let i = 0; i < trials; i++) {
+      const idx = botPickCpcProposition(props, clicked, "difficile");
+      if (props[idx]?.isValid) validCount++;
+    }
+    expect(validCount / trials).toBeGreaterThan(0.85);
+  });
+
+  it("sur un bot facile, tape parfois l'intrus", () => {
+    const clicked = new Set<string>();
+    let intrusCount = 0;
+    const trials = 1000;
+    for (let i = 0; i < trials; i++) {
+      const idx = botPickCpcProposition(props, clicked, "facile");
+      if (!props[idx]?.isValid) intrusCount++;
+    }
+    // Devrait être autour de 30% (facile = 70% correct)
+    expect(intrusCount).toBeGreaterThan(200);
+    expect(intrusCount).toBeLessThan(400);
+  });
+
+  it("clique l'intrus s'il ne reste que lui", () => {
+    const clicked = new Set(["V1", "V2", "V3"]);
+    const idx = botPickCpcProposition(props, clicked, "difficile");
+    expect(props[idx]?.text).toBe("INTRUS");
   });
 });
 

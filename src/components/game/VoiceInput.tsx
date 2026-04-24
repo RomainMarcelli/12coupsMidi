@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mic, MicOff, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSpeechRecognition } from "@/lib/voice/speech-recognition";
@@ -11,6 +11,10 @@ interface VoiceInputProps {
   disabled?: boolean;
   /** Si true, on vide le champ après chaque submit (pour rejouer). */
   clearOnSubmit?: boolean;
+  /** Cache le bouton micro (mode clavier only). */
+  hideVoice?: boolean;
+  /** Focus l'input texte dès le montage et quand cette clé change. */
+  focusKey?: string | number;
 }
 
 /**
@@ -27,16 +31,30 @@ export function VoiceInput({
   placeholder = "Ta réponse…",
   disabled,
   clearOnSubmit = true,
+  hideVoice = false,
+  focusKey,
 }: VoiceInputProps) {
   const { transcript, listening, supported, error, start, stop, reset } =
     useSpeechRecognition();
   const [text, setText] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Quand la reco vocale livre un résultat, on recopie dans le champ texte
   // pour que l'utilisateur puisse le corriger avant de valider.
   useEffect(() => {
     if (transcript) setText(transcript);
   }, [transcript]);
+
+  // Focus auto de l'input texte — se redéclenche quand focusKey change
+  // (utile pour refocus à chaque changement de joueur actif en Coup Fatal).
+  useEffect(() => {
+    if (disabled) return;
+    const el = inputRef.current;
+    if (!el) return;
+    // microdelay : laisser la phase de transition terminer avant de focus
+    const id = window.setTimeout(() => el.focus(), 50);
+    return () => window.clearTimeout(id);
+  }, [focusKey, disabled]);
 
   function submit() {
     const value = text.trim();
@@ -64,58 +82,61 @@ export function VoiceInput({
   return (
     <div className="flex w-full flex-col gap-3">
       {/* Bouton micro + transcript live */}
-      <div className="flex flex-col items-center gap-2">
-        <button
-          type="button"
-          onClick={toggleMic}
-          disabled={disabled || !supported}
-          title={
-            supported
-              ? listening
-                ? "Stop"
-                : "Parler"
-              : "Reconnaissance vocale non supportée"
-          }
-          className={cn(
-            "relative flex h-20 w-20 items-center justify-center rounded-full border-2 transition-all",
-            listening
-              ? "border-buzz bg-buzz/10 text-buzz animate-pulse"
-              : "border-gold bg-white text-gold-warm hover:bg-gold/10 hover:scale-105",
-            (!supported || disabled) && "cursor-not-allowed opacity-50",
-          )}
-        >
-          {listening ? (
-            <MicOff className="h-9 w-9" aria-hidden="true" />
-          ) : (
-            <Mic className="h-9 w-9" aria-hidden="true" />
-          )}
-          {listening && (
-            <span className="absolute inset-0 rounded-full border-2 border-buzz/40 animate-ping" />
-          )}
-        </button>
+      {!hideVoice && (
+        <div className="flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleMic}
+            disabled={disabled || !supported}
+            title={
+              supported
+                ? listening
+                  ? "Stop"
+                  : "Parler"
+                : "Reconnaissance vocale non supportée"
+            }
+            className={cn(
+              "relative flex h-20 w-20 items-center justify-center rounded-full border-2 transition-all",
+              listening
+                ? "border-buzz bg-buzz/10 text-buzz animate-pulse"
+                : "border-gold bg-white text-gold-warm hover:bg-gold/10 hover:scale-105",
+              (!supported || disabled) && "cursor-not-allowed opacity-50",
+            )}
+          >
+            {listening ? (
+              <MicOff className="h-9 w-9" aria-hidden="true" />
+            ) : (
+              <Mic className="h-9 w-9" aria-hidden="true" />
+            )}
+            {listening && (
+              <span className="absolute inset-0 rounded-full border-2 border-buzz/40 animate-ping" />
+            )}
+          </button>
 
-        {listening && (
-          <p className="text-sm text-navy/60">
-            {transcript || "Parle clairement en français…"}
-          </p>
-        )}
-        {!supported && (
-          <p className="text-xs text-navy/50">
-            Micro non supporté par ce navigateur — tape ta réponse.
-          </p>
-        )}
-        {error && !listening && (
-          <p className="text-xs text-buzz" role="alert">
-            {error === "not-allowed"
-              ? "Autorise l'accès au micro dans ton navigateur."
-              : `Erreur micro : ${error}`}
-          </p>
-        )}
-      </div>
+          {listening && (
+            <p className="text-sm text-navy/60">
+              {transcript || "Parle clairement en français…"}
+            </p>
+          )}
+          {!supported && (
+            <p className="text-xs text-navy/50">
+              Micro non supporté par ce navigateur — tape ta réponse.
+            </p>
+          )}
+          {error && !listening && (
+            <p className="text-xs text-buzz" role="alert">
+              {error === "not-allowed"
+                ? "Autorise l'accès au micro dans ton navigateur."
+                : `Erreur micro : ${error}`}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Input texte + bouton Valider */}
       <div className="flex items-stretch gap-2">
         <input
+          ref={inputRef}
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}

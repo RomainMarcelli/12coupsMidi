@@ -64,6 +64,7 @@ function buildRow(q: QuestionInput, category_id: number, subcategory_id: number 
     indices: q.indices ?? null,
     image_url: q.image_url ?? null,
     explication: q.explication ?? null,
+    format: q.format ?? null,
   };
 }
 
