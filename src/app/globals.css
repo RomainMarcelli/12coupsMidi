@@ -129,6 +129,120 @@
   --sidebar-ring: #f5b700;
 }
 
+/* ----- Thème dark "Mahylan, version nuit" — palette V2 -----
+   Palette dédiée, contraste AA respecté (4.5:1 texte sur background) :
+     background       #0A0E27  (bleu nuit profond, jamais du noir pur)
+     card             #141A3A  (surface élevée, cartes)
+     popover/modal    #1F2752  (surface très élevée)
+     border           #2A3563  (bordure subtile, lumineuse)
+     foreground       #F1FAEE  (texte principal, blanc cassé)
+     muted-foreground #A8B2D1  (texte secondaire bleu-gris)
+     primary (gold)   #F5C518  (or accent qui ressort)
+     destructive      #FF6B6B  (rouge plus chaud, moins agressif)
+     life-green       #51CF66  (vert succès)
+   Les couleurs sémantiques `gold-warm`, `gold-pale`, `sky`, `sky-pale`,
+   `buzz`, `life-green`, `life-yellow`, `life-red` sont surchargées
+   ci-dessous pour s'aligner sur cette palette. */
+.dark {
+  --background: #0a0e27;
+  --foreground: #f1faee;
+  --card: #141a3a;
+  --card-foreground: #f1faee;
+  --popover: #1f2752;
+  --popover-foreground: #f1faee;
+  --primary: #f5c518;
+  --primary-foreground: #0a0e27;
+  --secondary: #1f2752;
+  --secondary-foreground: #f1faee;
+  --muted: #141a3a;
+  --muted-foreground: #a8b2d1;
+  --accent: #4da3f0;
+  --accent-foreground: #ffffff;
+  --destructive: #ff6b6b;
+  --border: #2a3563;
+  --input: #2a3563;
+  --ring: #f5c518;
+  --chart-1: #f5c518;
+  --chart-2: #51cf66;
+  --chart-3: #4da3f0;
+  --chart-4: #ff6b6b;
+  --chart-5: #a8b2d1;
+  /* Surcharge des couleurs sémantiques Mahylan en dark pour qu'elles
+     restent lisibles sur fond nuit. */
+  --color-cream: #1f2752; /* "fond doux" devient surface élevée en dark */
+  --color-cream-deep: #141a3a;
+  --color-navy: #f1faee; /* "texte principal" devient blanc cassé */
+  --color-navy-soft: #a8b2d1;
+  --color-gold: #f5c518;
+  --color-gold-warm: #ffd95c;
+  --color-gold-pale: #2f3970; /* halo doux devient violet bleu doux */
+  --color-sky: #4da3f0;
+  --color-sky-pale: #1f2752;
+  --color-buzz: #ff6b6b;
+  --color-life-green: #51cf66;
+  --color-life-yellow: #f5c518;
+  --color-life-red: #ff6b6b;
+  --sidebar: #141a3a;
+  --sidebar-foreground: #f1faee;
+  --sidebar-primary: #f5c518;
+  --sidebar-primary-foreground: #0a0e27;
+  --sidebar-accent: #1f2752;
+  --sidebar-accent-foreground: #f1faee;
+  --sidebar-border: #2a3563;
+  --sidebar-ring: #f5c518;
+}
+
+/* Ombres adoucies en dark : on remplace les drop-shadows lourdes par des
+   bordures lumineuses subtiles. Les utilitaires .glow-* sont surchargés. */
+.dark .glow-card {
+  box-shadow:
+    0 0 0 1px rgba(168, 178, 209, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.35);
+}
+.dark .glow-sun {
+  box-shadow:
+    0 0 0 1px rgba(245, 197, 24, 0.18),
+    0 0 32px rgba(245, 197, 24, 0.18);
+}
+.dark .glow-gold {
+  box-shadow:
+    0 0 0 2px rgba(245, 197, 24, 0.45),
+    0 0 24px rgba(245, 197, 24, 0.35);
+}
+
+/* Override massif `bg-white` en dark : la plupart des composants utilisent
+   bg-white pour les cards/surfaces. En dark, on les bascule sur la surface
+   élevée du thème nuit. Les rares blancs intentionnels en dark (thumb de
+   toggle, chip sur gradient gold) doivent utiliser `dark:bg-white` explicite
+   ou une classe dédiée. */
+.dark .bg-white {
+  background-color: var(--card);
+}
+.dark .bg-white\/85 {
+  background-color: rgb(20 26 58 / 0.85);
+}
+.dark .bg-white\/60 {
+  background-color: rgb(20 26 58 / 0.7);
+}
+
+/* Dégradés gradient-to-br qui partent de cream/gold-pale en light :
+   en dark, on les adoucit sur du navy nuit pour garder de la chaleur sans
+   être agressif. */
+.dark .from-gold-pale,
+.dark .via-cream,
+.dark .to-sky-pale {
+  --tw-gradient-from: rgba(245, 197, 24, 0.08) var(--tw-gradient-from-position);
+  --tw-gradient-stops:
+    var(--tw-gradient-from),
+    rgba(20, 26, 58, 0.9) var(--tw-gradient-via-position),
+    rgba(77, 163, 240, 0.08) var(--tw-gradient-to-position);
+}
+
+/* Navbar / sticky : en dark le `bg-white/85` doit rester sombre. */
+.dark .bg-card\/85 {
+  background-color: rgb(20 26 58 / 0.92);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -147,6 +261,19 @@
         transparent 50%
       );
     background-attachment: fixed;
+  }
+  .dark body {
+    background-image:
+      radial-gradient(
+        ellipse at top,
+        rgba(245, 183, 0, 0.06) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse at bottom right,
+        rgba(43, 142, 230, 0.05) 0%,
+        transparent 50%
+      );
   }
   html {
     @apply h-full font-sans;

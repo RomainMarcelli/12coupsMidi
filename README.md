@@ -1,8 +1,8 @@
-# Midi Master
+# Les 12 coups de Mahylan
 
-PWA d'entraînement aux 12 Coups de Midi. Stack : Next.js 16 + TypeScript + Tailwind v4 + Supabase.
+PWA d'entraînement aux 12 Coups — multi-modes (Coup d'envoi, Coup par Coup, Face-à-Face, parcours complet, Révision/Apprentissage). Stack : Next.js 16 + TypeScript + Tailwind v4 + Supabase.
 
-Voir le cahier des charges complet dans [MIDI_MASTER_PROJET.md](./MIDI_MASTER_PROJET.md), le journal des phases dans [PROGRESS.md](./PROGRESS.md), et les décisions techniques dans [DECISIONS.md](./DECISIONS.md).
+Voir le cahier des charges historique dans [MIDI_MASTER_PROJET.md](./MIDI_MASTER_PROJET.md), le journal des phases dans [PROGRESS.md](./PROGRESS.md), les décisions techniques dans [DECISIONS.md](./DECISIONS.md), et le journal des changements dans [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 

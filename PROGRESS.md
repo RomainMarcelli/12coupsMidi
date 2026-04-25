@@ -1,4 +1,4 @@
-# Midi Master — Journal de progression
+# Mahylan — Journal de progression
 
 Suivi phase par phase du projet. Chaque phase listée avec statut, date, livrables et points d'attention.
 
@@ -436,3 +436,34 @@ Avant d'attaquer le mode, correction du bug signalé (« une question apparaissa
 ## Phases 7 à 12
 
 Voir le cahier des charges pour le détail. Chaque phase sera notée ici au fil de l'eau.
+
+---
+
+## Lot UX/Rebrand — 2026-04-25
+
+Voir [CHANGELOG.md](./CHANGELOG.md) pour le détail complet. Récap haut niveau :
+
+- **Rebrand global** : "Midi Master" → "Les 12 coups de Mahylan" (slug `mahylan`).
+- **Favicons & PWA** : tous les formats régénérés depuis `public/logo.png` (script `gen-icons.mjs` réécrit, encodeur ICO maison).
+- **Auto-pseudo Joueur 1** dans tous les setups multijoueur (12 Coups / Jeu 1 / Jeu 2 / Face-à-Face).
+- **Bug photo profil 1 MB** corrigé : upload désormais 100 % côté client (compression WebP 512×512 + Supabase Storage direct).
+- **Sécurité compte** dans `/parametres` → Profil : changement email + mot de passe (re-auth obligatoire).
+- **Dark mode** complètement refait (palette `#0A0E27` / `#141A3A` / `#F5C518`…).
+- **30 s + bouton "Passer à la suite"** entre les questions du Jeu 1 (les deux modes).
+- **Mode spectateur** dans le parcours 12 Coups : encart d'élimination + rematch + bouton flottant.
+- **Sélecteur voix TTS** (vitesse / hauteur / Tester) dans `/parametres` → Audio & Voix.
+- **Page Stats** entièrement refaite : 4 graphiques Recharts (évolution 30 j, par catégorie, par mode, heatmap), 8 KPIs, et carte spéciale **Tableau de bord Maître de Midi** avec algo composite (4 dimensions pondérées) + estimation de date pour 100 %.
+- **Doublon "XP 600 XP"** retiré du tab Compte.
+
+**Tests** : 12 fichiers / **228 tests** (+13 sur l'algo Maître de Midi).
+**Build** : 21 routes générées, typecheck clean.
+
+### Nouveaux fichiers clés
+
+- [src/lib/avatar-upload.ts](src/lib/avatar-upload.ts) — compression image client + upload Storage.
+- [src/lib/user-display.ts](src/lib/user-display.ts) — helper `resolveUserPseudo`.
+- [src/lib/stats/maitre-de-midi.ts](src/lib/stats/maitre-de-midi.ts) + [.test.ts](src/lib/stats/maitre-de-midi.test.ts) — algo Maître de Midi pur.
+- [src/components/game/FeedbackCountdown.tsx](src/components/game/FeedbackCountdown.tsx) — countdown 30 s + bouton.
+- [src/components/game/SpectatorBanner.tsx](src/components/game/SpectatorBanner.tsx) — encart spectateur + bouton flottant.
+- [src/app/(app)/stats/stats-client.tsx](src/app/(app)/stats/stats-client.tsx) — tous les graphiques Recharts.
+- [CHANGELOG.md](./CHANGELOG.md) — journal des changements.

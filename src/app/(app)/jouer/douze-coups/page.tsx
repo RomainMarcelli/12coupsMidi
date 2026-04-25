@@ -8,6 +8,7 @@ import { buildDuelThemes } from "@/lib/game-logic/duel";
 import {
   pickFaceAFaceQuestions,
 } from "@/lib/game-logic/faceAFace";
+import { resolveUserPseudo } from "@/lib/user-display";
 import { DouzeCoupsClient } from "./douze-coups-client";
 import { NoQuestionsScreen } from "./no-questions";
 
@@ -16,6 +17,9 @@ export const dynamic = "force-dynamic";
 
 export default async function DouzeCoupsPage() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const [
     { data: quizz2Pool },
@@ -115,7 +119,7 @@ export default async function DouzeCoupsPage() {
       quizz4CountByCategory={quizz4CountByCategory}
       fafQuestions={fafQuestions}
       categories={categories ?? []}
-      userPseudo={profile?.pseudo ?? "Toi"}
+      userPseudo={resolveUserPseudo(profile?.pseudo)}
     />
   );
 }

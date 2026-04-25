@@ -23,50 +23,38 @@ const COLORS: Record<LifeState, { bg: string; glow: string; label: string }> = {
   },
 };
 
-const ORDER: LifeState[] = ["green", "yellow", "red"];
-
 interface LifeBarProps {
   state: LifeState;
   className?: string;
 }
 
 /**
- * Barre de vie 3 pastilles vert/jaune/rouge.
- * Chaque pastille s'anime (scale + opacity) selon l'état courant :
- * - pastille active = gonflée, pleine couleur, glow
- * - pastilles au-delà = éteintes
+ * Indicateur de vie : une SEULE pastille colorée selon l'état courant.
+ * Vert = plein, Jaune = attention, Rouge = critique.
+ * Anime un changement d'état avec une petite pulsation + crossfade entre
+ * couleurs (la `key={state}` force le remount → nouveau spring).
  */
 export function LifeBar({ state, className }: LifeBarProps) {
-  const activeIndex = ORDER.indexOf(state);
+  const cfg = COLORS[state];
 
   return (
     <div
-      className={cn("flex items-center gap-2", className)}
+      className={cn("flex items-center", className)}
       role="status"
-      aria-label={`Vies : ${COLORS[state].label}`}
+      aria-label={`Vies : ${cfg.label}`}
     >
-      {ORDER.map((color, idx) => {
-        const isActive = idx === activeIndex;
-        const isDimmed = idx > activeIndex;
-        const cfg = COLORS[color];
-
-        return (
-          <motion.span
-            key={color}
-            animate={{
-              scale: isActive ? 1.25 : 1,
-              opacity: isDimmed ? 0.15 : 1,
-            }}
-            transition={{ type: "spring", stiffness: 320, damping: 20 }}
-            className={cn(
-              "block h-4 w-4 rounded-full ring-1 ring-navy/20",
-              cfg.bg,
-              isActive && cfg.glow,
-            )}
-            aria-hidden="true"
-          />
-        );
-      })}
+      <motion.span
+        key={state}
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1.1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 320, damping: 18 }}
+        className={cn(
+          "block h-4 w-4 rounded-full ring-1 ring-navy/20",
+          cfg.bg,
+          cfg.glow,
+        )}
+        aria-hidden="true"
+      />
     </div>
   );
 }

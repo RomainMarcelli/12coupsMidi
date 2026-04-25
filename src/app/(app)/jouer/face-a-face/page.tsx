@@ -3,6 +3,7 @@ import {
   FAF_POOL_SIZE,
   pickFaceAFaceQuestions,
 } from "@/lib/game-logic/faceAFace";
+import { resolveUserPseudo } from "@/lib/user-display";
 import { FaceAFaceClient } from "./face-a-face-client";
 import { NoFafQuestions } from "./no-questions";
 
@@ -13,6 +14,9 @@ export const dynamic = "force-dynamic";
 
 export default async function FaceAFacePage() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const [{ data: pool }, { data: categories }, { data: profile }] =
     await Promise.all([
@@ -44,7 +48,7 @@ export default async function FaceAFacePage() {
   return (
     <FaceAFaceClient
       initialQuestions={questions}
-      userPseudo={profile?.pseudo ?? "Toi"}
+      userPseudo={resolveUserPseudo(profile?.pseudo)}
     />
   );
 }

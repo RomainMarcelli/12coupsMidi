@@ -20,8 +20,10 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnswerButton } from "@/components/game/AnswerButton";
 import { DuelPanel } from "@/components/game/DuelPanel";
+import { FeedbackCountdown } from "@/components/game/FeedbackCountdown";
 import { LifeBar } from "@/components/game/LifeBar";
 import { QuestionCard } from "@/components/game/QuestionCard";
+import { SpeakerButton } from "@/components/game/SpeakerButton";
 import { PlayerSetup } from "@/components/game/PlayerSetup";
 import { Button } from "@/components/ui/button";
 import { Timer } from "@/components/game/Timer";
@@ -191,13 +193,12 @@ export function CoupDEnvoiClient({
         return;
       }
 
-      // Feedback puis joueur suivant
+      // Feedback puis joueur suivant — piloté par `FeedbackCountdown` dans
+      // tous les cas (humain ET bot). Pour les bots on garde un countdown
+      // court (8 s) avec bouton "Suivant" pour que l'humain spectateur ait
+      // le temps de lire la question + voir la bonne réponse, mais puisse
+      // aussi accélérer manuellement.
       setPhase("feedback");
-      const delay = isCorrect ? FEEDBACK_DELAY_CORRECT_MS : FEEDBACK_DELAY_WRONG_MS;
-      window.setTimeout(() => {
-        advanceToNextPlayer();
-        setPhase("playing");
-      }, delay);
     },
     [currentQuestion, currentPlayer, playersErrors, advanceToNextPlayer],
   );
@@ -442,6 +443,9 @@ export function CoupDEnvoiClient({
           difficulte={currentQuestion.difficulte}
         />
       </AnimatePresence>
+      <div className="flex justify-center">
+        <SpeakerButton text={displayEnonce} />
+      </div>
 
       {/* Indicateur tour actif */}
       <div className="text-center">
@@ -478,6 +482,22 @@ export function CoupDEnvoiClient({
           );
         })}
       </div>
+
+      {/* Compte à rebours + bouton Passer après chaque réponse.
+          Humain : 30 s pour relire calmement.
+          Bot : 8 s pour voir la bonne réponse, avec bouton "Suivant" pour
+          accélérer si tu suis vite. Auto-skip à 0 dans les deux cas. */}
+      {phase === "feedback" && (
+        <FeedbackCountdown
+          key={`countdown-${currentQuestion.id}-${currentPlayerIdx}`}
+          seconds={currentPlayer.isBot ? 8 : 30}
+          label={currentPlayer.isBot ? "Suivant" : "Passer à la suite"}
+          onSkip={() => {
+            advanceToNextPlayer();
+            setPhase("playing");
+          }}
+        />
+      )}
 
       {/* Raccourcis clavier */}
       <p className="text-center text-xs text-navy/40">

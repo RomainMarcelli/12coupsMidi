@@ -66,7 +66,7 @@ export async function GET() {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="midi-master-questions-${date}.json"`,
+      "Content-Disposition": `attachment; filename="mahylan-questions-${date}.json"`,
       "Cache-Control": "no-store",
     },
   });

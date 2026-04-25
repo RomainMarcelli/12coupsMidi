@@ -57,20 +57,11 @@ export function prepareCeQuestion(
 
   let reponses = rawReponses.slice(0, 2);
 
-  if (format === "vrai_faux") {
-    // Vrai en premier, Faux en second
-    const vrai = reponses.find((r) => r.text.toLowerCase() === "vrai");
-    const faux = reponses.find((r) => r.text.toLowerCase() === "faux");
-    if (vrai && faux) reponses = [vrai, faux];
-  } else if (format === "plus_moins") {
-    const plus = reponses.find((r) => r.text.toLowerCase() === "plus");
-    const moins = reponses.find((r) => r.text.toLowerCase() === "moins");
-    if (plus && moins) reponses = [plus, moins];
-  } else {
-    // "ou" ou null : shuffle pour éviter la triche positionnelle
-    if (reponses.length === 2 && rng() < 0.5) {
-      reponses = [reponses[1]!, reponses[0]!];
-    }
+  // Randomise la position des 2 réponses pour tous les formats (Vrai/Faux,
+  // Plus/Moins, L'un ou l'autre) — demande user : éviter que la bonne soit
+  // toujours à la même position.
+  if (reponses.length === 2 && rng() < 0.5) {
+    reponses = [reponses[1]!, reponses[0]!];
   }
 
   const cat = q.category_id ? categoriesById.get(q.category_id) : null;

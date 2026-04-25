@@ -12,16 +12,16 @@ export default function LoginPage() {
         <div className="relative">
           <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
           <Image
-            src="/logo.svg"
+            src="/logo.png"
             alt=""
-            width={80}
-            height={80}
-            className="h-20 w-20"
+            width={160}
+            height={160}
+            className="h-20 w-20 rounded-2xl object-cover shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
             priority
           />
         </div>
         <h1 className="font-display text-3xl font-extrabold text-navy">
-          Midi <span className="text-gold-warm">Master</span>
+          Les <span className="text-gold-warm">12 coups</span> de Mahylan
         </h1>
         <p className="text-sm text-navy/70">
           Entraîne-toi aux 12 Coups de Midi.

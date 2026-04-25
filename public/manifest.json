@@ -1,29 +1,35 @@
 {
-  "name": "Midi Master",
-  "short_name": "Midi Master",
-  "description": "PWA d'entraînement aux 12 Coups de Midi — deviens Maître de Midi.",
+  "name": "Les 12 coups de Mahylan",
+  "short_name": "Mahylan",
+  "description": "PWA d'entraînement aux 12 Coups — deviens Maître de Midi.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0B1F4D",
-  "theme_color": "#0B1F4D",
+  "background_color": "#0A0E27",
+  "theme_color": "#0A0E27",
   "lang": "fr-FR",
   "categories": ["games", "education", "entertainment"],
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-maskable-512.png",
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

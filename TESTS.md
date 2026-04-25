@@ -1,4 +1,4 @@
-# Midi Master — Check-list des tests manuels (Phases 1 → 3)
+# Mahylan — Check-list des tests manuels (Phases 1 → 3)
 
 Tous les tests à passer avant de valider les phases 1, 2 et 3.
 Coche les cases au fur et à mesure. En cas d'échec, note l'étape et signale-la.
@@ -287,3 +287,80 @@ DevTools → Device Toolbar → iPhone 12 (375 px).
 ---
 
 Quand tout est coché, dis "ok phase 4" et j'enchaîne sur le **Jeu 1 — Quizz 1 chance sur 2**.
+
+---
+
+## ANNEXE — Check-list lot 2026-04-25 (rebrand + dark mode + stats + voix TTS)
+
+### A. Rebrand
+- [ ] Onglet du navigateur affiche "Les 12 coups de Mahylan"
+- [ ] Navbar affiche "Les 12 coups de Mahylan" (plus aucun "Midi Master" visible)
+- [ ] Favicon visible dans l'onglet du navigateur
+- [ ] PWA installée → icône Mahylan + nom court "Mahylan" sur l'écran d'accueil
+- [ ] Page 404 → alt image OK
+
+### B. Bug upload photo
+- [ ] /parametres → Profil → upload une photo > 1 MB → succès (compression auto)
+- [ ] Avatar visible dans la Navbar et dans /parametres après reload
+- [ ] Bouton de fallback (initiale) si pas d'avatar
+
+### C. Auto-pseudo Joueur 1
+- [ ] /jouer/douze-coups → setup → champ Joueur 1 pré-rempli avec mon pseudo
+- [ ] /jouer/jeu-1 → idem
+- [ ] /jouer/jeu-2 → idem
+- [ ] /jouer/face-a-face → idem
+- [ ] Si pseudo BDD vide → fallback sur partie gauche de l'email (pas "Toi")
+
+### D. Sécurité du compte
+- [ ] /parametres → Profil → "Modifier" l'email → mot de passe correct → mail envoyé
+- [ ] Mauvais mot de passe → message d'erreur clair
+- [ ] Changement de mot de passe : 8 char + 1 chiffre + confirmation
+- [ ] Bouton œil pour afficher/masquer
+
+### E. Dark mode
+- [ ] /parametres → Apparence → Sombre → tout passe en nuit
+- [ ] Pages testées en dark : `/`, `/jouer/douze-coups`, `/revision`, `/stats`, `/parametres`
+- [ ] Aucun fond blanc inattendu
+- [ ] Texte lisible (contraste)
+- [ ] Préférence persistée après refresh
+
+### F. Timing 30 s + bouton Passer (Jeu 1 uniquement)
+- [ ] /jouer/jeu-1 → après réponse → bouton "Passer à la suite" gros bouton or
+- [ ] Compte à rebours visible "Suite dans X s…" qui décrémente
+- [ ] Clic sur le bouton → passe à la suivante immédiatement
+- [ ] À 0 s → passe automatiquement
+- [ ] /jouer/douze-coups → Jeu 1 → même comportement
+- [ ] Autres modes (jeu-2, face-a-face) : timing inchangé
+
+### G. Mode spectateur (12 Coups vs Bots)
+- [ ] Lancer une partie 1 humain + 3 bots, perdre un duel
+- [ ] Encart rouge "Tu as été éliminé !" en haut
+- [ ] Bouton "Recommencer" → relance la partie avec mêmes paramètres
+- [ ] Bouton "Continuer à regarder" → encart fermé + bouton flottant en bas à droite
+- [ ] Le bouton flottant relance aussi
+- [ ] Cas multi-humains : encart sans bouton Recommencer
+
+### H. Voix TTS
+- [ ] /parametres → Audio & Voix → section "Voix de lecture" visible
+- [ ] Dropdown liste les voix françaises (FR/CA/BE/CH/LU)
+- [ ] Sliders Vitesse + Hauteur fonctionnels
+- [ ] Bouton "Tester" prononce la phrase de démo avec les paramètres en cours
+- [ ] Préférences persistées en BDD (refresh → toujours là)
+- [ ] Aucune voix française → message d'aide
+
+### I. Page Stats
+- [ ] Carte "Maître de Midi" en haut, % en très grand
+- [ ] Date estimée affichée (ou "Continue à t'entraîner")
+- [ ] Top 3 catégories à renforcer si applicable
+- [ ] Breakdown : Précision / Couverture / Consistance / Face-à-Face
+- [ ] 8 KPIs (niveau, précision, série, favoris, temps moyen, etc.)
+- [ ] Courbe d'évolution sur 30 jours
+- [ ] Barres horizontales par catégorie (couleurs natives BDD)
+- [ ] Camembert des modes joués
+- [ ] Heatmap d'activité (30 cases plus ou moins dorées)
+- [ ] Section badges (vide ou avec badges)
+
+### J. Doublon XP
+- [ ] /parametres → Compte → plus de ligne "XP : 600 XP"
+- [ ] Niveau / Email / Pseudo / Rôle restent affichés
+

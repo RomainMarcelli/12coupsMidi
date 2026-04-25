@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import type { BotDifficulty } from "@/lib/game-logic/faceAFace";
 import {
+  DC_PLAYER_COLORS,
   DC_STARTING_CAGNOTTE,
   applyCorrectAnswer,
   applyDuelResult,
@@ -57,12 +58,20 @@ interface DouzeCoupsState {
   nextPlayer: () => void;
 
   // Duel
+  /**
+   * Sort de la phase `transition_duel` (sas 20 s après la 2e erreur) pour
+   * démarrer effectivement le duel. Idempotent : ne fait rien si la phase
+   * courante n'est pas `transition_duel`.
+   */
+  startDuelPhase: () => void;
   designateAdversary: (challengedId: string) => void;
   resolveDuel: (adversaryCorrect: boolean, chosenCategoryId: number) => void;
 
   // Transitions
   advanceToJeu2: () => void;
   advanceToFaceAFace: () => void;
+  /** Safety net : garantit que les survivants entrent en Jeu 2 avec 0 erreur. */
+  forceResetErrorsJeu2: () => void;
   finalizeFaceAFace: (winnerId: string, loserId: string) => void;
   finishGame: () => void;
 
@@ -108,11 +117,12 @@ export const useDouzeCoupsStore = create<DouzeCoupsState>((set, get) => ({
       };
     }
 
-    const players: DcPlayer[] = input.players.map((p) => ({
+    const players: DcPlayer[] = input.players.map((p, idx) => ({
       id: generatePlayerId(),
       pseudo: p.pseudo.trim(),
       isBot: p.isBot,
       botLevel: p.botLevel,
+      color: DC_PLAYER_COLORS[idx % DC_PLAYER_COLORS.length]!,
       cagnotte: DC_STARTING_CAGNOTTE,
       errors: 0,
       isEliminated: false,
@@ -151,10 +161,13 @@ export const useDouzeCoupsStore = create<DouzeCoupsState>((set, get) => ({
     if (!target) return;
 
     if (dcShouldTriggerDuel(target.errors)) {
-      // Déclenche duel
+      // Bascule en phase transition_duel : on garde le rendu Jeu 1/Jeu 2
+      // affiché avec le feedback de la question ratée pendant 20 s
+      // (lecture de la bonne réponse + explication) avant de basculer
+      // dans le duel proprement dit via `startDuelPhase()`.
       set({
         players: updated,
-        phase: "duel",
+        phase: "transition_duel",
         pendingDuel: {
           challengerId: playerId,
           challengedId: null,
@@ -170,6 +183,12 @@ export const useDouzeCoupsStore = create<DouzeCoupsState>((set, get) => ({
     set((s) => ({
       currentPlayerIdx: dcNextActiveIdx(s.currentPlayerIdx, s.players),
     }));
+  },
+
+  startDuelPhase: () => {
+    const state = get();
+    if (state.phase !== "transition_duel") return;
+    set({ phase: "duel" });
   },
 
   designateAdversary: (challengedId) => {
@@ -251,6 +270,19 @@ export const useDouzeCoupsStore = create<DouzeCoupsState>((set, get) => ({
       phase: "faceaface",
       players: resetErrorsForNewGame(s.players),
     }));
+  },
+
+  forceResetErrorsJeu2: () => {
+    set((s) => {
+      const needsReset = s.players.some(
+        (p) => !p.isEliminated && p.errors > 0,
+      );
+      if (!needsReset) return {};
+      if (typeof console !== "undefined") {
+        console.debug("[douze-coups] forceResetErrorsJeu2 corrige un état incohérent");
+      }
+      return { players: resetErrorsForNewGame(s.players) };
+    });
   },
 
   finalizeFaceAFace: (winnerId, loserId) => {

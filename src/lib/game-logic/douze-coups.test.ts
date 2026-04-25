@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  DC_CORRECT_BONUS,
   DC_MAX_ERRORS,
   DC_STARTING_CAGNOTTE,
   applyCorrectAnswer,
@@ -29,6 +28,7 @@ function player(
     id,
     pseudo: id,
     isBot: false,
+    color: "gold",
     cagnotte: DC_STARTING_CAGNOTTE,
     errors: 0,
     isEliminated: false,
@@ -174,12 +174,12 @@ describe("dcAliveCount", () => {
 });
 
 describe("applyCorrectAnswer", () => {
-  it("+bonus cagnotte + correctCount pour le joueur ciblé", () => {
+  it("incrémente correctCount SANS toucher à la cagnotte", () => {
     const ps = [player("a"), player("b")];
     const updated = applyCorrectAnswer(ps, "a");
-    expect(updated[0]!.cagnotte).toBe(DC_STARTING_CAGNOTTE + DC_CORRECT_BONUS);
     expect(updated[0]!.correctCount).toBe(1);
-    // b inchangé
+    // Cagnotte inchangée : l'argent ne bouge qu'aux duels / face-à-face
+    expect(updated[0]!.cagnotte).toBe(DC_STARTING_CAGNOTTE);
     expect(updated[1]!.cagnotte).toBe(DC_STARTING_CAGNOTTE);
   });
 });

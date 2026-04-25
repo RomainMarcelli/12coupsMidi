@@ -23,9 +23,15 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnswerButton } from "@/components/game/AnswerButton";
 import { DuelPanel } from "@/components/game/DuelPanel";
+import { FeedbackCountdown } from "@/components/game/FeedbackCountdown";
+import { TransitionDuelOverlay } from "@/components/game/TransitionDuelOverlay";
 import { LifeBar } from "@/components/game/LifeBar";
 import { QuestionCard } from "@/components/game/QuestionCard";
-import { Timer } from "@/components/game/Timer";
+import { SpeakerButton } from "@/components/game/SpeakerButton";
+import {
+  FloatingRestartButton,
+  SpectatorBanner,
+} from "@/components/game/SpectatorBanner";
 import { VoiceInput } from "@/components/game/VoiceInput";
 import { Button } from "@/components/ui/button";
 import type { CeQuestion } from "@/lib/game-logic/coup-d-envoi";
@@ -39,12 +45,11 @@ import {
   botPickCpcProposition,
 } from "@/lib/game-logic/coup-par-coup";
 import {
-  DC_JEU1_TIMER_SECONDS,
-  DC_JEU2_TIMER_SECONDS,
   DC_STARTING_CAGNOTTE,
   dcLifeState,
   dcPodium,
   type DcPlayer,
+  type DcPlayerColor,
 } from "@/lib/game-logic/douze-coups";
 import {
   buildDuelThemes,
@@ -69,7 +74,7 @@ import {
   availableDuelThemes,
 } from "@/stores/douzeCoupsStore";
 import { saveDouzeCoupsSession, type SaveDcResult } from "./actions";
-import { DcSetupScreen } from "./setup-screen";
+import { DcSetupScreen, type DcSetupResult } from "./setup-screen";
 import { DcIntroScreen } from "./intro-screen";
 
 type CategoryRow = Pick<
@@ -106,56 +111,109 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
   const initParty = useDouzeCoupsStore((s) => s.initParty);
   const startIntro = useDouzeCoupsStore((s) => s.startIntro);
   const startJeu1 = useDouzeCoupsStore((s) => s.startJeu1);
+  const reset = useDouzeCoupsStore((s) => s.reset);
   const players = useDouzeCoupsStore((s) => s.players);
   const userPlayerId = players[0]?.id ?? "";
 
+  // On retient la dernière config de setup pour pouvoir relancer une partie
+  // identique sans repasser par le formulaire complet (rematch).
+  const [lastSetup, setLastSetup] = useState<DcSetupResult | null>(null);
+  // Une fois que l'utilisateur a fait son choix sur l'encart spectateur,
+  // on ne le réaffiche plus (juste le bouton flottant).
+  const [spectatorAcked, setSpectatorAcked] = useState(false);
+
+  // Re-init au démarrage d'une nouvelle partie : on remet à zéro l'état
+  // d'acquittement spectateur.
+  useEffect(() => {
+    if (phase === "setup" || phase === "intro") {
+      setSpectatorAcked(false);
+    }
+  }, [phase]);
+
+  function startGame(result: DcSetupResult): boolean {
+    const { ok, error } = initParty({
+      players: result.players,
+      categories,
+      quizz4CountByCategory,
+    });
+    if (!ok) {
+      alert(error ?? "Impossible de démarrer la partie.");
+      return false;
+    }
+    setLastSetup(result);
+    setSpectatorAcked(false);
+    startIntro();
+    return true;
+  }
+
+  function rematch() {
+    if (!lastSetup) return;
+    reset();
+    // Petit délai pour laisser le store reset se propager avant re-init
+    window.setTimeout(() => startGame(lastSetup), 0);
+  }
+
   if (phase === "setup") {
-    return (
-      <DcSetupScreen
-        userPseudo={userPseudo}
-        onReady={(result) => {
-          const { ok, error } = initParty({
-            players: result.players,
-            categories,
-            quizz4CountByCategory,
-          });
-          if (!ok) {
-            alert(error ?? "Impossible de démarrer la partie.");
-            return;
-          }
-          startIntro();
-        }}
-      />
-    );
+    return <DcSetupScreen userPseudo={userPseudo} onReady={startGame} />;
   }
 
   if (phase === "intro") {
     return <DcIntroScreen onEnd={() => startJeu1()} />;
   }
 
-  if (phase === "jeu1") {
-    return <DcJeu1Stage ceQuestions={ceQuestions} />;
+  // --- Détection mode spectateur (humain user éliminé) -----------------
+  // Convention : `players[0]` = l'humain user (premier slot du setup).
+  const userPlayer = players[0];
+  const userEliminated = !!userPlayer && userPlayer.isEliminated;
+  const otherHumansAlive = players.some(
+    (p, i) => i !== 0 && !p.isBot && !p.isEliminated,
+  );
+  const canRestart = userEliminated && !otherHumansAlive && !!lastSetup;
+  const showSpectatorBanner =
+    userEliminated && phase !== "results" && !spectatorAcked;
+  const showFloatingRestart =
+    userEliminated && phase !== "results" && spectatorAcked && canRestart;
+
+  // Pendant `transition_duel`, on garde le rendu du jeu en cours pour
+  // que l'utilisateur continue à voir la question + le feedback complet
+  // (bonne réponse, explication). Le stage gère lui-même l'overlay du
+  // sas 20 s et le freeze des interactions.
+  const pendingReturnPhase = useDouzeCoupsStore(
+    (s) => s.pendingDuel?.returnPhase ?? null,
+  );
+
+  function renderStage() {
+    if (phase === "jeu1") return <DcJeu1Stage ceQuestions={ceQuestions} />;
+    if (phase === "transition_duel" && pendingReturnPhase === "jeu1") {
+      return <DcJeu1Stage ceQuestions={ceQuestions} />;
+    }
+    if (phase === "transition_duel" && pendingReturnPhase === "jeu2") {
+      return <DcJeu2Stage cpcRounds={cpcRounds} />;
+    }
+    if (phase === "duel") return <DcDuelStage duelThemes={duelThemes} />;
+    if (phase === "jeu2") return <DcJeu2Stage cpcRounds={cpcRounds} />;
+    if (phase === "faceaface")
+      return <DcFaceAFaceStage fafQuestions={fafQuestions} />;
+    if (phase === "results")
+      return <DcResultsScreen userPlayerId={userPlayerId} />;
+    return null;
   }
 
-  if (phase === "duel") {
-    return (
-      <DcDuelStage duelThemes={duelThemes} />
-    );
-  }
-
-  if (phase === "jeu2") {
-    return <DcJeu2Stage cpcRounds={cpcRounds} />;
-  }
-
-  if (phase === "faceaface") {
-    return <DcFaceAFaceStage fafQuestions={fafQuestions} />;
-  }
-
-  if (phase === "results") {
-    return <DcResultsScreen userPlayerId={userPlayerId} />;
-  }
-
-  return null;
+  return (
+    <>
+      {showSpectatorBanner && (
+        <div className="mx-auto w-full max-w-3xl px-4 pt-4">
+          <SpectatorBanner
+            canRestart={canRestart}
+            onRestart={rematch}
+            onContinueWatching={() => setSpectatorAcked(true)}
+          />
+        </div>
+      )}
+      {renderStage()}
+      <FloatingRestartButton visible={showFloatingRestart} onRestart={rematch} />
+    </>
+  );
 }
 
 // ===========================================================================
@@ -197,13 +255,7 @@ function PlayerBadge({
   active: boolean;
 }) {
   const life = dcLifeState(player.errors);
-  const tone = player.isEliminated
-    ? "border-navy/10 bg-navy/5 opacity-50"
-    : life === "green"
-      ? "border-life-green/40 bg-life-green/5"
-      : life === "yellow"
-        ? "border-life-yellow/50 bg-life-yellow/10"
-        : "border-life-red/50 bg-life-red/10";
+  const colorStyle = playerColorStyle(player.color);
 
   return (
     <motion.div
@@ -212,10 +264,12 @@ function PlayerBadge({
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
       className={cn(
         "relative flex flex-col gap-1 rounded-xl border p-2.5 transition-all",
-        tone,
+        player.isEliminated
+          ? "border-navy/10 bg-navy/5 opacity-50"
+          : cn(colorStyle.border, colorStyle.bgSoft),
         active &&
           !player.isEliminated &&
-          "border-gold shadow-[0_0_24px_rgba(245,183,0,0.35)] bg-gold/10",
+          cn(colorStyle.borderActive, colorStyle.shadow, colorStyle.bgActive),
       )}
     >
       {player.isEliminated && (
@@ -227,7 +281,7 @@ function PlayerBadge({
         <div
           className={cn(
             "flex h-6 w-6 shrink-0 items-center justify-center rounded-md",
-            player.isBot ? "bg-sky/15 text-sky" : "bg-gold/20 text-gold-warm",
+            colorStyle.iconBg,
           )}
         >
           {player.isBot ? (
@@ -236,7 +290,12 @@ function PlayerBadge({
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
           )}
         </div>
-        <span className="flex-1 truncate text-xs font-bold text-navy">
+        <span
+          className={cn(
+            "flex-1 truncate text-xs font-bold",
+            player.isEliminated ? "text-navy/40" : colorStyle.text,
+          )}
+        >
           {player.pseudo}
         </span>
       </div>
@@ -260,6 +319,61 @@ function PlayerBadge({
   );
 }
 
+interface PlayerColorStyle {
+  border: string;
+  borderActive: string;
+  bgSoft: string;
+  bgActive: string;
+  shadow: string;
+  iconBg: string;
+  text: string;
+}
+
+function playerColorStyle(color: DcPlayerColor): PlayerColorStyle {
+  switch (color) {
+    case "gold":
+      return {
+        border: "border-gold/30",
+        borderActive: "border-gold",
+        bgSoft: "bg-gold/5",
+        bgActive: "bg-gold/15",
+        shadow: "shadow-[0_0_24px_rgba(245,183,0,0.35)]",
+        iconBg: "bg-gold/20 text-gold-warm",
+        text: "text-gold-warm",
+      };
+    case "sky":
+      return {
+        border: "border-sky/30",
+        borderActive: "border-sky",
+        bgSoft: "bg-sky/5",
+        bgActive: "bg-sky/15",
+        shadow: "shadow-[0_0_24px_rgba(43,142,230,0.35)]",
+        iconBg: "bg-sky/20 text-sky",
+        text: "text-sky",
+      };
+    case "buzz":
+      return {
+        border: "border-buzz/30",
+        borderActive: "border-buzz",
+        bgSoft: "bg-buzz/5",
+        bgActive: "bg-buzz/15",
+        shadow: "shadow-[0_0_24px_rgba(230,57,70,0.35)]",
+        iconBg: "bg-buzz/20 text-buzz",
+        text: "text-buzz",
+      };
+    case "life-green":
+      return {
+        border: "border-life-green/30",
+        borderActive: "border-life-green",
+        bgSoft: "bg-life-green/5",
+        bgActive: "bg-life-green/15",
+        shadow: "shadow-[0_0_24px_rgba(46,204,113,0.35)]",
+        iconBg: "bg-life-green/20 text-life-green",
+        text: "text-life-green",
+      };
+  }
+}
+
 function formatMoney(amount: number): string {
   return `${amount.toLocaleString("fr-FR")} €`;
 }
@@ -279,7 +393,13 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
   const usedIdxRef = useRef<Set<number>>(new Set([0]));
   const [feedback, setFeedback] = useState<
     | { kind: "correct"; correctIdx: number }
-    | { kind: "wrong"; selectedIdx: number; correctIdx: number }
+    | {
+        kind: "wrong";
+        selectedIdx: number;
+        correctIdx: number;
+        correctText: string;
+        explication: string | null;
+      }
     | null
   >(null);
 
@@ -314,12 +434,19 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
         return;
       const correctIdx = currentQuestion.reponses.findIndex((r) => r.correct);
       const isCorrect = selectedIdx === correctIdx;
+      const correctText = currentQuestion.reponses[correctIdx]?.text ?? "";
 
       isTransitioningRef.current = true;
       setFeedback(
         isCorrect
           ? { kind: "correct", correctIdx }
-          : { kind: "wrong", selectedIdx, correctIdx },
+          : {
+              kind: "wrong",
+              selectedIdx,
+              correctIdx,
+              correctText,
+              explication: currentQuestion.explication,
+            },
       );
       if (isCorrect) {
         playSound("ding");
@@ -329,13 +456,11 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
         recordWrong(currentPlayer.id, "jeu1");
       }
 
-      pendingTimerRef.current = window.setTimeout(
-        () => {
-          advanceToNext();
-          pendingTimerRef.current = null;
-        },
-        isCorrect ? 1200 : 1800,
-      );
+      // Plus de setTimeout auto, même pour les bots : c'est `FeedbackCountdown`
+      // qui pilote le passage à la question suivante dans TOUS les cas.
+      // Humain : 30 s. Bot : 8 s avec bouton "Suivant" pour accélérer.
+      // Évite l'enchaînement trop rapide des questions quand plusieurs bots
+      // jouent à la suite (l'humain spectateur n'avait pas le temps de lire).
     },
     [currentQuestion, currentPlayer, recordCorrect, recordWrong, advanceToNext],
   );
@@ -396,11 +521,8 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
             {formatLbl}
           </span>
         )}
-        <Timer
-          key={`timer-${qIdx}-${currentPlayerIdx}`}
-          duration={DC_JEU1_TIMER_SECONDS}
-          paused={feedback !== null}
-          onEnd={() => processAnswer(-1)}
+        <SpeakerButton
+          text={`${formatLbl ? formatLbl + ". " : ""}${displayEnonce}`}
         />
       </div>
 
@@ -443,12 +565,64 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
         })}
       </div>
 
+      <WrongFeedback feedback={feedback} />
+
+      {/* Bouton "Passer à la suite" + countdown, visible dès qu'une réponse
+          a été enregistrée. Humain : 30 s pour lire / relire l'explication.
+          Bot : 8 s avec bouton "Suivant" pour permettre à l'humain
+          spectateur de voir la bonne réponse + l'explication des bots
+          mais d'accélérer s'il a déjà compris. */}
+      {feedback && (
+        <FeedbackCountdown
+          key={`countdown-${currentQuestion.id}-${currentPlayerIdx}`}
+          seconds={currentPlayer.isBot ? 8 : 30}
+          label={currentPlayer.isBot ? "Suivant" : "Passer à la suite"}
+          onSkip={advanceToNext}
+        />
+      )}
+
       <p className="text-center text-xs text-navy/40">
         <ArrowLeft className="inline h-3 w-3 align-text-bottom" aria-hidden="true" />{" "}
         A pour la gauche · B pour la droite{" "}
         <ArrowRight className="inline h-3 w-3 align-text-bottom" aria-hidden="true" />
       </p>
     </main>
+  );
+}
+
+/** Encart d'erreur : bonne réponse attendue + explication si dispo. */
+function WrongFeedback({
+  feedback,
+}: {
+  feedback:
+    | { kind: "correct"; correctIdx: number }
+    | {
+        kind: "wrong";
+        selectedIdx: number;
+        correctIdx: number;
+        correctText: string;
+        explication: string | null;
+      }
+    | null;
+}) {
+  if (!feedback || feedback.kind !== "wrong") return null;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl border border-buzz/40 bg-buzz/10 p-4 text-sm text-navy"
+    >
+      <p className="font-display text-base font-bold text-buzz">
+        Mauvaise réponse
+      </p>
+      <p className="mt-1">
+        La bonne réponse était&nbsp;:{" "}
+        <strong className="text-life-green">{feedback.correctText}</strong>
+      </p>
+      {feedback.explication && (
+        <p className="mt-2 text-navy/80">{feedback.explication}</p>
+      )}
+    </motion.div>
   );
 }
 
@@ -631,12 +805,20 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
   const recordWrong = useDouzeCoupsStore((s) => s.recordWrong);
   const nextPlayer = useDouzeCoupsStore((s) => s.nextPlayer);
   const advanceToFaceAFace = useDouzeCoupsStore((s) => s.advanceToFaceAFace);
+  const forceResetErrorsJeu2 = useDouzeCoupsStore((s) => s.forceResetErrorsJeu2);
 
   const [roundIdx, setRoundIdx] = useState(0);
   const [clicked, setClicked] = useState<Set<string>>(new Set());
   const [shakeText, setShakeText] = useState<string | null>(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const isTransitioningRef = useRef(false);
+
+  // Safety net : à l'entrée en Jeu 2, on s'assure que tous les survivants
+  // sont à 0 erreur (pour éviter un bug où une erreur résiduelle de Jeu 1
+  // ferait passer au rouge dès la 1re erreur de Jeu 2).
+  useEffect(() => {
+    forceResetErrorsJeu2();
+  }, [forceResetErrorsJeu2]);
 
   const currentPlayer = players[currentPlayerIdx];
   const current = cpcRounds[roundIdx];
@@ -751,23 +933,14 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
           6 propositions liées · évite l&apos;
           <strong className="text-buzz">intrus</strong>
         </p>
+        <div className="mt-3 flex justify-center">
+          <SpeakerButton
+            text={`${current.theme}. Six propositions liées, évite l'intrus.`}
+          />
+        </div>
       </div>
 
       <TurnLabel player={currentPlayer} />
-
-      <Timer
-        key={`cpc-timer-${roundIdx}-${currentPlayerIdx}`}
-        duration={DC_JEU2_TIMER_SECONDS}
-        paused={showingFeedback || currentPlayer.isBot}
-        onEnd={() => {
-          // Timeout = intrus implicite pour ce joueur
-          if (!isTransitioningRef.current && currentPlayer) {
-            isTransitioningRef.current = true;
-            recordWrong(currentPlayer.id, "jeu2");
-            endRound(true);
-          }
-        }}
-      />
 
       <div className="grid gap-2.5 sm:grid-cols-2">
         {current.propositions.map((prop) => {
@@ -1077,33 +1250,40 @@ function DcFaceAFaceStage({
             categoryColor={currentQuestion.category?.couleur ?? undefined}
             difficulte={currentQuestion.difficulte}
           />
+          <div className="flex justify-center">
+            <SpeakerButton text={currentQuestion.enonce} />
+          </div>
           <AnimatePresence>
             {flash && (
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="mx-auto rounded-xl border border-buzz/40 bg-buzz/10 px-4 py-2 text-center text-sm text-buzz"
+                className="mx-auto rounded-xl border border-buzz/40 bg-buzz/10 px-4 py-3 text-center text-sm text-buzz"
               >
-                {flash.kind === "wrong"
-                  ? "Mauvaise réponse"
-                  : activePlayer?.isBot
-                    ? "Le bot passe"
-                    : "Passé"}{" "}
-                — la bonne : <strong>{flash.correctAnswer}</strong>
+                <p className="font-display font-bold text-buzz">
+                  {flash.kind === "wrong"
+                    ? "Mauvaise réponse"
+                    : activePlayer?.isBot
+                      ? "Le bot passe"
+                      : "Passé"}
+                </p>
+                <p className="mt-1 text-navy">
+                  La bonne réponse était&nbsp;:{" "}
+                  <strong className="text-life-green">
+                    {flash.correctAnswer}
+                  </strong>
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
           {activePlayer?.isBot ? (
-            <BotThinkingMini
-              name={activePlayer.pseudo}
-            />
+            <BotThinkingMini name={activePlayer.pseudo} />
           ) : (
             <div className="flex flex-col gap-3">
               <VoiceInput
                 onSubmit={handleAnswer}
                 placeholder="Ta réponse…"
-                hideVoice
                 focusKey={`${activeIdx}-${qIdx}`}
                 disabled={phaseLocal !== "playing"}
               />

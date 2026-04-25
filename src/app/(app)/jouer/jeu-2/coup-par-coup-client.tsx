@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { DuelPanel } from "@/components/game/DuelPanel";
 import { LifeBar } from "@/components/game/LifeBar";
 import { PlayerSetup } from "@/components/game/PlayerSetup";
+import { SpeakerButton } from "@/components/game/SpeakerButton";
 import {
   CPC_MAX_ERRORS,
   CPC_ROUNDS_PER_GAME,
@@ -467,6 +468,11 @@ export function CoupParCoupClient({
           6 propositions liées · évite l&apos;
           <strong className="text-buzz">intrus</strong>
         </p>
+        <div className="mt-3 flex justify-center">
+          <SpeakerButton
+            text={`${current.theme}. Six propositions liées, évite l'intrus.`}
+          />
+        </div>
       </div>
 
       {/* Indicateur tour */}

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Mic, MicOff, Send } from "lucide-react";
+import { Check, Mic, MicOff, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSetting } from "@/lib/settings";
 import { useSpeechRecognition } from "@/lib/voice/speech-recognition";
 
 interface VoiceInputProps {
@@ -15,6 +16,12 @@ interface VoiceInputProps {
   hideVoice?: boolean;
   /** Focus l'input texte dès le montage et quand cette clé change. */
   focusKey?: string | number;
+  /**
+   * Délai (ms) d'inactivité vocale avant auto-submit. Défaut 800 ms : on
+   * arrête dès que l'utilisateur fait une vraie pause. Mettre plus haut
+   * en mode "réflexion" (e.g. 1500).
+   */
+  silenceMs?: number;
 }
 
 /**
@@ -33,11 +40,15 @@ export function VoiceInput({
   clearOnSubmit = true,
   hideVoice = false,
   focusKey,
+  silenceMs = 800,
 }: VoiceInputProps) {
   const { transcript, listening, supported, error, start, stop, reset } =
     useSpeechRecognition();
+  const voiceEnabledSetting = useSetting("voiceRecognition");
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const onSubmitRef = useRef(onSubmit);
+  onSubmitRef.current = onSubmit;
 
   // Quand la reco vocale livre un résultat, on recopie dans le champ texte
   // pour que l'utilisateur puisse le corriger avant de valider.
@@ -45,31 +56,53 @@ export function VoiceInput({
     if (transcript) setText(transcript);
   }, [transcript]);
 
-  // Focus auto de l'input texte — se redéclenche quand focusKey change
-  // (utile pour refocus à chaque changement de joueur actif en Coup Fatal).
+  // Focus auto de l'input texte
   useEffect(() => {
     if (disabled) return;
     const el = inputRef.current;
     if (!el) return;
-    // microdelay : laisser la phase de transition terminer avant de focus
     const id = window.setTimeout(() => el.focus(), 50);
     return () => window.clearTimeout(id);
   }, [focusKey, disabled]);
 
-  function submit() {
-    const value = text.trim();
+  function submit(forced?: string) {
+    const value = (forced ?? text).trim();
     if (!value || disabled) return;
-    onSubmit(value);
+    onSubmitRef.current(value);
     if (clearOnSubmit) {
       setText("");
       reset();
     }
   }
 
+  function startListening() {
+    if (!supported || disabled) return;
+    setText("");
+    start({
+      silenceMs,
+      onAutoStop: (finalTranscript) => {
+        const cleaned = finalTranscript.trim();
+        if (!cleaned) return;
+        // Soumet directement le transcript final dès que la voix est stable —
+        // évite d'attendre l'arrêt natif (~3 s) du moteur vocal Chrome.
+        onSubmitRef.current(cleaned);
+        if (clearOnSubmit) {
+          setText("");
+          reset();
+        }
+      },
+    });
+  }
+
   function toggleMic() {
     if (!supported || disabled) return;
-    if (listening) stop();
-    else start();
+    if (listening) {
+      // L'utilisateur clique stop → on prend ce qu'on a et on soumet
+      stop();
+      submit();
+    } else {
+      startListening();
+    }
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -79,10 +112,12 @@ export function VoiceInput({
     }
   }
 
+  const showVoice = !hideVoice && voiceEnabledSetting !== false;
+
   return (
     <div className="flex w-full flex-col gap-3">
       {/* Bouton micro + transcript live */}
-      {!hideVoice && (
+      {showVoice && (
         <div className="flex flex-col items-center gap-2">
           <button
             type="button"
@@ -91,7 +126,7 @@ export function VoiceInput({
             title={
               supported
                 ? listening
-                  ? "Stop"
+                  ? "Stop & valider"
                   : "Parler"
                 : "Reconnaissance vocale non supportée"
             }
@@ -99,7 +134,7 @@ export function VoiceInput({
               "relative flex h-20 w-20 items-center justify-center rounded-full border-2 transition-all",
               listening
                 ? "border-buzz bg-buzz/10 text-buzz animate-pulse"
-                : "border-gold bg-white text-gold-warm hover:bg-gold/10 hover:scale-105",
+                : "border-gold bg-card text-gold-warm hover:bg-gold/10 hover:scale-105",
               (!supported || disabled) && "cursor-not-allowed opacity-50",
             )}
           >
@@ -113,13 +148,28 @@ export function VoiceInput({
             )}
           </button>
 
+          {/* Bouton "Valider maintenant" très visible pendant l'écoute */}
           {listening && (
-            <p className="text-sm text-navy/60">
+            <button
+              type="button"
+              onClick={() => {
+                stop();
+                submit();
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-life-green px-4 py-2 text-sm font-bold text-white shadow-[0_4px_0_0_#27ae60] hover:-translate-y-px hover:shadow-[0_6px_16px_rgba(46,204,113,0.45)]"
+            >
+              <Check className="h-4 w-4" aria-hidden="true" />
+              Valider maintenant
+            </button>
+          )}
+
+          {listening && (
+            <p className="min-h-[1.25rem] text-sm text-foreground/70">
               {transcript || "Parle clairement en français…"}
             </p>
           )}
           {!supported && (
-            <p className="text-xs text-navy/50">
+            <p className="text-xs text-foreground/50">
               Micro non supporté par ce navigateur — tape ta réponse.
             </p>
           )}
@@ -146,11 +196,11 @@ export function VoiceInput({
           autoComplete="off"
           autoCapitalize="off"
           spellCheck={false}
-          className="h-11 flex-1 rounded-md border border-border bg-white px-3 text-base text-navy placeholder-navy/40 focus:border-gold focus:outline-none disabled:opacity-50"
+          className="h-11 flex-1 rounded-md border border-border bg-card px-3 text-base text-foreground placeholder-foreground/40 focus:border-gold focus:outline-none disabled:opacity-50"
         />
         <button
           type="button"
-          onClick={submit}
+          onClick={() => submit()}
           disabled={disabled || text.trim() === ""}
           className="flex h-11 items-center gap-1.5 rounded-md bg-gold px-4 font-bold text-navy shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_16px_rgba(245,183,0,0.45)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-50"
         >

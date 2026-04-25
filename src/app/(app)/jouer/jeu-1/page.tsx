@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { shuffleCePool, prepareCeQuestion } from "@/lib/game-logic/coup-d-envoi";
 import { buildDuelThemes } from "@/lib/game-logic/duel";
+import { resolveUserPseudo } from "@/lib/user-display";
 import { CoupDEnvoiClient } from "./coup-d-envoi-client";
 import { NoCeQuestions } from "./no-questions";
 
@@ -11,6 +12,9 @@ export const dynamic = "force-dynamic";
 
 export default async function Jeu1Page() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const [{ data: pool }, { data: quizz4Pool }, { data: categories }, { data: profile }] =
     await Promise.all([
@@ -49,7 +53,7 @@ export default async function Jeu1Page() {
     <CoupDEnvoiClient
       initialQuestions={questions}
       duelThemes={duelThemes}
-      userPseudo={profile?.pseudo ?? "Toi"}
+      userPseudo={resolveUserPseudo(profile?.pseudo)}
     />
   );
 }

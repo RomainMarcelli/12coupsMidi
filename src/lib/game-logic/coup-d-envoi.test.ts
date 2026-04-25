@@ -81,36 +81,41 @@ describe("stripFormatPrefix", () => {
 });
 
 describe("prepareCeQuestion", () => {
-  it("format vrai_faux : Vrai toujours en premier", () => {
+  it("format vrai_faux : position randomisée via rng", () => {
     const raw = makeQuestion({
       id: "q1",
       type: "quizz_2",
       format: "vrai_faux",
       enonce: "Vrai ou faux : test ?",
       reponses: [
-        { text: "Faux", correct: false },
         { text: "Vrai", correct: true },
+        { text: "Faux", correct: false },
       ],
     });
-    const prepared = prepareCeQuestion(raw, SAMPLE_CATEGORIES);
-    expect(prepared.reponses[0]!.text).toBe("Vrai");
-    expect(prepared.reponses[1]!.text).toBe("Faux");
-    expect(prepared.format).toBe("vrai_faux");
+    // rng < 0.5 → échange
+    const swapped = prepareCeQuestion(raw, SAMPLE_CATEGORIES, () => 0);
+    expect(swapped.reponses[0]!.text).toBe("Faux");
+    expect(swapped.reponses[1]!.text).toBe("Vrai");
+    // rng >= 0.5 → pas d'échange
+    const same = prepareCeQuestion(raw, SAMPLE_CATEGORIES, () => 0.9);
+    expect(same.reponses[0]!.text).toBe("Vrai");
+    expect(same.format).toBe("vrai_faux");
   });
 
-  it("format plus_moins : Plus toujours en premier", () => {
+  it("format plus_moins : position randomisée via rng", () => {
     const raw = makeQuestion({
       id: "q1",
       type: "quizz_2",
       format: "plus_moins",
       reponses: [
-        { text: "Moins", correct: false },
         { text: "Plus", correct: true },
+        { text: "Moins", correct: false },
       ],
     });
-    const prepared = prepareCeQuestion(raw, SAMPLE_CATEGORIES);
-    expect(prepared.reponses[0]!.text).toBe("Plus");
-    expect(prepared.reponses[1]!.text).toBe("Moins");
+    const swapped = prepareCeQuestion(raw, SAMPLE_CATEGORIES, () => 0);
+    expect(swapped.reponses[0]!.text).toBe("Moins");
+    const same = prepareCeQuestion(raw, SAMPLE_CATEGORIES, () => 0.9);
+    expect(same.reponses[0]!.text).toBe("Plus");
   });
 
   it("format 'ou' : shuffle possible", () => {

@@ -17,11 +17,11 @@ export default function NotFound() {
       <div className="relative">
         <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
         <Image
-          src="/logo.svg"
-          alt="Midi Master"
-          width={120}
-          height={120}
-          className="h-28 w-28"
+          src="/logo.png"
+          alt="Les 12 coups de Mahylan"
+          width={224}
+          height={224}
+          className="h-28 w-28 rounded-3xl object-cover shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
           priority
         />
       </div>

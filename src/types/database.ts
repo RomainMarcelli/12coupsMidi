@@ -56,6 +56,9 @@ export interface Database {
           xp: number;
           niveau: number;
           created_at: string;
+          avatar_url: string | null;
+          theme: "light" | "dark" | "system";
+          settings: Json;
         };
         Insert: {
           id: string;
@@ -64,8 +67,25 @@ export interface Database {
           xp?: number;
           niveau?: number;
           created_at?: string;
+          avatar_url?: string | null;
+          theme?: "light" | "dark" | "system";
+          settings?: Json;
         };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Relationships: [];
+      };
+      user_favorites: {
+        Row: {
+          user_id: string;
+          question_id: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          question_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_favorites"]["Insert"]>;
         Relationships: [];
       };
       categories: {

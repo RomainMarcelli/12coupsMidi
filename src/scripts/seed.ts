@@ -1,5 +1,5 @@
 /**
- * Script de seed Midi Master.
+ * Script de seed Mahylan.
  *
  * Usage :
  *   npm run seed
@@ -67,7 +67,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
 
 async function main() {
   const startedAt = Date.now();
-  console.log("Midi Master — seed des questions\n");
+  console.log("Mahylan — seed des questions\n");
 
   // 1. Charge les JSON (fichier principal + extensions éventuelles)
   const sources = [

@@ -4,6 +4,7 @@ import {
   pickCoupParCoupRounds,
 } from "@/lib/game-logic/coup-par-coup";
 import { buildDuelThemes } from "@/lib/game-logic/duel";
+import { resolveUserPseudo } from "@/lib/user-display";
 import { CoupParCoupClient } from "./coup-par-coup-client";
 import { NoRoundsPlaceholder } from "./no-rounds";
 
@@ -12,6 +13,9 @@ export const dynamic = "force-dynamic";
 
 export default async function Jeu2Page() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const [
     { data: pool },
@@ -56,7 +60,7 @@ export default async function Jeu2Page() {
     <CoupParCoupClient
       rounds={rounds}
       duelThemes={duelThemes}
-      userPseudo={profile?.pseudo ?? "Toi"}
+      userPseudo={resolveUserPseudo(profile?.pseudo)}
     />
   );
 }

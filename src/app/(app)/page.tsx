@@ -127,16 +127,14 @@ function HeroTile({ href, title, subtitle }: HeroTileProps) {
       <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full bg-gold/35 blur-3xl animate-sun-pulse" />
       <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-sky/15 blur-3xl" />
       <div className="relative flex items-start gap-6">
-        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white shadow-[0_8px_32px_rgba(245,183,0,0.45)]">
-          <Image
-            src="/logo.svg"
-            alt=""
-            width={64}
-            height={64}
-            className="h-14 w-14"
-            priority
-          />
-        </div>
+        <Image
+          src="/logo.png"
+          alt=""
+          width={160}
+          height={160}
+          className="h-20 w-20 shrink-0 rounded-2xl object-contain shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
+          priority
+        />
         <div className="flex-1">
           <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
             Parcours complet

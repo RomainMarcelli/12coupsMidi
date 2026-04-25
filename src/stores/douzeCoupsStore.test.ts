@@ -73,15 +73,15 @@ describe("douzeCoupsStore", () => {
     expect(themes!.theme2Used).toBe(false);
   });
 
-  it("recordCorrect ajoute le bonus cagnotte et correctCount", () => {
+  it("recordCorrect incrémente correctCount sans toucher à la cagnotte", () => {
     init4();
     const id = useDouzeCoupsStore.getState().players[0]!.id;
     useDouzeCoupsStore.getState().recordCorrect(id);
     const p = useDouzeCoupsStore
       .getState()
       .players.find((pl) => pl.id === id)!;
-    expect(p.cagnotte).toBeGreaterThan(DC_STARTING_CAGNOTTE);
     expect(p.correctCount).toBe(1);
+    expect(p.cagnotte).toBe(DC_STARTING_CAGNOTTE);
   });
 
   it("recordWrong incrémente les erreurs", () => {

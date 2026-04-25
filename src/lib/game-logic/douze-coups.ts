@@ -29,12 +29,6 @@ type CategoryRow = Pick<
 >;
 
 export const DC_STARTING_CAGNOTTE = 10_000;
-/** Bonus cagnotte par bonne réponse dans les jeux (Jeu 1 et Jeu 2). */
-export const DC_CORRECT_BONUS = 100;
-/** Timer par question en Jeu 1 (Coup d'Envoi). */
-export const DC_JEU1_TIMER_SECONDS = 10;
-/** Timer par question en Jeu 2 (Coup par Coup) — plus long car il faut réfléchir. */
-export const DC_JEU2_TIMER_SECONDS = 20;
 /** Max d'erreurs par joueur dans le jeu courant avant déclenchement du duel. */
 export const DC_MAX_ERRORS = 2;
 /** Minimum de joueurs pour une partie. */
@@ -42,11 +36,31 @@ export const DC_MIN_PLAYERS = 2;
 /** Maximum de joueurs pour une partie. */
 export const DC_MAX_PLAYERS = 4;
 
+/**
+ * Couleurs assignées par slot (ordre d'entrée dans la partie).
+ * Utilisées pour distinguer visuellement les joueurs (avatar, cadre, pseudo).
+ */
+export type DcPlayerColor = "gold" | "sky" | "buzz" | "life-green";
+export const DC_PLAYER_COLORS: DcPlayerColor[] = [
+  "gold",
+  "sky",
+  "buzz",
+  "life-green",
+];
+
 export type DcGamePhase =
   | "setup"
   | "intro"
   | "jeu1"
   | "jeu2"
+  /**
+   * Sas de 20 s entre la 2e mauvaise réponse d'un joueur et le démarrage
+   * effectif du duel. Pendant cette phase, le rendu Jeu 1 ou Jeu 2 reste
+   * affiché (avec le feedback de la question ratée + l'explication) et un
+   * encart overlay propose un bouton "Passer au duel" + countdown.
+   * Toute interaction de jeu doit être gelée pendant cette phase.
+   */
+  | "transition_duel"
   | "duel"
   | "faceaface"
   | "results";
@@ -58,7 +72,9 @@ export interface DcPlayer {
   pseudo: string;
   isBot: boolean;
   botLevel?: BotDifficulty;
-  /** Cagnotte courante (€). */
+  /** Couleur visuelle attribuée au slot (ne change pas en cours de partie). */
+  color: DcPlayerColor;
+  /** Cagnotte courante (€). Ne bouge que via duels / face-à-face final. */
   cagnotte: number;
   /** Erreurs accumulées dans le jeu courant (remis à 0 après duel gagné / passage au jeu suivant). */
   errors: number;
@@ -243,15 +259,18 @@ export function applyDuelResult(
   });
 }
 
-/** Enregistre une bonne réponse : +bonus cagnotte + correctCount. */
+/**
+ * Enregistre une bonne réponse : +1 correctCount uniquement.
+ * La cagnotte NE BOUGE PAS sur les bonnes réponses — elle ne se déplace
+ * qu'au moment des duels et du face-à-face final.
+ */
 export function applyCorrectAnswer(
   players: DcPlayer[],
   playerId: string,
-  bonus: number = DC_CORRECT_BONUS,
 ): DcPlayer[] {
   return players.map((p) =>
     p.id === playerId
-      ? { ...p, cagnotte: p.cagnotte + bonus, correctCount: p.correctCount + 1 }
+      ? { ...p, correctCount: p.correctCount + 1 }
       : p,
   );
 }

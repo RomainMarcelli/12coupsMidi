@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { QuestionCard } from "@/components/game/QuestionCard";
+import { SpeakerButton } from "@/components/game/SpeakerButton";
 import { VoiceInput } from "@/components/game/VoiceInput";
 import { Button } from "@/components/ui/button";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
@@ -503,13 +504,18 @@ export function FaceAFaceClient({
             className="flex flex-col gap-4"
           >
             {currentQuestion && (
-              <QuestionCard
-                keyId={currentQuestion.id}
-                enonce={currentQuestion.enonce}
-                category={currentQuestion.category?.nom}
-                categoryColor={currentQuestion.category?.couleur ?? undefined}
-                difficulte={currentQuestion.difficulte}
-              />
+              <>
+                <QuestionCard
+                  keyId={currentQuestion.id}
+                  enonce={currentQuestion.enonce}
+                  category={currentQuestion.category?.nom}
+                  categoryColor={currentQuestion.category?.couleur ?? undefined}
+                  difficulte={currentQuestion.difficulte}
+                />
+                <div className="flex justify-center">
+                  <SpeakerButton text={currentQuestion.enonce} />
+                </div>
+              </>
             )}
 
             <AnimatePresence>
