@@ -189,7 +189,7 @@ export function EtoileClient({ question }: EtoileClientProps) {
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Star className="h-5 w-5 text-gold-warm" aria-hidden="true" />
-          <h1 className="font-display text-lg font-bold text-navy">
+          <h1 className="font-display text-lg font-bold text-foreground">
             Étoile Mystérieuse
           </h1>
         </div>
@@ -199,7 +199,7 @@ export function EtoileClient({ question }: EtoileClientProps) {
               "rounded-lg border px-3 py-1 font-display text-lg font-bold tabular-nums",
               remainingSec <= 15
                 ? "border-buzz/50 bg-buzz/10 text-buzz animate-pulse"
-                : "border-border bg-white text-navy",
+                : "border-border bg-card text-foreground",
             )}
           >
             {String(mm).padStart(1, "0")}:{String(ss).padStart(2, "0")}
@@ -207,7 +207,7 @@ export function EtoileClient({ question }: EtoileClientProps) {
           <button
             type="button"
             onClick={abandon}
-            className="flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-xs font-semibold text-navy/70 transition-colors hover:border-buzz hover:text-buzz"
+            className="flex items-center gap-1 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-semibold text-foreground/70 transition-colors hover:border-buzz hover:text-buzz"
             title="Abandonner"
           >
             <Flag className="h-3.5 w-3.5" aria-hidden="true" />
@@ -228,7 +228,7 @@ export function EtoileClient({ question }: EtoileClientProps) {
             style={{ filter: `blur(${blurPx}px)` }}
             draggable={false}
           />
-          <div className="absolute bottom-2 right-2 rounded-full bg-white/80 px-2 py-0.5 text-xs font-semibold text-navy/70 backdrop-blur">
+          <div className="absolute bottom-2 right-2 rounded-full bg-card/80 px-2 py-0.5 text-xs font-semibold text-foreground/70 backdrop-blur">
             {indicesRevealed} / {maxReveal} indices
           </div>
         </div>
@@ -247,16 +247,16 @@ export function EtoileClient({ question }: EtoileClientProps) {
                 className={cn(
                   "flex items-start gap-3 rounded-xl border p-3 text-sm",
                   revealed
-                    ? "border-gold/40 bg-gold/10 text-navy"
-                    : "border-dashed border-border bg-white/50 text-navy/40",
+                    ? "border-gold/40 bg-gold/10 text-foreground"
+                    : "border-dashed border-border bg-card/50 text-foreground/40",
                 )}
               >
                 <span
                   className={cn(
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold",
                     revealed
-                      ? "bg-gold text-navy"
-                      : "bg-cream-deep text-navy/40",
+                      ? "bg-gold text-on-color"
+                      : "bg-muted text-foreground/40",
                   )}
                 >
                   {idx + 1}
@@ -271,7 +271,7 @@ export function EtoileClient({ question }: EtoileClientProps) {
             type="button"
             onClick={revealNext}
             disabled={indicesRevealed >= maxReveal}
-            className="mt-1 flex items-center justify-center gap-2 rounded-md border border-gold/50 bg-white px-4 py-2 text-sm font-semibold text-navy transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="mt-1 flex items-center justify-center gap-2 rounded-md border border-gold/50 bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Eye className="h-4 w-4" aria-hidden="true" />
             {indicesRevealed >= maxReveal
@@ -303,7 +303,7 @@ export function EtoileClient({ question }: EtoileClientProps) {
 
       {/* Historique des essais ratés (discret) */}
       {attempts.length > 0 && (
-        <p className="text-center text-xs text-navy/40">
+        <p className="text-center text-xs text-foreground/40">
           Essais : {attempts.join(" · ")}
         </p>
       )}
@@ -326,7 +326,7 @@ function IntroScreen({
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-8 p-8 text-center">
       <div className="relative">
         <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-sky/30 blur-3xl" />
-        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white shadow-[0_4px_24px_rgba(43,142,230,0.35)]">
+        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-card shadow-[0_4px_24px_rgba(43,142,230,0.35)]">
           <Star
             className="h-12 w-12 text-sky"
             aria-hidden="true"
@@ -339,17 +339,17 @@ function IntroScreen({
         <p className="font-display text-sm font-bold uppercase tracking-widest text-sky">
           Jeu 2
         </p>
-        <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
+        <h1 className="font-display text-4xl font-extrabold text-foreground sm:text-5xl">
           Étoile Mystérieuse
         </h1>
-        <p className="text-navy/70 sm:text-lg">
+        <p className="text-foreground/70 sm:text-lg">
           Devine la personnalité à partir d'indices progressifs.
           <br />
-          Tu as <strong className="text-navy">2 minutes</strong>.
+          Tu as <strong className="text-foreground">2 minutes</strong>.
         </p>
       </div>
 
-      <ul className="flex flex-col gap-2 rounded-xl border border-border bg-white p-5 text-left text-sm text-navy/80 glow-card">
+      <ul className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5 text-left text-sm text-foreground/80 glow-card">
         <li className="flex items-start gap-2">
           <Eye
             className="mt-0.5 h-4 w-4 shrink-0 text-gold-warm"
@@ -383,16 +383,16 @@ function IntroScreen({
       </ul>
 
       {category && (
-        <p className="text-sm text-navy/60">
+        <p className="text-sm text-foreground/60">
           Thème du jour :{" "}
-          <span className="font-semibold text-navy">{category}</span>
+          <span className="font-semibold text-foreground">{category}</span>
         </p>
       )}
 
       <button
         type="button"
         onClick={onStart}
-        className="inline-flex items-center gap-2 rounded-xl bg-gold px-10 py-5 font-display text-xl font-extrabold uppercase tracking-wide text-navy shadow-[0_6px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,183,0,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
+        className="inline-flex items-center gap-2 rounded-xl bg-gold px-10 py-5 font-display text-xl font-extrabold uppercase tracking-wide text-on-color shadow-[0_6px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,183,0,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
       >
         <Play className="h-5 w-5" aria-hidden="true" fill="currentColor" />
         C'est parti !
@@ -446,23 +446,23 @@ function ResultsScreen({
         <h1
           className={cn(
             "font-display text-4xl font-extrabold",
-            found ? "text-life-green" : "text-navy",
+            found ? "text-life-green" : "text-foreground",
           )}
         >
           {found ? "Trouvé !" : "Presque…"}
         </h1>
-        <p className="text-navy/70 sm:text-lg">
+        <p className="text-foreground/70 sm:text-lg">
           C'était{" "}
           <strong className="text-gold-warm">{bonneReponse}</strong>.
         </p>
         {found && (
-          <p className="text-sm text-navy/60">
+          <p className="text-sm text-foreground/60">
             Trouvé avec {indicesRevealed} indice{indicesRevealed > 1 ? "s" : ""}{" "}
             révélé{indicesRevealed > 1 ? "s" : ""}.
           </p>
         )}
         {explication && (
-          <p className="mt-2 rounded-md border border-border bg-white p-3 text-sm text-navy/80">
+          <p className="mt-2 rounded-md border border-border bg-card p-3 text-sm text-foreground/80">
             {explication}
           </p>
         )}
@@ -475,7 +475,7 @@ function ResultsScreen({
           aria-hidden="true"
           fill="currentColor"
         />
-        <span className="font-display text-lg font-bold text-navy">
+        <span className="font-display text-lg font-bold text-foreground">
           {isSaving
             ? "Enregistrement…"
             : xpGained !== null
@@ -502,14 +502,14 @@ function ResultsScreen({
         </Button>
         <Link
           href="/revision"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-card/60 px-4 text-sm font-semibold text-foreground transition-colors hover:bg-gold/20 hover:border-gold"
         >
           <BarChart3 className="h-4 w-4" aria-hidden="true" />
           Mes erreurs
         </Link>
         <Link
           href="/"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-card/60 px-4 text-sm font-semibold text-foreground transition-colors hover:bg-gold/20 hover:border-gold"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           Accueil

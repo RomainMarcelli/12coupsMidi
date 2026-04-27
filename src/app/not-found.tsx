@@ -30,10 +30,10 @@ export default function NotFound() {
         <p className="font-display text-7xl font-extrabold text-gold-warm">
           404
         </p>
-        <h1 className="font-display text-2xl font-bold text-navy sm:text-3xl">
+        <h1 className="font-display text-2xl font-bold text-foreground sm:text-3xl">
           Page introuvable
         </h1>
-        <p className="max-w-md text-navy/70">
+        <p className="max-w-md text-foreground/70">
           Cette section n'existe pas encore, ou tu t'es aventuré sur une URL
           inconnue. Retour à l'accueil.
         </p>
@@ -41,7 +41,7 @@ export default function NotFound() {
 
       <Link
         href="/"
-        className="flex items-center gap-2 rounded-lg bg-gold px-5 py-3 font-bold text-navy shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00]"
+        className="flex items-center gap-2 rounded-lg bg-gold px-5 py-3 font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00]"
       >
         <Home className="h-4 w-4" aria-hidden="true" />
         Accueil

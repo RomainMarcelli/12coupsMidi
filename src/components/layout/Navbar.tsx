@@ -75,7 +75,7 @@ export function Navbar({ pseudo, role, avatarUrl }: NavbarProps) {
 
         {role === "admin" && (
           <Link
-            href="/admin/questions"
+            href="/admin"
             aria-current={pathname.startsWith("/admin") ? "page" : undefined}
             className={cn(
               "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold transition-colors",

@@ -14,17 +14,17 @@ export default async function ImportQuestionsPage() {
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
       <Link
         href="/admin/questions"
-        className="flex items-center gap-1 self-start text-sm text-navy/70 transition-colors hover:text-gold"
+        className="flex items-center gap-1 self-start text-sm text-foreground/70 transition-colors hover:text-gold"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Retour à la liste
       </Link>
 
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-extrabold text-navy">
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
           Importer un fichier JSON
         </h1>
-        <p className="text-sm text-navy/70">
+        <p className="text-sm text-foreground/70">
           Dépose un fichier .json (tableau de questions) ou colle le contenu
           dans la zone. Le schéma est validé avant l'insertion, tu vois un
           aperçu.
@@ -33,11 +33,11 @@ export default async function ImportQuestionsPage() {
 
       <ImportForm />
 
-      <details className="rounded-xl border border-border bg-card/50 p-4 text-sm text-navy/80">
+      <details className="rounded-xl border border-border bg-card/50 p-4 text-sm text-foreground/80">
         <summary className="cursor-pointer font-semibold text-gold">
           Format attendu
         </summary>
-        <pre className="mt-3 overflow-x-auto rounded-md bg-cream-deep p-3 text-xs">
+        <pre className="mt-3 overflow-x-auto rounded-md bg-muted p-3 text-xs">
 {`[
   {
     "type": "quizz_2",

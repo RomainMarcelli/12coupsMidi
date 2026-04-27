@@ -37,10 +37,10 @@ export function TvHostLanding() {
         <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
           Mode soirée
         </p>
-        <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
+        <h1 className="font-display text-4xl font-extrabold text-foreground sm:text-5xl">
           Lance une partie sur ta TV
         </h1>
-        <p className="max-w-xl text-navy/70 sm:text-lg">
+        <p className="max-w-xl text-foreground/70 sm:text-lg">
           Affiche les questions sur ton écran. Tes amis rejoignent depuis
           leur téléphone et jouent en live, à plusieurs (jusqu&apos;à 8).
         </p>
@@ -81,7 +81,7 @@ export function TvHostLanding() {
         </p>
       )}
 
-      <p className="text-xs text-navy/50">
+      <p className="text-xs text-foreground/50">
         L&apos;écran principal (cette page) doit rester ouvert sur la TV ou
         le PC pendant toute la partie.
       </p>
@@ -99,10 +99,10 @@ function Step({
   desc: string;
 }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 rounded-xl border border-border bg-white p-4">
+    <div className="flex flex-col items-center gap-1.5 rounded-xl border border-border bg-card p-4">
       <Icon className="h-7 w-7 text-gold-warm" aria-hidden="true" />
-      <p className="font-display text-sm font-bold text-navy">{title}</p>
-      <p className="text-xs text-navy/60">{desc}</p>
+      <p className="font-display text-sm font-bold text-foreground">{title}</p>
+      <p className="text-xs text-foreground/60">{desc}</p>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { spreadByCategoryWithGetter } from "@/lib/game-logic/spread-by-category";
 import type { Json, QuestionType } from "@/types/database";
 import type { RevQuestion } from "@/lib/revision/types";
 
@@ -93,6 +94,35 @@ export async function markRevisionResult(
   return { status: "kept" };
 }
 
+/**
+ * G1.2 — Marque une question comme révisée (mode lecture seule).
+ *
+ * Supprime directement la ligne dans `wrong_answers` sans la requalifier.
+ * Différent de `markRevisionResult(true)` qui exige
+ * REVISION_MASTERY_THRESHOLD bonnes réponses successives.
+ *
+ * Use case : depuis l'écran "Voir mes erreurs", l'utilisateur lit la
+ * bonne réponse et décide qu'il l'a comprise sans rejouer la question.
+ */
+export async function markErrorAsReviewed(
+  questionId: string,
+): Promise<{ status: "ok" } | { status: "error"; message: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("wrong_answers")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("question_id", questionId);
+
+  if (error) return { status: "error", message: error.message };
+  return { status: "ok" };
+}
+
 // ===========================================================================
 // Tirage de questions selon filtres (pour Apprendre / Marathon)
 // ===========================================================================
@@ -138,7 +168,14 @@ export async function fetchQuestionsForRevision(
 
   const all = (qs ?? []).map((q) => normalizeQuestion(q, catsById));
   const shuffled = shuffleArray(all).slice(0, Math.max(1, input.count));
-  return { status: "ok", questions: shuffled };
+  // F1.3 — Anti-répétition de catégories (3 questions d'écart minimum).
+  // Skip auto si pool < 2 catégories distinctes (cas du mode mono-cat).
+  const spread = spreadByCategoryWithGetter(
+    shuffled,
+    (q) => q.category?.id ?? null,
+    3,
+  );
+  return { status: "ok", questions: spread };
 }
 
 // ===========================================================================
@@ -175,7 +212,14 @@ export async function fetchDailyChallenge(): Promise<
   // Seed déterministe par date pour que tous voient les mêmes questions.
   const seed = hashSeed(date);
   const shuffled = shuffleArray(all, seed).slice(0, 5);
-  return { status: "ok", questions: shuffled, date };
+  // F1.3 — Anti-répétition (5 questions, donc l'algo va surtout
+  // essayer de varier sans contrainte forte).
+  const spread = spreadByCategoryWithGetter(
+    shuffled,
+    (q) => q.category?.id ?? null,
+    3,
+  );
+  return { status: "ok", questions: spread, date };
 }
 
 // ===========================================================================

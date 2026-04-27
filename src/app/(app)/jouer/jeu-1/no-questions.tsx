@@ -7,10 +7,10 @@ export function NoCeQuestions({ count }: { count: number }) {
       <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gold/15 text-gold-warm">
         <Dices className="h-10 w-10" aria-hidden="true" />
       </div>
-      <h1 className="font-display text-3xl font-extrabold text-navy">
+      <h1 className="font-display text-3xl font-extrabold text-foreground">
         Pas assez de questions
       </h1>
-      <p className="text-navy/70">
+      <p className="text-foreground/70">
         Il faut au moins 10 questions <code>quizz_2</code> en base pour lancer
         le Coup d&apos;Envoi. Actuellement : <strong>{count}</strong>.
         <br />
@@ -19,7 +19,7 @@ export function NoCeQuestions({ count }: { count: number }) {
       </p>
       <Link
         href="/"
-        className="rounded-md bg-gold px-4 py-2 font-semibold text-navy shadow-[0_4px_0_0_#e89e00]"
+        className="rounded-md bg-gold px-4 py-2 font-semibold text-on-color shadow-[0_4px_0_0_#e89e00]"
       >
         Retour accueil
       </Link>

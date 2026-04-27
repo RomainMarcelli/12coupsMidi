@@ -90,7 +90,7 @@ export function FeedbackCountdown({
         aria-label={label}
         className={cn(
           // Tap target 48×48 minimum (recommandation iOS 44, on prend large)
-          "group inline-flex h-12 min-w-[44px] items-center gap-2 rounded-xl bg-gold px-5 font-bold text-navy shadow-[0_4px_0_0_#e89e00] transition-all",
+          "group inline-flex h-12 min-w-[44px] items-center gap-2 rounded-xl bg-gold px-5 font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all",
           "hover:-translate-y-px hover:shadow-[0_6px_18px_rgba(245,183,0,0.55)]",
           "active:translate-y-px active:shadow-[0_2px_0_0_#e89e00]",
           "disabled:cursor-not-allowed disabled:opacity-60",

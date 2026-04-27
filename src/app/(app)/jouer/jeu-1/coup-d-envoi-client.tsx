@@ -452,10 +452,10 @@ export function CoupDEnvoiClient({
 
       {/* Indicateur tour actif */}
       <div className="text-center">
-        <p className="text-xs uppercase tracking-widest text-navy/50">
+        <p className="text-xs uppercase tracking-widest text-foreground/50">
           Au tour de
         </p>
-        <p className="font-display text-xl font-extrabold text-navy">
+        <p className="font-display text-xl font-extrabold text-foreground">
           {currentPlayer.pseudo}
           {currentPlayer.isBot && (
             <span className="ml-1 text-xs text-sky">(bot)</span>
@@ -503,7 +503,7 @@ export function CoupDEnvoiClient({
       )}
 
       {/* Raccourcis clavier */}
-      <p className="text-center text-xs text-navy/40">
+      <p className="text-center text-xs text-foreground/40">
         <ArrowLeft className="inline h-3 w-3 align-text-bottom" aria-hidden="true" />{" "}
         A pour la gauche · B pour la droite{" "}
         <ArrowRight className="inline h-3 w-3 align-text-bottom" aria-hidden="true" />
@@ -527,7 +527,7 @@ function IntroScreen({
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
       <div className="relative">
         <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
-        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white shadow-[0_4px_24px_rgba(245,183,0,0.3)]">
+        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-card shadow-[0_4px_24px_rgba(245,183,0,0.3)]">
           <Dices className="h-12 w-12 text-gold-warm" aria-hidden="true" />
         </div>
       </div>
@@ -535,17 +535,17 @@ function IntroScreen({
         <p className="font-display text-sm font-bold uppercase tracking-widest text-gold-warm">
           Jeu 1
         </p>
-        <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
+        <h1 className="font-display text-4xl font-extrabold text-foreground sm:text-5xl">
           Le Coup d&apos;Envoi
         </h1>
-        <p className="text-navy/70 sm:text-lg">
+        <p className="text-foreground/70 sm:text-lg">
           Chacun son tour, une question à 2 options.
           <br />
           <strong>Vrai ou faux, L&apos;un ou l&apos;autre, Plus ou moins.</strong>
         </p>
       </div>
 
-      <ul className="flex flex-col gap-2 rounded-xl border border-border bg-white p-5 text-left text-sm text-navy/80 glow-card">
+      <ul className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5 text-left text-sm text-foreground/80 glow-card">
         <li className="flex items-start gap-2">
           <LifeBar state="yellow" className="mt-0.5 scale-75" />
           <span>
@@ -569,7 +569,7 @@ function IntroScreen({
               "inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm",
               p.isBot
                 ? "border-sky/40 bg-sky/10 text-sky"
-                : "border-gold/50 bg-gold/10 text-navy",
+                : "border-gold/50 bg-gold/10 text-foreground",
             )}
           >
             {p.isBot ? (
@@ -585,7 +585,7 @@ function IntroScreen({
       <button
         type="button"
         onClick={onStart}
-        className="inline-flex items-center gap-2 rounded-xl bg-gold px-10 py-5 font-display text-xl font-extrabold uppercase tracking-wide text-navy shadow-[0_6px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,183,0,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
+        className="inline-flex items-center gap-2 rounded-xl bg-gold px-10 py-5 font-display text-xl font-extrabold uppercase tracking-wide text-on-color shadow-[0_6px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,183,0,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
       >
         <Play className="h-5 w-5" aria-hidden="true" fill="currentColor" />
         C&apos;est parti !
@@ -636,7 +636,7 @@ function PlayerBadge({
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
           )}
         </div>
-        <span className="flex-1 truncate text-xs font-bold text-navy">
+        <span className="flex-1 truncate text-xs font-bold text-foreground">
           {player.pseudo}
         </span>
       </div>
@@ -690,7 +690,7 @@ function RougeAnnounceScreen({
         initial={{ opacity: 0, scale: 0.7 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.8, type: "spring", stiffness: 200, damping: 16 }}
-        className="font-display text-4xl font-extrabold text-navy sm:text-5xl"
+        className="font-display text-4xl font-extrabold text-foreground sm:text-5xl"
       >
         Qui dit «&nbsp;rouge&nbsp;» dit…
       </motion.h1>
@@ -716,10 +716,10 @@ function NoDuelThemesPanel({
       <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-buzz/15 text-buzz">
         <Swords className="h-10 w-10" aria-hidden="true" />
       </div>
-      <h1 className="font-display text-3xl font-extrabold text-navy">
+      <h1 className="font-display text-3xl font-extrabold text-foreground">
         Pas assez de thèmes pour le Duel
       </h1>
-      <p className="text-navy/70">
+      <p className="text-foreground/70">
         Il faut au moins 2 catégories avec des questions{" "}
         <code>quizz_4</code> pour proposer le choix de thèmes.
       </p>
@@ -772,17 +772,17 @@ function ResultsScreen({
       </motion.div>
 
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-4xl font-extrabold text-navy">
+        <h1 className="font-display text-4xl font-extrabold text-foreground">
           Coup d&apos;Envoi terminé
         </h1>
         {rougePlayer && (
-          <p className="text-navy/70 sm:text-lg">
+          <p className="text-foreground/70 sm:text-lg">
             <strong className="text-buzz">{rougePlayer.pseudo}</strong> est
             passé au rouge le premier.
           </p>
         )}
         {duelWinner && duelEliminated && (
-          <p className="mt-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-navy">
+          <p className="mt-1 rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground">
             <strong className="text-gold-warm">Duel :</strong>{" "}
             <strong>{duelWinner.pseudo}</strong> gagne,{" "}
             <strong className="text-buzz">{duelEliminated.pseudo}</strong>{" "}
@@ -792,7 +792,7 @@ function ResultsScreen({
       </div>
 
       {/* Récap par joueur */}
-      <ul className="flex w-full flex-col gap-2 rounded-xl border border-border bg-white p-4 text-left text-sm glow-card">
+      <ul className="flex w-full flex-col gap-2 rounded-xl border border-border bg-card p-4 text-left text-sm glow-card">
         {players.map((p) => {
           const errs = playersErrors[p.id] ?? 0;
           const correctByP = answers.filter(
@@ -814,8 +814,8 @@ function ResultsScreen({
                   <Crown className="h-4 w-4" aria-hidden="true" />
                 )}
               </div>
-              <span className="flex-1 font-semibold text-navy">{p.pseudo}</span>
-              <span className="text-xs text-navy/60">
+              <span className="flex-1 font-semibold text-foreground">{p.pseudo}</span>
+              <span className="text-xs text-foreground/60">
                 {correctByP} / {totalByP} ·{" "}
                 {errs} erreur{errs > 1 ? "s" : ""}
               </span>
@@ -868,14 +868,14 @@ function ResultsScreen({
         </Button>
         <Link
           href="/revision"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-card/60 px-4 text-sm font-semibold text-foreground transition-colors hover:bg-gold/20 hover:border-gold"
         >
           <BarChart3 className="h-4 w-4" aria-hidden="true" />
           Mes erreurs
         </Link>
         <Link
           href="/"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-card/60 px-4 text-sm font-semibold text-foreground transition-colors hover:bg-gold/20 hover:border-gold"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           Accueil
@@ -906,7 +906,7 @@ function StatCard({
       >
         {value}
       </div>
-      <p className="text-xs uppercase tracking-wider text-navy/60">{label}</p>
+      <p className="text-xs uppercase tracking-wider text-foreground/60">{label}</p>
     </div>
   );
 }

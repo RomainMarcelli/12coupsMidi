@@ -325,7 +325,7 @@ export function TvHostRoom({
             <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
               Mode TV Soirée
             </p>
-            <h1 className="font-display text-2xl font-extrabold text-navy">
+            <h1 className="font-display text-2xl font-extrabold text-foreground">
               Salle d&apos;attente
             </h1>
           </div>
@@ -334,7 +334,7 @@ export function TvHostRoom({
           type="button"
           onClick={handleEnd}
           aria-label="Mettre fin à la partie"
-          className="inline-flex items-center gap-1.5 rounded-md border border-buzz/30 bg-white px-3 py-2 text-sm font-semibold text-buzz hover:border-buzz hover:bg-buzz/10"
+          className="inline-flex items-center gap-1.5 rounded-md border border-buzz/30 bg-card px-3 py-2 text-sm font-semibold text-buzz hover:border-buzz hover:bg-buzz/10"
         >
           <X className="h-4 w-4" aria-hidden="true" />
           Quitter
@@ -348,7 +348,7 @@ export function TvHostRoom({
             Pour rejoindre
           </p>
           {joinUrl ? (
-            <div className="rounded-2xl bg-white p-5 shadow-[0_8px_32px_rgba(245,183,0,0.35)]">
+            <div className="rounded-2xl bg-card p-5 shadow-[0_8px_32px_rgba(245,183,0,0.35)]">
               <QRCodeSVG
                 value={joinUrl}
                 size={280}
@@ -357,30 +357,30 @@ export function TvHostRoom({
               />
             </div>
           ) : (
-            <div className="flex h-[280px] w-[280px] items-center justify-center rounded-2xl bg-white">
+            <div className="flex h-[280px] w-[280px] items-center justify-center rounded-2xl bg-card">
               <Loader2 className="h-8 w-8 animate-spin text-gold-warm" aria-hidden="true" />
             </div>
           )}
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-bold text-navy/70">
+            <p className="text-sm font-bold text-foreground/70">
               Ou tape le code
             </p>
-            <p className="font-display text-7xl font-black tracking-[0.3em] text-navy sm:text-8xl">
+            <p className="font-display text-7xl font-black tracking-[0.3em] text-foreground sm:text-8xl">
               {code}
             </p>
           </div>
-          <p className="max-w-xs text-sm text-navy/70">
+          <p className="max-w-xs text-sm text-foreground/70">
             Sur ton téléphone, ouvre l&apos;app et entre ce code, ou scanne
             le QR code ci-dessus.
           </p>
         </section>
 
         {/* Bloc joueurs connectés */}
-        <section className="flex flex-col gap-4 rounded-3xl border border-border bg-white p-6 glow-card">
+        <section className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-6 glow-card">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-navy" aria-hidden="true" />
-              <h2 className="font-display text-xl font-bold text-navy">
+              <Users className="h-5 w-5 text-foreground" aria-hidden="true" />
+              <h2 className="font-display text-xl font-bold text-foreground">
                 Joueurs connectés
               </h2>
             </div>
@@ -390,7 +390,7 @@ export function TvHostRoom({
           </div>
 
           {players.length === 0 ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border py-10 text-center text-navy/50">
+            <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border py-10 text-center text-foreground/50">
               <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
               <p>En attente des premiers joueurs…</p>
             </div>
@@ -415,7 +415,7 @@ export function TvHostRoom({
                       <Crown className="h-5 w-5 text-gold-warm" aria-hidden="true" />
                     )}
                   </div>
-                  <span className="flex-1 font-display text-lg font-bold text-navy">
+                  <span className="flex-1 font-display text-lg font-bold text-foreground">
                     {p.pseudo}
                   </span>
                   <span
@@ -447,7 +447,7 @@ export function TvHostRoom({
             {status === "playing" ? "Partie en cours…" : "Démarrer la partie"}
           </Button>
           {!canStart && status === "waiting" && (
-            <p className="text-center text-xs text-navy/50">
+            <p className="text-center text-xs text-foreground/50">
               Au moins 2 joueurs requis pour démarrer.
             </p>
           )}
@@ -512,14 +512,14 @@ function TvPlayingView({
 
   return (
     <main className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 p-6 lg:p-10">
-      <header className="flex items-center justify-between text-navy">
+      <header className="flex items-center justify-between text-foreground">
         <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
           Partie {code} · Tour {game.currentRound + 1} / {game.totalRounds}
         </p>
         <button
           type="button"
           onClick={onEnd}
-          className="inline-flex items-center gap-1.5 rounded-md border border-buzz/30 bg-white px-3 py-1.5 text-xs font-semibold text-buzz hover:bg-buzz/10"
+          className="inline-flex items-center gap-1.5 rounded-md border border-buzz/30 bg-card px-3 py-1.5 text-xs font-semibold text-buzz hover:bg-buzz/10"
         >
           <X className="h-3.5 w-3.5" aria-hidden="true" />
           Terminer
@@ -541,7 +541,7 @@ function TvPlayingView({
                 className={
                   isActive
                     ? "flex items-center gap-3 rounded-2xl border-2 border-gold bg-gold/15 p-3 shadow-[0_0_24px_rgba(245,183,0,0.5)]"
-                    : "flex items-center gap-3 rounded-2xl border border-border bg-white p-3"
+                    : "flex items-center gap-3 rounded-2xl border border-border bg-card p-3"
                 }
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gold/15">
@@ -559,15 +559,15 @@ function TvPlayingView({
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="font-display text-base font-extrabold text-navy">
+                  <p className="font-display text-base font-extrabold text-foreground">
                     {p.pseudo}
                   </p>
-                  <p className="text-xs text-navy/60">
+                  <p className="text-xs text-foreground/60">
                     {score} bonne{score > 1 ? "s" : ""} réponse{score > 1 ? "s" : ""}
                   </p>
                 </div>
                 {isActive && (
-                  <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-navy">
+                  <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-on-color">
                     À jouer
                   </span>
                 )}
@@ -585,14 +585,14 @@ function TvPlayingView({
                   {q.format}
                 </span>
               )}
-              <h2 className="font-display text-3xl font-extrabold text-navy lg:text-5xl">
+              <h2 className="font-display text-3xl font-extrabold text-foreground lg:text-5xl">
                 {q.enonce}
               </h2>
               <div className="grid w-full max-w-3xl gap-3 sm:grid-cols-2">
                 {q.choices.map((c) => (
                   <div
                     key={c.idx}
-                    className="flex items-center gap-3 rounded-xl border-2 border-gold/30 bg-white px-6 py-5 text-left text-xl font-semibold text-navy"
+                    className="flex items-center gap-3 rounded-xl border-2 border-gold/30 bg-card px-6 py-5 text-left text-xl font-semibold text-foreground"
                   >
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/20 font-display font-extrabold text-gold-warm">
                       {String.fromCharCode(65 + c.idx)}
@@ -601,7 +601,7 @@ function TvPlayingView({
                   </div>
                 ))}
               </div>
-              <p className="text-lg font-bold text-navy/70">
+              <p className="text-lg font-bold text-foreground/70">
                 À toi de jouer, <span className="text-gold-warm">{currentPseudo}</span> !
               </p>
             </>
@@ -652,21 +652,21 @@ function TvResultsView({
         <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
           Mode TV — Partie terminée
         </p>
-        <h1 className="font-display text-5xl font-extrabold text-navy">
+        <h1 className="font-display text-5xl font-extrabold text-foreground">
           {ranked[0]?.pseudo ?? "Pas de vainqueur"} gagne !
         </h1>
       </div>
-      <ul className="flex w-full flex-col gap-2 rounded-2xl border border-border bg-white p-5 glow-card">
+      <ul className="flex w-full flex-col gap-2 rounded-2xl border border-border bg-card p-5 glow-card">
         {ranked.map((p, i) => (
           <li
             key={p.id}
             className={
               i === 0
                 ? "flex items-center gap-3 text-gold-warm"
-                : "flex items-center gap-3 text-navy"
+                : "flex items-center gap-3 text-foreground"
             }
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-navy/10 font-display text-base font-extrabold text-navy">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-foreground/10 font-display text-base font-extrabold text-foreground">
               {i + 1}
             </span>
             <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gold/15">

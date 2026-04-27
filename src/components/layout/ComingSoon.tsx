@@ -23,15 +23,15 @@ export function ComingSoon({
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
       <div className="relative">
         <div className="absolute inset-0 -z-10 rounded-full bg-gold/20 blur-3xl" />
-        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white shadow-[0_4px_24px_rgba(245,183,0,0.25)]">
+        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-card shadow-[0_4px_24px_rgba(245,183,0,0.25)]">
           <Icon className="h-12 w-12 text-gold-warm" aria-hidden="true" />
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-extrabold text-navy sm:text-4xl">
+        <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
           {title}
         </h1>
-        {subtitle && <p className="text-navy/70 sm:text-lg">{subtitle}</p>}
+        {subtitle && <p className="text-foreground/70 sm:text-lg">{subtitle}</p>}
         {phase && (
           <p className="text-sm font-semibold uppercase tracking-wider text-gold-warm">
             En construction — {phase}
@@ -40,7 +40,7 @@ export function ComingSoon({
       </div>
       <Link
         href="/"
-        className="flex items-center gap-1.5 rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-gold hover:bg-gold/10"
+        className="flex items-center gap-1.5 rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-gold hover:bg-gold/10"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Retour à l'accueil

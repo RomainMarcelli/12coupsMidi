@@ -9,6 +9,7 @@ import { buildDuelThemes } from "@/lib/game-logic/duel";
 import {
   pickFaceAFaceQuestions,
 } from "@/lib/game-logic/faceAFace";
+import { spreadByCategoryWithGetter } from "@/lib/game-logic/spread-by-category";
 import { resolveUserPseudo } from "@/lib/user-display";
 import { DouzeCoupsClient } from "./douze-coups-client";
 import { NoQuestionsScreen } from "./no-questions";
@@ -59,7 +60,16 @@ export default async function DouzeCoupsPage() {
       .eq("type", "face_a_face")
       .limit(200),
     supabase.from("categories").select("id, nom, slug, couleur"),
-    supabase.from("profiles").select("pseudo, avatar_url").maybeSingle(),
+    // E1.1 — Filtre explicite sur l'id user pour garantir la récup du
+    // profil (sans dépendre uniquement d'une RLS implicite). Si null,
+    // on fallback côté composant sur l'email-local-part.
+    user
+      ? supabase
+          .from("profiles")
+          .select("pseudo, avatar_url")
+          .eq("id", user.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
   ]);
 
   // Joueurs locaux mémorisés pour l'autocomplétion + photo dans le setup.
@@ -71,17 +81,29 @@ export default async function DouzeCoupsPage() {
     (categories ?? []).map((c) => [c.id, c] as const),
   );
 
-  // Prépare les questions Jeu 1 (Coup d'Envoi)
-  const ceQuestions = shuffleCePool(quizz2Pool ?? []).map((q) =>
+  // Prépare les questions Jeu 1 (Coup d'Envoi).
+  // F1.3 — Réordonnancement anti-répétition : pas 2 fois la même catégorie
+  // dans une fenêtre glissante de 3 questions.
+  const ceQuestionsRaw = shuffleCePool(quizz2Pool ?? []).map((q) =>
     prepareCeQuestion(q, categoriesById),
+  );
+  const ceQuestions = spreadByCategoryWithGetter(
+    ceQuestionsRaw,
+    (q) => q.category?.nom ?? null,
+    3,
   );
 
   // Prépare les rounds du Jeu 2 (Coup par Coup) — on prépare large (10) pour
   // avoir de la marge, la manche continuera jusqu'à un éliminé.
-  const cpcRounds = pickCoupParCoupRounds(
+  const cpcRoundsRaw = pickCoupParCoupRounds(
     cpcPool ?? [],
     categoriesById,
     10,
+  );
+  const cpcRounds = spreadByCategoryWithGetter(
+    cpcRoundsRaw,
+    (r) => r.category?.nom ?? null,
+    3,
   );
 
   // Duel themes = categories + comptage quizz_4 par catégorie
@@ -91,10 +113,15 @@ export default async function DouzeCoupsPage() {
   );
 
   // Face-à-face final pool
-  const fafQuestions = pickFaceAFaceQuestions(
+  const fafQuestionsRaw = pickFaceAFaceQuestions(
     fafPool ?? [],
     categoriesById,
     50,
+  );
+  const fafQuestions = spreadByCategoryWithGetter(
+    fafQuestionsRaw,
+    (q) => q.category?.nom ?? null,
+    3,
   );
 
   // Garde-fou minimums
@@ -117,6 +144,13 @@ export default async function DouzeCoupsPage() {
     );
   }
 
+  // E1.1 — Si le profil n'a pas de pseudo, on prend la partie locale
+  // de l'email (mieux que "Joueur" générique).
+  const emailLocalPart = user?.email?.split("@")[0]?.trim() || null;
+  const resolvedPseudo = resolveUserPseudo(
+    profile?.pseudo ?? emailLocalPart,
+  );
+
   return (
     <DouzeCoupsClient
       ceQuestions={ceQuestions}
@@ -125,7 +159,7 @@ export default async function DouzeCoupsPage() {
       quizz4CountByCategory={quizz4CountByCategory}
       fafQuestions={fafQuestions}
       categories={categories ?? []}
-      userPseudo={resolveUserPseudo(profile?.pseudo)}
+      userPseudo={resolvedPseudo}
       userAvatarUrl={profile?.avatar_url ?? null}
       savedPlayers={savedPlayers}
     />

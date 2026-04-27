@@ -18,6 +18,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,7 +26,10 @@ import { AnswerButton } from "@/components/game/AnswerButton";
 import { DuelPanel } from "@/components/game/DuelPanel";
 import { AnimEffect } from "@/components/animations/AnimEffect";
 import { ColorTransitionOverlay } from "@/components/game/ColorTransitionOverlay";
-import { resolveCorrectAnswerLabel } from "@/lib/game-logic/answer-display";
+import {
+  isGenericChoiceLabel,
+  resolveCorrectAnswerLabel,
+} from "@/lib/game-logic/answer-display";
 import {
   buildTTSFeedbackText,
   useAutoPlayTTS,
@@ -76,10 +80,7 @@ import { isMatch } from "@/lib/matching/fuzzy-match";
 import { playSound } from "@/lib/sounds";
 import { cn } from "@/lib/utils";
 import type { Database } from "@/types/database";
-import {
-  useDouzeCoupsStore,
-  availableDuelThemes,
-} from "@/stores/douzeCoupsStore";
+import { useDouzeCoupsStore } from "@/stores/douzeCoupsStore";
 import {
   recordGamePlayed,
   upsertSavedPlayer,
@@ -378,7 +379,7 @@ function PlayerBadge({
       )}
     >
       {player.isEliminated && (
-        <span className="absolute -right-1 -top-1 rotate-12 rounded-full bg-buzz px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-widest text-cream shadow-md">
+        <span className="absolute -right-1 -top-1 rotate-12 rounded-full bg-buzz px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-widest text-white shadow-md">
           Éliminé
         </span>
       )}
@@ -405,7 +406,7 @@ function PlayerBadge({
         <span
           className={cn(
             "flex-1 truncate text-xs font-bold",
-            player.isEliminated ? "text-navy/40" : colorStyle.text,
+            player.isEliminated ? "text-foreground/40" : colorStyle.text,
           )}
         >
           {player.pseudo}
@@ -422,7 +423,7 @@ function PlayerBadge({
       <p
         className={cn(
           "font-display text-sm font-extrabold tabular-nums",
-          player.isEliminated ? "text-navy/40" : "text-gold-warm",
+          player.isEliminated ? "text-foreground/40" : "text-gold-warm",
         )}
       >
         {formatMoney(player.cagnotte)}
@@ -509,8 +510,16 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
 
   const [qIdx, setQIdx] = useState(0);
   const usedIdxRef = useRef<Set<number>>(new Set([0]));
+  // E2.1 — On stocke `correctText` et `explication` aussi pour le cas
+  // "correct" afin que l'encart vert puisse afficher l'explication +
+  // résoudre les libellés génériques (« L'un » → « La France »).
   const [feedback, setFeedback] = useState<
-    | { kind: "correct"; correctIdx: number }
+    | {
+        kind: "correct";
+        correctIdx: number;
+        correctText: string;
+        explication: string | null;
+      }
     | {
         kind: "wrong";
         selectedIdx: number;
@@ -539,10 +548,10 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
           ),
           explanation: feedback.explication,
         })
-      : feedback?.kind === "correct" && currentQuestion?.explication
+      : feedback?.kind === "correct" && feedback.explication
         ? buildTTSFeedbackText({
             isCorrect: true,
-            explanation: currentQuestion.explication,
+            explanation: feedback.explication,
           })
         : null;
   useAutoPlayTTS({
@@ -560,6 +569,10 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
   }, []);
 
   const advanceToNext = useCallback(() => {
+    // Anti-doublons : reset si on a vu tout le pool.
+    if (usedIdxRef.current.size >= ceQuestions.length) {
+      usedIdxRef.current = new Set();
+    }
     const next = nextQuestionIndex(ceQuestions.length, usedIdxRef.current);
     if (next >= 0) {
       usedIdxRef.current.add(next);
@@ -581,7 +594,12 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
       isTransitioningRef.current = true;
       setFeedback(
         isCorrect
-          ? { kind: "correct", correctIdx }
+          ? {
+              kind: "correct",
+              correctIdx,
+              correctText,
+              explication: currentQuestion.explication,
+            }
           : {
               kind: "wrong",
               selectedIdx,
@@ -714,7 +732,7 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
         })}
       </div>
 
-      <WrongFeedback feedback={feedback} />
+      <AnswerFeedback feedback={feedback} />
 
       {/* Pendant `transition_duel` : on cache le bouton "Passer à la suite"
           (on ne change plus de question) et on affiche l'overlay rouge
@@ -744,7 +762,7 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
         />
       )}
 
-      <p className="text-center text-xs text-navy/40">
+      <p className="text-center text-xs text-foreground/40">
         <ArrowLeft className="inline h-3 w-3 align-text-bottom" aria-hidden="true" />{" "}
         A pour la gauche · B pour la droite{" "}
         <ArrowRight className="inline h-3 w-3 align-text-bottom" aria-hidden="true" />
@@ -753,12 +771,22 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
   );
 }
 
-/** Encart d'erreur : bonne réponse attendue + explication si dispo. */
-function WrongFeedback({
+/**
+ * Encart de feedback unifié — vert sur bonne réponse, rouge sur
+ * mauvaise. Affiche TOUJOURS l'explication si disponible (E2.1) +
+ * résout les libellés génériques type « L'un » → « La France » via
+ * `resolveCorrectAnswerLabel`.
+ */
+function AnswerFeedback({
   feedback,
 }: {
   feedback:
-    | { kind: "correct"; correctIdx: number }
+    | {
+        kind: "correct";
+        correctIdx: number;
+        correctText: string;
+        explication: string | null;
+      }
     | {
         kind: "wrong";
         selectedIdx: number;
@@ -768,31 +796,61 @@ function WrongFeedback({
       }
     | null;
 }) {
-  if (!feedback || feedback.kind !== "wrong") return null;
-  // Résolution du libellé : si `correctText` vaut un placeholder type
-  // "L'autre", on tente de l'extraire depuis l'explication. Si rien de
-  // probant, on affiche l'explication seule en gras.
+  if (!feedback) return null;
   const label = resolveCorrectAnswerLabel(
     feedback.correctText,
     feedback.explication,
   );
+  const isCorrect = feedback.kind === "correct";
+  // Pour le cas correct : on n'affiche le couple "X = label" que si le
+  // texte affiché était générique (« L'un », « Vrai », …). Sinon le
+  // libellé serait redondant avec le bouton vert mis en évidence.
+  const showResolvedLabel =
+    isCorrect && label && isGenericChoiceLabel(feedback.correctText);
+  // Pour le cas wrong : on l'affiche dès qu'on a un label propre.
+  const showWrongLabel = !isCorrect && !!label;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl border border-buzz/40 bg-buzz/10 p-4 text-sm text-navy"
+      className={cn(
+        "rounded-xl border p-4 text-sm text-foreground",
+        isCorrect
+          ? "border-life-green/40 bg-life-green/10"
+          : "border-buzz/40 bg-buzz/10",
+      )}
     >
-      <p className="font-display text-base font-bold text-buzz">
-        Mauvaise réponse
+      <p
+        className={cn(
+          "font-display text-base font-bold",
+          isCorrect ? "text-life-green" : "text-buzz",
+        )}
+      >
+        {isCorrect ? "Bonne réponse" : "Mauvaise réponse"}
       </p>
-      {label && (
+      {showResolvedLabel && (
+        <p className="mt-1">
+          {feedback.correctText}{" "}
+          <span className="text-foreground/50">=</span>{" "}
+          <strong className="text-life-green">{label}</strong>
+        </p>
+      )}
+      {showWrongLabel && (
         <p className="mt-1">
           La bonne réponse était&nbsp;:{" "}
           <strong className="text-life-green">{label}</strong>
         </p>
       )}
       {feedback.explication && (
-        <p className={cn("text-navy/80", label ? "mt-2" : "mt-1 font-semibold text-navy")}>
+        <p
+          className={cn(
+            "text-foreground/80",
+            showResolvedLabel || showWrongLabel
+              ? "mt-2"
+              : "mt-1 font-semibold text-foreground",
+          )}
+        >
           {feedback.explication}
         </p>
       )}
@@ -831,24 +889,29 @@ function DcDuelStage({ duelThemes }: { duelThemes: DuelTheme[] }) {
     [players, pendingDuel],
   );
 
-  // Filtre les thèmes dispos (non consommés)
-  const availableCategories = useMemo(() => {
+  // G4.2 — On affiche TOUJOURS les 2 thèmes initiaux (mêmes que ceux
+  // tirés au début), avec le ou les déjà consommés grisés via
+  // `consumedCategoryIds`. Plus de filtrage avec availableDuelThemes.
+  const availableThemeObjects = duelThemes;
+  const consumedCategoryIds = useMemo<number[]>(() => {
     if (!storeThemes) return [];
-    return availableDuelThemes(storeThemes);
+    const out: number[] = [];
+    if (storeThemes.theme1Used) out.push(storeThemes.theme1.id);
+    if (storeThemes.theme2Used) out.push(storeThemes.theme2.id);
+    return out;
   }, [storeThemes]);
-  const availableThemeObjects = useMemo(() => {
-    return duelThemes.filter((t) =>
-      availableCategories.some((c) => c.id === t.categoryId),
-    );
-  }, [duelThemes, availableCategories]);
 
-  // Mapping pour convertir le PlayerConfig attendu par DuelPanel
+  // Mapping pour convertir le PlayerConfig attendu par DuelPanel.
+  // E2.2 — On propage avatarUrl + cagnotte pour que DuelResultPanel
+  // puisse afficher photos + montant transféré.
   const rougePlayerForPanel = useMemo(() => {
     if (!challengerPlayer) return null;
     return {
       id: challengerPlayer.id,
       pseudo: challengerPlayer.pseudo,
       isBot: challengerPlayer.isBot,
+      avatarUrl: challengerPlayer.avatarUrl ?? null,
+      cagnotte: challengerPlayer.cagnotte,
     };
   }, [challengerPlayer]);
 
@@ -858,6 +921,8 @@ function DcDuelStage({ duelThemes }: { duelThemes: DuelTheme[] }) {
         id: p.id,
         pseudo: p.pseudo,
         isBot: p.isBot,
+        avatarUrl: p.avatarUrl ?? null,
+        cagnotte: p.cagnotte,
       })),
     [otherPlayers],
   );
@@ -874,7 +939,7 @@ function DcDuelStage({ duelThemes }: { duelThemes: DuelTheme[] }) {
   ) {
     return (
       <main className="mx-auto flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-        <p className="text-navy/60">
+        <p className="text-foreground/60">
           Duel impossible (pas d&apos;adversaire ou pas de thème dispo).
           Passage direct…
         </p>
@@ -887,7 +952,8 @@ function DcDuelStage({ duelThemes }: { duelThemes: DuelTheme[] }) {
       rougePlayer={rougePlayerForPanel}
       otherPlayers={othersForPanel}
       themes={availableThemeObjects}
-      isSecondDuel={availableThemeObjects.length === 1}
+      consumedCategoryIds={consumedCategoryIds}
+      isSecondDuel={consumedCategoryIds.length > 0}
       botDifficulty={challengerPlayer.botLevel ?? "moyen"}
       onComplete={(result: DuelResult) => {
         // Le thème choisi = on doit le retrouver via le questionId
@@ -952,7 +1018,7 @@ function RougeAnnounce({ player }: { player: DcPlayer | null }) {
         initial={{ opacity: 0, scale: 0.7 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.8, type: "spring", stiffness: 200, damping: 16 }}
-        className="font-display text-4xl font-extrabold text-navy sm:text-5xl"
+        className="font-display text-4xl font-extrabold text-foreground sm:text-5xl"
       >
         Qui dit «&nbsp;rouge&nbsp;» dit…
       </motion.h1>
@@ -987,8 +1053,18 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
   const [roundIdx, setRoundIdx] = useState(0);
   const [clicked, setClicked] = useState<Set<string>>(new Set());
   const [shakeText, setShakeText] = useState<string | null>(null);
-  const [showingFeedback, setShowingFeedback] = useState(false);
+  // E1.4 — Feedback persistant (avec explication) jusqu'au clic du
+  // bouton "Passer à la suite" ou expiration du countdown.
+  const [feedback, setFeedback] = useState<
+    | {
+        kind: "correct" | "wrong";
+        intrusText: string;
+        explication: string | null;
+      }
+    | null
+  >(null);
   const isTransitioningRef = useRef(false);
+  const showingFeedback = feedback !== null;
 
   // Vrai dès que la 2e erreur a déclenché le sas avant duel.
   const inTransitionDuel = phase === "transition_duel";
@@ -1003,39 +1079,54 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
   const currentPlayer = players[currentPlayerIdx];
   const current = cpcRounds[roundIdx];
 
-  // Lecture auto TTS Jeu 2 : énoncé "Trouve l'intrus parmi : X, Y, … ou Z".
-  // Pas de feedback auto ici (l'écran de propositions reste figé 1.8 s
-  // mais l'intrus ne change pas — on évite la verbosité).
+  // Lecture auto TTS Jeu 2 : énoncé "Trouve l'intrus parmi : X, Y, … ou Z"
+  // au mount, puis explication dès qu'on entre en feedback.
+  const ttsFeedbackText =
+    feedback && feedback.explication
+      ? buildTTSFeedbackText({
+          isCorrect: feedback.kind === "correct",
+          correctLabel: feedback.intrusText
+            ? `L'intrus était ${feedback.intrusText}`
+            : null,
+          explanation: feedback.explication,
+        })
+      : null;
   useAutoPlayTTS({
     enonce: current?.theme
       ? `${current.theme}. Trouve l'intrus`
       : "",
     choices: current?.propositions.map((p) => p.text) ?? [],
+    feedbackText: ttsFeedbackText,
   });
 
+  const advanceToNext = useCallback(() => {
+    // Si on est passé en sas avant duel, on NE change pas le round /
+    // le tour : l'écran reste figé sur l'intrus pendant que la
+    // TransitionDuelOverlay prend le relais.
+    const currentPhase = useDouzeCoupsStore.getState().phase;
+    if (currentPhase === "transition_duel") {
+      setFeedback(null);
+      isTransitioningRef.current = false;
+      return;
+    }
+    setFeedback(null);
+    setClicked(new Set());
+    setRoundIdx((i) => (i + 1) % cpcRounds.length);
+    nextPlayer();
+    isTransitioningRef.current = false;
+  }, [cpcRounds.length, nextPlayer]);
+
   const endRound = useCallback(
-    (hitIntrus: boolean) => {
-      setShowingFeedback(true);
-      window.setTimeout(() => {
-        // Si entre-temps on est passé en sas avant duel, on NE change pas
-        // le round / le tour : l'écran doit rester figé pour que l'humain
-        // lise l'intrus + l'explication. Le passage de phase suivant sera
-        // déclenché par `startDuelPhase()` puis par le résultat du duel.
-        const currentPhase = useDouzeCoupsStore.getState().phase;
-        if (currentPhase === "transition_duel") {
-          setShowingFeedback(false);
-          isTransitioningRef.current = false;
-          return;
-        }
-        setShowingFeedback(false);
-        setClicked(new Set());
-        setRoundIdx((i) => (i + 1) % cpcRounds.length);
-        nextPlayer();
-        isTransitioningRef.current = false;
-        void hitIntrus;
-      }, 1800);
+    (kind: "correct" | "wrong") => {
+      if (!current) return;
+      const intrusProp = current.propositions.find((p) => !p.isValid);
+      setFeedback({
+        kind,
+        intrusText: intrusProp?.text ?? "",
+        explication: current.explication,
+      });
     },
-    [cpcRounds.length, nextPlayer],
+    [current],
   );
 
   const processClick = useCallback(
@@ -1057,7 +1148,7 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
         if (validCount >= CPC_VALID_PER_ROUND) {
           playSound("win");
           isTransitioningRef.current = true;
-          endRound(false);
+          endRound("correct");
         } else {
           nextPlayer();
         }
@@ -1067,7 +1158,7 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
         window.setTimeout(() => setShakeText(null), 500);
         isTransitioningRef.current = true;
         recordWrong(currentPlayer.id, "jeu2");
-        endRound(true);
+        endRound("wrong");
       }
     },
     [
@@ -1127,16 +1218,16 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
       <div className="rounded-2xl border border-border bg-card p-5 text-center glow-card">
         {current.category && (
           <span
-            className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-navy"
+            className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-on-color"
             style={{ backgroundColor: current.category.couleur ?? "#F5B700" }}
           >
             {current.category.nom}
           </span>
         )}
-        <h1 className="mt-3 font-display text-2xl font-extrabold text-navy sm:text-3xl">
+        <h1 className="mt-3 font-display text-2xl font-extrabold text-foreground sm:text-3xl">
           {current.theme}
         </h1>
-        <p className="mt-1 text-sm text-navy/60">
+        <p className="mt-1 text-sm text-foreground/60">
           6 propositions liées · évite l&apos;
           <strong className="text-buzz">intrus</strong>
         </p>
@@ -1186,6 +1277,27 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
         })}
       </div>
 
+      {/* E1.4 + E2.1 — Encart de feedback (rouge si intrus cliqué,
+          vert si l'humain a trouvé tous les valides) avec libellé de
+          l'intrus + explication. Reste visible jusqu'au clic "Passer
+          à la suite" ou expiration du countdown. */}
+      {feedback && !inTransitionDuel && (
+        <CpcAnswerFeedback feedback={feedback} />
+      )}
+
+      {/* Bouton "Passer à la suite" + countdown. Humain : 30 s pour
+          lire / relire l'explication. Bot : 8 s avec bouton "Suivant"
+          pour permettre à l'humain spectateur de voir l'intrus +
+          l'explication mais d'accélérer s'il a déjà compris. */}
+      {feedback && !inTransitionDuel && (
+        <FeedbackCountdown
+          key={`countdown-${current.questionId}-${currentPlayerIdx}`}
+          seconds={currentPlayer.isBot ? 8 : 30}
+          label={currentPlayer.isBot ? "Suivant" : "Passer à la suite"}
+          onSkip={advanceToNext}
+        />
+      )}
+
       {/* Sas 20 s avant duel : on garde l'écran Jeu 2 figé (intrus révélé,
           propositions en feedback) et on ajoute en bas un encart rouge
           avec bouton "Passer au duel" + countdown. */}
@@ -1200,6 +1312,52 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
         />
       )}
     </main>
+  );
+}
+
+/**
+ * Encart de feedback Jeu 2 — vert (« Bonne réponse ») ou rouge
+ * (« Mauvaise réponse »), avec libellé de l'intrus et explication.
+ */
+function CpcAnswerFeedback({
+  feedback,
+}: {
+  feedback: {
+    kind: "correct" | "wrong";
+    intrusText: string;
+    explication: string | null;
+  };
+}) {
+  const isCorrect = feedback.kind === "correct";
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={cn(
+        "rounded-xl border p-4 text-sm text-foreground",
+        isCorrect
+          ? "border-life-green/40 bg-life-green/10"
+          : "border-buzz/40 bg-buzz/10",
+      )}
+    >
+      <p
+        className={cn(
+          "font-display text-base font-bold",
+          isCorrect ? "text-life-green" : "text-buzz",
+        )}
+      >
+        {isCorrect ? "Bonne réponse" : "Mauvaise réponse"}
+      </p>
+      {feedback.intrusText && (
+        <p className="mt-1">
+          L&apos;intrus était&nbsp;:{" "}
+          <strong className="text-buzz">{feedback.intrusText}</strong>
+        </p>
+      )}
+      {feedback.explication && (
+        <p className="mt-2 text-foreground/80">{feedback.explication}</p>
+      )}
+    </motion.div>
   );
 }
 
@@ -1221,7 +1379,7 @@ function CpcPropButton({
 
   const stateClasses = {
     idle:
-      "border-border bg-card text-navy hover:border-sky hover:bg-sky/10 hover:scale-[1.02]",
+      "border-border bg-card text-foreground hover:border-sky hover:bg-sky/10 hover:scale-[1.02]",
     "clicked-valid":
       "border-life-green bg-life-green/15 text-life-green line-through decoration-2",
     "clicked-intrus":
@@ -1340,6 +1498,12 @@ function DcFaceAFaceStage({
   }, [phaseLocal, winnerLocalIdx, p1, p2, finalizeFaceAFace]);
 
   const advance = useCallback(() => {
+    // Anti-doublons : reset si on a vu tout le pool (rare dans une
+    // session normale, mais sécurise contre le wrap-around aléatoire
+    // de nextQuestionIndex qui pourrait re-renvoyer une question vue).
+    if (usedIdxRef.current.size >= fafQuestions.length) {
+      usedIdxRef.current = new Set();
+    }
     const next = nextQuestionIndex(fafQuestions.length, usedIdxRef.current);
     if (next >= 0) {
       usedIdxRef.current.add(next);
@@ -1458,7 +1622,7 @@ function DcFaceAFaceStage({
   if (!p1 || !p2 || !currentQuestion) {
     return (
       <main className="mx-auto flex flex-1 items-center justify-center p-8">
-        <p className="text-navy/60">Préparation du Face-à-Face…</p>
+        <p className="text-foreground/60">Préparation du Face-à-Face…</p>
       </main>
     );
   }
@@ -1495,10 +1659,10 @@ function DcFaceAFaceStage({
             aria-hidden="true"
             fill="currentColor"
           />
-          <p className="font-display text-xl font-bold text-navy">
+          <p className="font-display text-xl font-bold text-foreground">
             {activePlayer?.pseudo} a trouvé
           </p>
-          <p className="text-sm text-navy/70">
+          <p className="text-sm text-foreground/70">
             Réponse : <strong>{currentQuestion.bonne_reponse}</strong>
           </p>
           <Button variant="gold" size="lg" onClick={continueTurn}>
@@ -1533,7 +1697,7 @@ function DcFaceAFaceStage({
                       ? "Le bot passe"
                       : "Passé"}
                 </p>
-                <p className="mt-1 text-navy">
+                <p className="mt-1 text-foreground">
                   La bonne réponse était&nbsp;:{" "}
                   <strong className="text-life-green">
                     {flash.correctAnswer}
@@ -1550,19 +1714,21 @@ function DcFaceAFaceStage({
                 onSubmit={handleAnswer}
                 placeholder="Ta réponse…"
                 focusKey={`${activeIdx}-${qIdx}`}
-                disabled={phaseLocal !== "playing"}
+                // Désactive pendant la fenêtre de feedback (1.4 s) pour
+                // ne pas pouvoir taper sur une question qui va basculer.
+                disabled={phaseLocal !== "playing" || flash !== null}
               />
               <div className="mx-auto flex flex-col items-center gap-1">
                 <button
                   type="button"
                   onClick={handlePass}
-                  disabled={phaseLocal !== "playing"}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-navy/20 bg-white/60 px-4 py-2 text-sm font-semibold text-navy hover:border-navy/40 hover:bg-navy/5 disabled:opacity-40"
+                  disabled={phaseLocal !== "playing" || flash !== null}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-foreground/20 bg-card/60 px-4 py-2 text-sm font-semibold text-foreground hover:border-foreground/40 hover:bg-foreground/5 disabled:opacity-40"
                 >
                   <SkipForward className="h-4 w-4" aria-hidden="true" />
                   Passer
                 </button>
-                <p className="text-[11px] text-navy/40">
+                <p className="text-[11px] text-foreground/40">
                   Raccourcis : <kbd className="rounded bg-navy/5 px-1">Espace</kbd>{" "}
                   <kbd className="rounded bg-navy/5 px-1">Entrée</kbd>{" "}
                   <kbd className="rounded bg-navy/5 px-1">$</kbd>{" "}
@@ -1579,8 +1745,8 @@ function DcFaceAFaceStage({
 
 function BotThinkingMini({ name }: { name: string }) {
   return (
-    <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-white p-5 glow-card">
-      <p className="font-display text-sm font-bold text-navy">
+    <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-5 glow-card">
+      <p className="font-display text-sm font-bold text-foreground">
         {name} réfléchit
         <motion.span
           animate={{ opacity: [1, 0.3, 1] }}
@@ -1617,7 +1783,7 @@ function FafPlayerCard({
         "relative overflow-hidden rounded-2xl border p-4 transition-all",
         active
           ? "border-gold bg-gold/10 shadow-[0_0_24px_rgba(245,183,0,0.35)]"
-          : "border-border bg-white opacity-70",
+          : "border-border bg-card opacity-70",
       )}
     >
       <div className="flex items-center gap-2">
@@ -1633,11 +1799,11 @@ function FafPlayerCard({
             <Crown className="h-5 w-5" aria-hidden="true" />
           )}
         </div>
-        <span className="flex-1 truncate font-display text-sm font-bold text-navy">
+        <span className="flex-1 truncate font-display text-sm font-bold text-foreground">
           {name}
         </span>
         {active && (
-          <span className="animate-pulse rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy">
+          <span className="animate-pulse rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-on-color">
             À toi
           </span>
         )}
@@ -1648,13 +1814,13 @@ function FafPlayerCard({
           critical
             ? "animate-pulse text-buzz"
             : active
-              ? "text-navy"
-              : "text-navy/60",
+              ? "text-foreground"
+              : "text-foreground/60",
         )}
       >
         {whole}
         <span className="text-xl">.{tenths}</span>
-        <span className="text-base text-navy/40">s</span>
+        <span className="text-base text-foreground/40">s</span>
       </div>
       <p className="mt-1 text-sm font-bold text-gold-warm">
         {formatMoney(cagnotte)}
@@ -1685,6 +1851,8 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
   const [saveResult, setSaveResult] = useState<SaveDcResult | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  // On garde l'enregistrement BDD (historique de partie) — l'XP est juste
+  // retirée de l'affichage utilisateur, pas du backend.
   useEffect(() => {
     if (saveResult || isSaving) return;
     setIsSaving(true);
@@ -1699,7 +1867,6 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
 
     // Bump des stats des saved_players (humains slots 2+ uniquement,
     // le slot 0 = compte connecté est suivi via game_sessions).
-    // Best-effort : on ignore les échecs.
     const winnerId = dcPodium(players)[0]?.id ?? null;
     void Promise.all(
       players
@@ -1714,79 +1881,202 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
 
   const podium = useMemo(() => dcPodium(players), [players]);
   const winner = podium[0];
-  const userPlayer = players.find((p) => p.id === userPlayerId);
   const userWon = winner?.id === userPlayerId;
-  const xpGained = saveResult?.status === "ok" ? saveResult.xpGained : null;
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
-      {/* Animation principale : couronne + pluie de pièces si vainqueur,
-          sinon un indicateur sky neutre. La pluie est à fond perdu en
-          overlay full-screen pour un effet "fin de partie" festif. */}
-      {userWon ? (
-        <>
-          <AnimEffect animation="winner" size="lg" autoCloseMs={0} />
-          <AnimEffect
-            animation="coins-rain"
-            size="fullscreen"
-            autoCloseMs={2200}
-          />
-        </>
-      ) : (
-        <motion.div
-          initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
-          animate={{ scale: 1, opacity: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 160, damping: 12 }}
-          className="flex h-32 w-32 items-center justify-center rounded-3xl bg-sky/15"
-        >
-          <Users className="h-16 w-16 text-sky" aria-hidden="true" />
-        </motion.div>
+    <main className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-5 overflow-hidden p-6 text-center sm:p-8">
+      {/* Pluie de pièces fullscreen si l'user gagne */}
+      {userWon && (
+        <AnimEffect
+          animation="coins-rain"
+          size="fullscreen"
+          autoCloseMs={2400}
+        />
       )}
 
-      <div className="flex flex-col gap-1">
+      {/* Avatar du vainqueur en grand avec couronne dorée animée */}
+      {winner && (
+        <div className="relative flex flex-col items-center gap-3">
+          <motion.div
+            initial={{ y: -24, opacity: 0, rotate: -25 }}
+            animate={{
+              y: [-12, -18, -12],
+              opacity: 1,
+              rotate: [-12, 0, 8, 0],
+            }}
+            transition={{
+              y: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
+              opacity: { duration: 0.5 },
+              rotate: { duration: 1, ease: "easeOut" },
+            }}
+            className="relative z-10"
+          >
+            <Crown
+              className="h-12 w-12 text-gold drop-shadow-[0_4px_10px_rgba(245,183,0,0.65)] sm:h-14 sm:w-14"
+              aria-hidden="true"
+              fill="currentColor"
+            />
+          </motion.div>
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 16,
+              delay: 0.2,
+            }}
+            className="relative -mt-3 flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-3xl border-4 border-gold bg-gold/15 shadow-[0_0_64px_rgba(245,183,0,0.55)] sm:h-36 sm:w-36"
+          >
+            {winner.avatarUrl ? (
+              <Image
+                src={winner.avatarUrl}
+                alt=""
+                width={144}
+                height={144}
+                className="h-full w-full object-cover"
+                unoptimized
+              />
+            ) : winner.isBot ? (
+              <Bot className="h-14 w-14 text-sky" aria-hidden="true" />
+            ) : (
+              <Crown
+                className="h-14 w-14 text-gold-warm"
+                aria-hidden="true"
+              />
+            )}
+          </motion.div>
+          {/* Badge MAÎTRE DE MIDI */}
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0, y: 12 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 220,
+              damping: 14,
+              delay: 0.6,
+            }}
+            className="inline-flex items-center gap-2 rounded-full border-2 border-gold bg-gradient-to-r from-gold via-gold-warm to-gold px-4 py-1.5 font-display text-xs font-extrabold uppercase tracking-widest text-on-color shadow-[0_4px_18px_rgba(245,183,0,0.5)] sm:text-sm"
+          >
+            <Trophy
+              className="h-4 w-4"
+              aria-hidden="true"
+              fill="currentColor"
+            />
+            Maître de Midi
+          </motion.div>
+        </div>
+      )}
+
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="flex flex-col gap-1"
+      >
         <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
           12 Coups de Midi
         </p>
-        <h1 className="font-display text-4xl font-extrabold text-navy">
+        <h1 className="font-display text-4xl font-extrabold text-foreground sm:text-5xl">
           {userWon ? "Tu remportes la partie !" : `${winner?.pseudo} gagne`}
         </h1>
         {winner && (
-          <p className="mt-1 font-display text-3xl font-extrabold text-gold-warm">
+          <motion.p
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: [0.5, 1.15, 1], opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
+            className="mt-1 font-display text-3xl font-extrabold text-gold-warm sm:text-4xl"
+          >
             {formatMoney(winner.cagnotte)}
-          </p>
+          </motion.p>
         )}
-      </div>
+      </motion.div>
 
-      {/* Podium */}
-      <ul className="flex w-full flex-col gap-2 rounded-xl border border-border bg-white p-4 text-left text-sm glow-card">
+      {/* Podium animé en stagger */}
+      <motion.ul
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: {},
+          show: { transition: { staggerChildren: 0.08, delayChildren: 0.5 } },
+        }}
+        className="flex w-full flex-col gap-2 rounded-2xl border border-border bg-card p-3 text-left text-sm glow-card sm:p-4"
+      >
         {podium.map((p, i) => (
-          <li
+          <motion.li
             key={p.id}
+            variants={{
+              hidden: { opacity: 0, x: -12 },
+              show: { opacity: 1, x: 0 },
+            }}
             className={cn(
-              "flex items-center gap-3",
-              i === 0 && "font-bold text-gold-warm",
+              "flex items-center gap-3 rounded-lg p-2 transition-colors",
+              i === 0 &&
+                "bg-gold/10 ring-2 ring-gold/40 ring-offset-1 ring-offset-card",
             )}
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-navy/10 text-xs font-bold text-navy">
-              {i + 1}
-            </span>
-            <div
+            {/* Rang */}
+            <span
               className={cn(
-                "flex h-7 w-7 shrink-0 items-center justify-center rounded-md",
-                p.isBot ? "bg-sky/15 text-sky" : "bg-gold/20 text-gold-warm",
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-extrabold",
+                i === 0
+                  ? "bg-gold text-on-color"
+                  : "bg-foreground/10 text-foreground",
               )}
             >
-              {p.isBot ? (
-                <Bot className="h-4 w-4" aria-hidden="true" />
+              {i + 1}
+            </span>
+            {/* Avatar / icône fallback */}
+            <div
+              className={cn(
+                "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border",
+                i === 0 ? "border-gold" : "border-border",
+                p.isBot ? "bg-sky/10" : "bg-gold/10",
+              )}
+            >
+              {p.avatarUrl ? (
+                <Image
+                  src={p.avatarUrl}
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="h-full w-full object-cover"
+                  unoptimized
+                />
+              ) : p.isBot ? (
+                <Bot className="h-4 w-4 text-sky" aria-hidden="true" />
               ) : (
-                <Crown className="h-4 w-4" aria-hidden="true" />
+                <Crown
+                  className="h-4 w-4 text-gold-warm"
+                  aria-hidden="true"
+                />
               )}
             </div>
-            <span className="flex-1 truncate text-navy">{p.pseudo}</span>
-            <span className="text-xs text-navy/60">
+            {/* Pseudo + Trophy mini si vainqueur */}
+            <span
+              className={cn(
+                "flex flex-1 items-center gap-1.5 truncate text-foreground",
+                i === 0 && "font-display font-extrabold text-foreground",
+              )}
+            >
+              {i === 0 && (
+                <Trophy
+                  className="h-3.5 w-3.5 shrink-0 text-gold-warm"
+                  aria-hidden="true"
+                  fill="currentColor"
+                />
+              )}
+              {p.pseudo}
+            </span>
+            <span className="hidden text-xs text-foreground/55 sm:inline">
               {p.correctCount} bonnes · {p.wrongCount} erreurs
             </span>
-            <span className="tabular-nums text-navy">
+            <span
+              className={cn(
+                "tabular-nums",
+                i === 0 ? "font-bold text-gold-warm" : "text-foreground",
+              )}
+            >
               {formatMoney(p.cagnotte)}
             </span>
             {p.isEliminated && (
@@ -1794,32 +2084,9 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
                 KO
               </span>
             )}
-          </li>
+          </motion.li>
         ))}
-      </ul>
-
-      {/* Stats user + XP */}
-      <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-6 py-3 glow-card">
-        <Trophy
-          className="h-6 w-6 text-gold-warm"
-          aria-hidden="true"
-          fill="currentColor"
-        />
-        <span className="font-display text-lg font-bold text-navy">
-          {isSaving
-            ? "Enregistrement…"
-            : xpGained !== null
-              ? `+${xpGained} XP`
-              : saveResult?.status === "error"
-                ? "— XP"
-                : "…"}
-        </span>
-        {userPlayer && !userWon && (
-          <span className="text-xs text-navy/50">
-            (cagnotte finale : {formatMoney(userPlayer.cagnotte)})
-          </span>
-        )}
-      </div>
+      </motion.ul>
 
       {saveResult?.status === "error" && (
         <p className="rounded-md border border-buzz/40 bg-buzz/10 px-3 py-2 text-sm text-buzz">
@@ -1827,7 +2094,12 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
         </p>
       )}
 
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1 }}
+        className="flex flex-wrap items-center justify-center gap-3"
+      >
         <Button
           variant="gold"
           size="lg"
@@ -1841,12 +2113,12 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
         </Button>
         <Link
           href="/"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-card px-4 text-sm font-semibold text-foreground transition-colors hover:border-gold hover:bg-gold/15"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           Accueil
         </Link>
-      </div>
+      </motion.div>
     </main>
   );
 }
@@ -1858,7 +2130,7 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
 function PhaseLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center justify-between">
-      <p className="inline-flex items-center gap-2 rounded-full bg-navy/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-navy">
+      <p className="inline-flex items-center gap-2 rounded-full bg-foreground/5 px-3 py-1 text-xs font-bold uppercase tracking-widest text-foreground">
         <Crown className="h-3 w-3 text-gold-warm" aria-hidden="true" />
         {label}
       </p>
@@ -1874,10 +2146,10 @@ function TurnLabel({ player }: { player: DcPlayer }) {
       animate={{ opacity: 1, y: 0 }}
       className="text-center"
     >
-      <p className="text-xs uppercase tracking-widest text-navy/50">
+      <p className="text-xs uppercase tracking-widest text-foreground/50">
         Au tour de
       </p>
-      <p className="font-display text-xl font-extrabold text-navy">
+      <p className="font-display text-xl font-extrabold text-foreground">
         {player.pseudo}
         {player.isBot && (
           <span className="ml-1 text-xs text-sky">(bot)</span>

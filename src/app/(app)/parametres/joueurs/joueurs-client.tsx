@@ -116,10 +116,10 @@ export function JoueursClient({ initial }: JoueursClientProps) {
       <div className="flex items-center gap-3">
         <BackButton href="/parametres" label="Paramètres" />
         <div className="flex-1">
-          <h1 className="font-display text-2xl font-extrabold text-navy">
+          <h1 className="font-display text-2xl font-extrabold text-foreground">
             Mes joueurs sauvegardés
           </h1>
-          <p className="text-sm text-navy/60">
+          <p className="text-sm text-foreground/60">
             {players.length === 0
               ? "Aucun joueur enregistré pour l'instant."
               : `${players.length} joueur${players.length > 1 ? "s" : ""} · ${totalGames} parties au total`}
@@ -146,20 +146,20 @@ export function JoueursClient({ initial }: JoueursClientProps) {
 
       {/* Recherche + tri (cachés si liste vide) */}
       {players.length > 1 && (
-        <div className="flex flex-col gap-2 rounded-xl border border-border bg-white p-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher un joueur…"
-            className="h-9 flex-1 rounded-md border border-border bg-white px-3 text-sm text-navy focus:border-gold focus:outline-none"
+            className="h-9 flex-1 rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
           />
           <select
             value={sortBy}
             onChange={(e) =>
               setSortBy(e.target.value as "recent" | "played" | "won")
             }
-            className="h-9 rounded-md border border-border bg-white px-2 text-sm font-semibold text-navy focus:border-gold focus:outline-none"
+            className="h-9 rounded-md border border-border bg-card px-2 text-sm font-semibold text-foreground focus:border-gold focus:outline-none"
           >
             <option value="recent">Plus récents</option>
             <option value="played">Plus joués</option>
@@ -171,7 +171,7 @@ export function JoueursClient({ initial }: JoueursClientProps) {
       {players.length === 0 ? (
         <EmptyState />
       ) : filtered.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border bg-white/40 p-6 text-center text-sm text-navy/60">
+        <p className="rounded-xl border border-dashed border-border bg-card/40 p-6 text-center text-sm text-foreground/60">
           Aucun joueur ne correspond à « {search} ».
         </p>
       ) : (
@@ -179,7 +179,7 @@ export function JoueursClient({ initial }: JoueursClientProps) {
           {filtered.map((p) => (
             <li
               key={p.id}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-white p-3 sm:flex-row sm:items-center"
+              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center"
             >
               <div className="flex items-center gap-3 sm:flex-1">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gold/15">
@@ -200,13 +200,13 @@ export function JoueursClient({ initial }: JoueursClientProps) {
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="font-display font-bold text-navy">
+                  <p className="font-display font-bold text-foreground">
                     {p.pseudo}
                   </p>
-                  <p className="text-xs text-navy/60">
+                  <p className="text-xs text-foreground/60">
                     {p.gamesPlayed} parties · {p.gamesWon} victoires
                   </p>
-                  <p className="text-[11px] text-navy/40">
+                  <p className="text-[11px] text-foreground/40">
                     Dernière partie :{" "}
                     {new Date(p.lastPlayedAt).toLocaleDateString("fr-FR", {
                       day: "2-digit",
@@ -222,7 +222,7 @@ export function JoueursClient({ initial }: JoueursClientProps) {
                   onClick={() => setEditTarget(p)}
                   disabled={pending}
                   aria-label={`Modifier ${p.pseudo}`}
-                  className="flex h-9 items-center gap-1.5 rounded-md border border-border bg-white px-3 text-sm font-semibold text-navy hover:border-gold/50 hover:bg-gold/10 disabled:opacity-40"
+                  className="flex h-9 items-center gap-1.5 rounded-md border border-border bg-card px-3 text-sm font-semibold text-foreground hover:border-gold/50 hover:bg-gold/10 disabled:opacity-40"
                 >
                   <Pencil className="h-4 w-4" aria-hidden="true" />
                   Modifier
@@ -232,7 +232,7 @@ export function JoueursClient({ initial }: JoueursClientProps) {
                   onClick={() => setDeleteTarget(p)}
                   disabled={pending}
                   aria-label={`Supprimer ${p.pseudo}`}
-                  className="flex h-9 items-center gap-1.5 rounded-md border border-buzz/30 bg-white px-3 text-sm font-semibold text-buzz hover:border-buzz hover:bg-buzz/10 disabled:opacity-40"
+                  className="flex h-9 items-center gap-1.5 rounded-md border border-buzz/30 bg-card px-3 text-sm font-semibold text-buzz hover:border-buzz hover:bg-buzz/10 disabled:opacity-40"
                 >
                   <Trash2 className="h-4 w-4" aria-hidden="true" />
                   Supprimer
@@ -276,14 +276,14 @@ export function JoueursClient({ initial }: JoueursClientProps) {
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="flex h-9 items-center gap-1.5 rounded-md border border-border bg-white px-4 text-sm font-semibold text-navy/70 hover:border-navy/40"
+                className="flex h-9 items-center gap-1.5 rounded-md border border-border bg-card px-4 text-sm font-semibold text-foreground/70 hover:border-navy/40"
               >
                 Annuler
               </button>
               <button
                 type="button"
                 onClick={handleConfirmDelete}
-                className="flex h-9 items-center gap-1.5 rounded-md bg-buzz px-4 text-sm font-bold text-cream shadow-[0_3px_0_0_#a32634] hover:-translate-y-px"
+                className="flex h-9 items-center gap-1.5 rounded-md bg-buzz px-4 text-sm font-bold text-white shadow-[0_3px_0_0_#a32634] hover:-translate-y-px"
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
                 Supprimer
@@ -298,14 +298,14 @@ export function JoueursClient({ initial }: JoueursClientProps) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-border bg-white/40 p-8 text-center">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-border bg-card/40 p-8 text-center">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gold/15 text-gold-warm">
         <Users className="h-7 w-7" aria-hidden="true" />
       </div>
-      <p className="font-display text-lg font-bold text-navy">
+      <p className="font-display text-lg font-bold text-foreground">
         Aucun joueur sauvegardé
       </p>
-      <p className="max-w-md text-sm text-navy/60">
+      <p className="max-w-md text-sm text-foreground/60">
         Lance une partie locale du <strong>12 Coups de Midi</strong> avec des
         amis : leurs pseudos et photos seront mémorisés ici automatiquement
         pour les retrouver à la prochaine partie.
@@ -377,7 +377,7 @@ function EditForm({
           {uploading && (
             <span className="absolute inset-0 flex items-center justify-center bg-navy/40">
               <Loader2
-                className="h-5 w-5 animate-spin text-cream"
+                className="h-5 w-5 animate-spin text-white"
                 aria-hidden="true"
               />
             </span>
@@ -396,7 +396,7 @@ function EditForm({
           onChange={(e) => setPseudo(e.target.value)}
           maxLength={24}
           autoFocus
-          className="h-11 flex-1 rounded-md border border-border bg-white px-3 text-base text-navy focus:border-gold focus:outline-none"
+          className="h-11 flex-1 rounded-md border border-border bg-card px-3 text-base text-foreground focus:border-gold focus:outline-none"
         />
       </div>
 
@@ -420,7 +420,7 @@ function EditForm({
         <button
           type="button"
           onClick={onCancel}
-          className="flex h-9 items-center gap-1.5 rounded-md border border-border bg-white px-4 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="flex h-9 items-center gap-1.5 rounded-md border border-border bg-card px-4 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Annuler
         </button>
@@ -428,7 +428,7 @@ function EditForm({
           type="button"
           onClick={() => onSave({ pseudo: pseudo.trim(), avatarUrl })}
           disabled={!pseudo.trim() || uploading}
-          className="flex h-9 items-center gap-1.5 rounded-md bg-gold px-4 text-sm font-bold text-navy shadow-[0_3px_0_0_#e89e00] hover:-translate-y-px disabled:opacity-40"
+          className="flex h-9 items-center gap-1.5 rounded-md bg-gold px-4 text-sm font-bold text-on-color shadow-[0_3px_0_0_#e89e00] hover:-translate-y-px disabled:opacity-40"
         >
           <Check className="h-4 w-4" aria-hidden="true" />
           Enregistrer

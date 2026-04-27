@@ -5,6 +5,7 @@ import {
   ArrowRight,
   Bot,
   Camera,
+  Check,
   Crown,
   Loader2,
   Lock,
@@ -118,10 +119,10 @@ export function DcSetupScreen({
           <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
             Les 12 Coups de Midi
           </p>
-          <h1 className="font-display text-4xl font-extrabold text-navy">
+          <h1 className="font-display text-4xl font-extrabold text-foreground">
             Prépare la partie
           </h1>
-          <p className="text-navy/70">Tu joues contre qui ?</p>
+          <p className="text-foreground/70">Tu joues contre qui ?</p>
         </div>
 
         <div className="grid w-full gap-3 sm:grid-cols-2">
@@ -152,7 +153,7 @@ export function DcSetupScreen({
         <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-sky/15 text-sky">
           <Users className="h-10 w-10" aria-hidden="true" />
         </div>
-        <h1 className="font-display text-3xl font-extrabold text-navy">
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
           Humains — comment ?
         </h1>
         <div className="grid w-full gap-3 sm:grid-cols-2">
@@ -183,7 +184,7 @@ export function DcSetupScreen({
         <button
           type="button"
           onClick={() => setSubPhase("mode")}
-          className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Retour
         </button>
@@ -305,7 +306,7 @@ export function DcSetupScreen({
           <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
             12 Coups de Midi · Configuration
           </p>
-          <h1 className="font-display text-3xl font-extrabold text-navy">
+          <h1 className="font-display text-3xl font-extrabold text-foreground">
             Les joueurs
           </h1>
         </div>
@@ -323,12 +324,12 @@ export function DcSetupScreen({
 
       {/* Fill with bots (seulement en humains local) */}
       {adversary === "humans_local" && (
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-white p-4">
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
           <div className="text-left">
-            <p className="font-display text-sm font-bold text-navy">
+            <p className="font-display text-sm font-bold text-foreground">
               Compléter avec des bots
             </p>
-            <p className="text-xs text-navy/60">
+            <p className="text-xs text-foreground/60">
               Les slots vides seront remplis par des bots
             </p>
           </div>
@@ -341,12 +342,12 @@ export function DcSetupScreen({
       )}
 
       {/* Nombre de joueurs */}
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-white p-4">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
         <div className="text-left">
-          <p className="font-display text-sm font-bold text-navy">
+          <p className="font-display text-sm font-bold text-foreground">
             Joueurs : {players.length}
           </p>
-          <p className="text-xs text-navy/60">
+          <p className="text-xs text-foreground/60">
             Min {DC_MIN_PLAYERS} · Max {DC_MAX_PLAYERS}
           </p>
         </div>
@@ -356,7 +357,7 @@ export function DcSetupScreen({
             onClick={() => handleChangeCount(-1)}
             disabled={players.length <= DC_MIN_PLAYERS}
             aria-label="Moins un joueur"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-navy hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Minus className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -365,7 +366,7 @@ export function DcSetupScreen({
             onClick={() => handleChangeCount(1)}
             disabled={players.length >= DC_MAX_PLAYERS}
             aria-label="Un joueur de plus"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-navy hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -377,7 +378,7 @@ export function DcSetupScreen({
         {players.map((p, i) => (
           <li
             key={i}
-            className="flex flex-col gap-2 rounded-xl border border-border bg-white p-3 sm:flex-row sm:items-center"
+            className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center"
           >
             <div className="flex items-center gap-3">
               {/* Slot photo : pour humain on peut cliquer pour upload,
@@ -406,6 +407,17 @@ export function DcSetupScreen({
                   onChange={(v) => handleChangePseudo(i, v)}
                   onPick={(sp) => handlePickSavedPlayer(i, sp)}
                   savedPlayers={savedPlayers}
+                  // E1.2 — exclude pseudos already used in d'autres slots
+                  // (slot courant inclus dans `players` avec sa propre
+                  // valeur, donc on l'exclut explicitement).
+                  excludePseudos={
+                    new Set(
+                      players
+                        .filter((_, idx) => idx !== i)
+                        .map((pl) => pl.pseudo.trim().toLowerCase())
+                        .filter((s) => s.length > 0),
+                    )
+                  }
                   placeholder={`Joueur ${i + 1}`}
                 />
               ) : (
@@ -417,12 +429,12 @@ export function DcSetupScreen({
                   maxLength={24}
                   placeholder={p.isBot ? "" : `Joueur ${i + 1}`}
                   className={cn(
-                    "h-10 flex-1 rounded-md border border-border bg-white px-3 text-base text-navy focus:border-gold focus:outline-none",
+                    "h-10 flex-1 rounded-md border border-border bg-card px-3 text-base text-foreground focus:border-gold focus:outline-none",
                     p.isBot && "cursor-not-allowed bg-navy/5",
                   )}
                 />
               )}
-              <span className="text-xs uppercase tracking-wider text-navy/40">
+              <span className="text-xs uppercase tracking-wider text-foreground/40">
                 #{i + 1}
               </span>
             </div>
@@ -452,7 +464,7 @@ export function DcSetupScreen({
                       e.target.value as BotDifficulty,
                     )
                   }
-                  className="h-9 rounded-md border border-border bg-white px-2 text-xs font-semibold text-navy focus:border-gold focus:outline-none"
+                  className="h-9 rounded-md border border-border bg-card px-2 text-xs font-semibold text-foreground focus:border-gold focus:outline-none"
                 >
                   <option value="facile">
                     Facile ({Math.round(BOT_PROFILES.facile.correctProbability * 100)} %)
@@ -468,18 +480,42 @@ export function DcSetupScreen({
             </div>
             {/* Toggle "Enregistrer ce joueur" — visible uniquement pour
                 les humains slots ≥ 1 (le slot 0 = compte connecté est
-                déjà géré ailleurs). Opt-in : décoché par défaut. */}
-            {!p.isBot && i > 0 && p.pseudo.trim().length > 0 && (
-              <label className="flex items-center gap-2 text-[11px] font-semibold text-navy/70 sm:ml-2">
-                <input
-                  type="checkbox"
-                  checked={p.saveToBdd ?? false}
-                  onChange={(e) => handleToggleSave(i, e.target.checked)}
-                  className="h-3.5 w-3.5 accent-gold"
-                />
-                Enregistrer ce joueur
-              </label>
-            )}
+                déjà géré ailleurs). Opt-in : décoché par défaut.
+                F4.1 — Si le slot correspond exactement à un saved_player
+                existant (pseudo lower-trimmé identique + avatarUrl
+                identique), on masque le toggle et on affiche un badge
+                "Joueur sauvegardé" en vert. Si l'user modifie quoi que
+                ce soit, le toggle réapparaît. */}
+            {!p.isBot &&
+              i > 0 &&
+              p.pseudo.trim().length > 0 &&
+              (() => {
+                const exactMatch = savedPlayers.find(
+                  (sp) =>
+                    sp.pseudo.trim().toLowerCase() ===
+                      p.pseudo.trim().toLowerCase() &&
+                    (sp.avatarUrl ?? null) === (p.avatarUrl ?? null),
+                );
+                if (exactMatch) {
+                  return (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-life-green/15 px-2 py-0.5 text-[11px] font-bold text-life-green sm:ml-2">
+                      <Check className="h-3 w-3" aria-hidden="true" />
+                      Joueur sauvegardé
+                    </span>
+                  );
+                }
+                return (
+                  <label className="flex items-center gap-2 text-[11px] font-semibold text-foreground/70 sm:ml-2">
+                    <input
+                      type="checkbox"
+                      checked={p.saveToBdd ?? false}
+                      onChange={(e) => handleToggleSave(i, e.target.checked)}
+                      className="h-3.5 w-3.5 accent-gold"
+                    />
+                    Enregistrer ce joueur
+                  </label>
+                );
+              })()}
           </li>
         ))}
       </ul>
@@ -512,7 +548,7 @@ export function DcSetupScreen({
           onClick={() =>
             setSubPhase(adversary === "bots" ? "mode" : "humans-subpick")
           }
-          className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Retour
         </button>
@@ -627,7 +663,7 @@ function MyPlayersModal({
                           "flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all",
                           alreadyAdded
                             ? "cursor-not-allowed border-border bg-background/30 opacity-50"
-                            : "border-border bg-white hover:border-gold hover:bg-gold/10 hover:scale-[1.01]",
+                            : "border-border bg-card hover:border-gold hover:bg-gold/10 hover:scale-[1.01]",
                         )}
                       >
                         <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gold/15">
@@ -754,13 +790,13 @@ function PlayerAvatarSlot({
           <Crown className="h-5 w-5 text-gold-warm" aria-hidden="true" />
         )}
         {!disabled && !avatarUrl && (
-          <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-navy">
+          <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-on-color">
             <Camera className="h-2.5 w-2.5" aria-hidden="true" />
           </span>
         )}
         {uploading && (
           <span className="absolute inset-0 flex items-center justify-center bg-navy/40">
-            <Loader2 className="h-4 w-4 animate-spin text-cream" aria-hidden="true" />
+            <Loader2 className="h-4 w-4 animate-spin text-white" aria-hidden="true" />
           </span>
         )}
       </button>
@@ -776,7 +812,7 @@ function PlayerAvatarSlot({
             onChange(null);
           }}
           aria-label="Retirer la photo"
-          className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-buzz text-cream shadow-md transition-transform hover:scale-110"
+          className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-buzz text-white shadow-md transition-transform hover:scale-110"
         >
           <X className="h-2.5 w-2.5" aria-hidden="true" />
         </button>
@@ -807,12 +843,19 @@ function PseudoAutocomplete({
   onPick,
   savedPlayers,
   placeholder,
+  excludePseudos,
 }: {
   value: string;
   onChange: (v: string) => void;
   onPick: (sp: SavedPlayer) => void;
   savedPlayers: SavedPlayer[];
   placeholder?: string;
+  /**
+   * E1.2 — Pseudos (lowercase trimmed) déjà utilisés dans d'autres slots
+   * du setup. Filtrés de la liste des suggestions pour empêcher le double
+   * ajout du même joueur.
+   */
+  excludePseudos?: Set<string>;
 }) {
   const [focused, setFocused] = useState(false);
   const [highlightedIdx, setHighlightedIdx] = useState(0);
@@ -820,19 +863,33 @@ function PseudoAutocomplete({
 
   const suggestions = useMemo(() => {
     const q = value.trim().toLowerCase();
-    const list = q
-      ? savedPlayers.filter((sp) => sp.pseudo.toLowerCase().includes(q))
+    const filteredByExclusion = excludePseudos
+      ? savedPlayers.filter(
+          (sp) => !excludePseudos.has(sp.pseudo.trim().toLowerCase()),
+        )
       : savedPlayers;
+    const list = q
+      ? filteredByExclusion.filter((sp) =>
+          sp.pseudo.toLowerCase().includes(q),
+        )
+      : filteredByExclusion;
     return list.slice(0, 5);
-  }, [value, savedPlayers]);
+  }, [value, savedPlayers, excludePseudos]);
 
   const hasMore = useMemo(() => {
     const q = value.trim().toLowerCase();
+    const filteredByExclusion = excludePseudos
+      ? savedPlayers.filter(
+          (sp) => !excludePseudos.has(sp.pseudo.trim().toLowerCase()),
+        )
+      : savedPlayers;
     const totalMatching = q
-      ? savedPlayers.filter((sp) => sp.pseudo.toLowerCase().includes(q)).length
-      : savedPlayers.length;
+      ? filteredByExclusion.filter((sp) =>
+          sp.pseudo.toLowerCase().includes(q),
+        ).length
+      : filteredByExclusion.length;
     return totalMatching > 5;
-  }, [value, savedPlayers]);
+  }, [value, savedPlayers, excludePseudos]);
 
   // Reset l'index sur changement de suggestions
   useEffect(() => {
@@ -899,7 +956,7 @@ function PseudoAutocomplete({
         onKeyDown={handleKeyDown}
         maxLength={24}
         placeholder={placeholder}
-        className="h-10 w-full rounded-md border border-border bg-white px-3 text-base text-navy focus:border-gold focus:outline-none"
+        className="h-10 w-full rounded-md border border-border bg-card px-3 text-base text-foreground focus:border-gold focus:outline-none"
       />
       <AnimatePresence>
         {showDropdown && (
@@ -908,10 +965,10 @@ function PseudoAutocomplete({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-border bg-white shadow-lg"
+            className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-border bg-card shadow-lg"
             role="listbox"
           >
-            <p className="border-b border-border bg-background/40 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-navy/50">
+            <p className="border-b border-border bg-background/40 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-foreground/50">
               Joueurs déjà utilisés
             </p>
             <ul className="max-h-64 overflow-y-auto">
@@ -928,7 +985,7 @@ function PseudoAutocomplete({
                       }}
                       onMouseEnter={() => setHighlightedIdx(idx)}
                       className={cn(
-                        "flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-navy transition-colors",
+                        "flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm text-foreground transition-colors",
                         isHighlighted ? "bg-gold/15" : "hover:bg-gold/10",
                       )}
                     >
@@ -952,7 +1009,7 @@ function PseudoAutocomplete({
                       <span className="flex-1 truncate font-bold">
                         {sp.pseudo}
                       </span>
-                      <span className="hidden items-center gap-2 text-[10px] uppercase tracking-wider text-navy/50 sm:flex">
+                      <span className="hidden items-center gap-2 text-[10px] uppercase tracking-wider text-foreground/50 sm:flex">
                         <span className="inline-flex items-center gap-1">
                           <Play className="h-3 w-3" aria-hidden="true" />
                           {sp.gamesPlayed}
@@ -1014,21 +1071,21 @@ function BigChoiceCard({
         "relative flex flex-col items-center gap-2 rounded-2xl border p-6 transition-all",
         disabled
           ? "cursor-not-allowed border-border bg-navy/5 opacity-60"
-          : "border-border bg-white hover:border-gold/50 hover:bg-gold/5 hover:scale-[1.02]",
+          : "border-border bg-card hover:border-gold/50 hover:bg-gold/5 hover:scale-[1.02]",
       )}
     >
       <div
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-xl",
-          disabled ? "bg-navy/10 text-navy/40" : "bg-gold/20 text-gold-warm",
+          disabled ? "bg-navy/10 text-foreground/40" : "bg-gold/20 text-gold-warm",
         )}
       >
         <Icon className="h-7 w-7" aria-hidden="true" />
       </div>
-      <div className="font-display text-lg font-bold text-navy">{label}</div>
-      <p className="text-xs text-navy/60">{desc}</p>
+      <div className="font-display text-lg font-bold text-foreground">{label}</div>
+      <p className="text-xs text-foreground/60">{desc}</p>
       {badge && (
-        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-cream-deep px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy/60">
+        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground/60">
           <Lock className="h-3 w-3" aria-hidden="true" />
           {badge}
         </span>

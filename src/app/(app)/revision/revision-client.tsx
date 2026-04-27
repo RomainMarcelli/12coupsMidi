@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BookOpen,
   Brain,
   Calendar,
+  Flag,
+  FlaskConical,
   GraduationCap,
   Layers,
   Loader2,
@@ -16,6 +19,7 @@ import {
   Timer,
   Trophy,
 } from "lucide-react";
+import { FlagoraEmbedModal } from "@/components/revision/FlagoraEmbedModal";
 import { fetchFavorites } from "@/app/(app)/favoris/actions";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -30,6 +34,7 @@ import {
 } from "./actions";
 import { QuizPlayer } from "./_components/QuizPlayer";
 import { FlashcardPlayer } from "./_components/FlashcardPlayer";
+import { ErrorsReader } from "./_components/ErrorsReader";
 
 export interface CategoryRow {
   id: number;
@@ -47,6 +52,7 @@ export interface RevisionClientProps {
 type Mode =
   | "hub"
   | "retravailler"
+  | "erreurs-lecture"
   | "apprendre"
   | "flashcards"
   | "marathon"
@@ -64,12 +70,48 @@ const TYPE_LABEL: Record<QuestionType, string> = {
   coup_par_coup: "Intrus",
 };
 
+const VALID_MODES: ReadonlyArray<Mode> = [
+  "hub",
+  "retravailler",
+  "erreurs-lecture",
+  "apprendre",
+  "flashcards",
+  "marathon",
+  "marathon-libre",
+  "defi",
+  "fiche",
+  "favoris",
+];
+
 export function RevisionClient(props: RevisionClientProps) {
-  const [mode, setMode] = useState<Mode>("hub");
+  // F1.1 — Support du param `?mode=...` pour permettre la navigation
+  // directe vers "Retravailler" (depuis le bouton "Voir mes erreurs"
+  // de la fin de session) ou n'importe quel sous-mode.
+  const searchParams = useSearchParams();
+  const initialMode: Mode = (() => {
+    const m = searchParams.get("mode");
+    if (m && (VALID_MODES as ReadonlyArray<string>).includes(m)) return m as Mode;
+    return "hub";
+  })();
+  const [mode, setMode] = useState<Mode>(initialMode);
+
+  // Si l'URL change après mount (back/forward), on resync.
+  useEffect(() => {
+    const m = searchParams.get("mode");
+    if (m && (VALID_MODES as ReadonlyArray<string>).includes(m)) {
+      setMode(m as Mode);
+    }
+  }, [searchParams]);
 
   if (mode === "hub") {
     return <Hub onPick={setMode} props={props} />;
   }
+
+  // G1.2 — Le `key` basé sur l'URL force un remount à chaque navigation
+  // (notamment quand le bouton "Refaire mes erreurs" pointe vers
+  // `?mode=retravailler&t=<timestamp>` : changer le timestamp suffit
+  // à recharger un nouveau lot de questions / réinitialiser l'état).
+  const remountKey = searchParams.toString();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -85,7 +127,10 @@ export function RevisionClient(props: RevisionClientProps) {
       </div>
 
       {mode === "retravailler" && (
-        <RetravaillerMode questions={props.wrongQuestions} />
+        <RetravaillerMode key={remountKey} questions={props.wrongQuestions} />
+      )}
+      {mode === "erreurs-lecture" && (
+        <ErrorsReader key={remountKey} questions={props.wrongQuestions} />
       )}
       {mode === "apprendre" && <ApprendreMode categories={props.categories} />}
       {mode === "flashcards" && (
@@ -113,6 +158,7 @@ function Hub({
 }) {
   const wrongCount = props.wrongQuestions.length;
   const total = props.totalQuestionsAvailable;
+  const [showFlagora, setShowFlagora] = useState(false);
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
@@ -134,10 +180,22 @@ function Hub({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <ModeCard
-          title="À retravailler"
+          title="Voir mes erreurs"
           desc={
             wrongCount > 0
-              ? `${wrongCount} question${wrongCount > 1 ? "s" : ""} ratée${wrongCount > 1 ? "s" : ""} en mémoire`
+              ? `${wrongCount} question${wrongCount > 1 ? "s" : ""} ratée${wrongCount > 1 ? "s" : ""} — lecture seule`
+              : "Aucune erreur en mémoire"
+          }
+          icon={BookOpen}
+          accent="buzz"
+          onClick={() => onPick("erreurs-lecture")}
+          disabled={wrongCount === 0}
+        />
+        <ModeCard
+          title="Refaire mes erreurs"
+          desc={
+            wrongCount > 0
+              ? `Rejoue les ${wrongCount} question${wrongCount > 1 ? "s" : ""} ratée${wrongCount > 1 ? "s" : ""}`
               : "Aucune erreur en mémoire"
           }
           icon={RotateCcw}
@@ -182,11 +240,25 @@ function Hub({
           onClick={() => onPick("defi")}
         />
         <ModeCard
-          title="Fiche de révision"
-          desc="Lis les questions et réponses d'une catégorie"
+          title="Fiches de révision"
+          desc="Apprends carte par carte avec révélation guidée"
           icon={BookOpen}
           accent="sky"
-          onClick={() => onPick("fiche")}
+          href="/revision/fiches"
+        />
+        <ModeCard
+          title="Tableau périodique"
+          desc="118 éléments à apprendre ou à retrouver"
+          icon={FlaskConical}
+          accent="sky"
+          href="/revision/tableau-periodique"
+        />
+        <ModeCard
+          title="Drapeaux & Capitales"
+          desc="App externe Flagora (intégrée)"
+          icon={Flag}
+          accent="sky"
+          onClick={() => setShowFlagora(true)}
         />
         <ModeCard
           title="Favoris"
@@ -196,6 +268,10 @@ function Hub({
           onClick={() => onPick("favoris")}
         />
       </div>
+      <FlagoraEmbedModal
+        open={showFlagora}
+        onClose={() => setShowFlagora(false)}
+      />
     </main>
   );
 }
@@ -208,6 +284,7 @@ function ModeCard({
   highlight,
   disabled,
   onClick,
+  href,
 }: {
   title: string;
   desc: string;
@@ -215,7 +292,10 @@ function ModeCard({
   accent: "gold" | "sky" | "buzz" | "life-green";
   highlight?: boolean;
   disabled?: boolean;
-  onClick: () => void;
+  /** Si fourni → bouton classique. Sinon utiliser `href`. Mutuellement exclusif. */
+  onClick?: () => void;
+  /** Si fourni → la card devient un Link Next vers cette URL. */
+  href?: string;
 }) {
   const accentClass = {
     gold: {
@@ -240,23 +320,19 @@ function ModeCard({
     },
   }[accent];
 
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={cn(
-        "group relative flex flex-col items-start gap-3 rounded-2xl border bg-card p-5 text-left transition-all glow-card",
-        disabled
-          ? "border-border opacity-50 cursor-not-allowed"
-          : cn(
-              "border-border hover:scale-[1.02]",
-              accentClass.border,
-              accentClass.shadow,
-            ),
-        highlight && "border-buzz/60",
-      )}
-    >
+  const containerCls = cn(
+    "group relative flex flex-col items-start gap-3 rounded-2xl border bg-card p-5 text-left transition-all glow-card",
+    disabled
+      ? "border-border opacity-50 cursor-not-allowed"
+      : cn(
+          "border-border hover:scale-[1.02]",
+          accentClass.border,
+          accentClass.shadow,
+        ),
+    highlight && "border-buzz/60",
+  );
+  const inner = (
+    <>
       <div
         className={cn(
           "flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-110",
@@ -277,6 +353,25 @@ function ModeCard({
           Recommandé
         </span>
       )}
+    </>
+  );
+
+  if (href && !disabled) {
+    return (
+      <Link href={href} className={containerCls}>
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={containerCls}
+    >
+      {inner}
     </button>
   );
 }
@@ -645,6 +740,24 @@ function ConfigAndPlay({
 // MODE 5 — Défi du jour
 // ===========================================================================
 
+/**
+ * Formate une date ISO (YYYY-MM-DD) en français lisible avec jour de
+ * la semaine. Ex : "lundi 27 avril 2026".
+ *
+ * E3.2 — Remplace le format ISO peu lisible affiché auparavant.
+ */
+function formatDefiDate(isoDate: string | null): string {
+  if (!isoDate) return "";
+  const d = new Date(isoDate);
+  if (Number.isNaN(d.getTime())) return isoDate;
+  return new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(d);
+}
+
 function DefiMode() {
   const [questions, setQuestions] = useState<RevQuestion[] | null>(null);
   const [date, setDate] = useState<string | null>(null);
@@ -669,26 +782,48 @@ function DefiMode() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-5 p-8 text-center">
+    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-5 p-6 text-center sm:p-8">
       <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gold/20 text-gold-warm shadow-[0_0_64px_rgba(245,183,0,0.45)]"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative flex w-full flex-col items-center gap-4 overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-br from-gold-pale via-cream to-sky-pale p-8 shadow-[0_0_64px_rgba(245,183,0,0.25)]"
       >
-        <Calendar className="h-12 w-12" aria-hidden="true" />
+        {/* Halo décoratif */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gold/40 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-sky/30 blur-2xl"
+        />
+
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gold/30 text-gold-warm shadow-[0_0_48px_rgba(245,183,0,0.45)]"
+        >
+          <Calendar className="h-12 w-12" aria-hidden="true" />
+        </motion.div>
+        <header className="relative">
+          <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
+            Défi du jour
+          </p>
+          <h1 className="mt-1 font-display text-3xl font-extrabold text-foreground">
+            5 questions, identiques pour tous
+          </h1>
+          {date && (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-foreground/10 px-3 py-1 text-sm font-bold capitalize text-foreground">
+              <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+              {formatDefiDate(date)}
+            </p>
+          )}
+          <p className="mt-3 text-sm text-foreground/70">
+            Le tirage change à minuit. Reviens demain pour de nouvelles.
+          </p>
+        </header>
       </motion.div>
-      <header>
-        <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
-          Défi du jour
-        </p>
-        <h1 className="mt-1 font-display text-3xl font-extrabold text-foreground">
-          5 questions, identiques pour tous
-        </h1>
-        <p className="mt-2 text-foreground/70">
-          Le tirage change à minuit. Reviens demain pour de nouvelles.
-        </p>
-      </header>
 
       {!questions ? (
         <Button variant="gold" size="lg" onClick={load} disabled={isPending}>
@@ -702,9 +837,9 @@ function DefiMode() {
       ) : (
         <div className="flex flex-col items-center gap-2">
           <p className="text-sm text-foreground/70">
-            Défi du{" "}
-            <strong className="font-mono text-foreground">{date ?? ""}</strong>{" "}
-            — {questions.length} questions prêtes.
+            <strong className="text-foreground">{questions.length}</strong>{" "}
+            question{questions.length > 1 ? "s" : ""} prête
+            {questions.length > 1 ? "s" : ""}.
           </p>
           <Button
             variant="gold"
@@ -767,7 +902,7 @@ function FicheMode({ categories }: { categories: CategoryRow[] }) {
               className="rounded-xl border border-border bg-card p-3 text-left hover:border-gold/50 hover:bg-gold/5"
             >
               <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-navy"
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-color"
                 style={{ backgroundColor: c.couleur ?? "#F5B700" }}
               >
                 {c.nom}

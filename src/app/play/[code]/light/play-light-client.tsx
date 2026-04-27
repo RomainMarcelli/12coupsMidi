@@ -30,10 +30,10 @@ interface PlayLightClientProps {
 type Phase = "waiting" | "playing" | "result" | "ended";
 
 const ANSWER_COLORS = [
-  "bg-buzz text-cream", // A = rouge
-  "bg-sky text-navy", // B = bleu
-  "bg-life-green text-navy", // C = vert
-  "bg-life-yellow text-navy", // D = jaune
+  "bg-buzz text-white", // A = rouge
+  "bg-sky text-on-color", // B = bleu
+  "bg-life-green text-on-color", // C = vert
+  "bg-life-yellow text-on-color", // D = jaune
 ];
 
 /**
@@ -175,13 +175,13 @@ export function PlayLightClient({
           aria-hidden="true"
           fill="currentColor"
         />
-        <h1 className="font-display text-3xl font-extrabold text-navy">
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
           Partie terminée !
         </h1>
-        <p className="text-navy/70">
+        <p className="text-foreground/70">
           Tes réponses : <strong className="text-life-green">{score}</strong> bonnes.
         </p>
-        <p className="text-sm text-navy/50">
+        <p className="text-sm text-foreground/50">
           Le classement final est sur la TV.
         </p>
       </main>
@@ -195,12 +195,12 @@ export function PlayLightClient({
     <main
       className={cn(
         "flex min-h-screen flex-col gap-4 p-4 transition-colors",
-        flash ? "bg-gold/40" : "bg-cream",
+        flash ? "bg-gold/40" : "bg-background",
       )}
     >
-      <header className="flex items-center justify-between text-navy">
+      <header className="flex items-center justify-between text-foreground">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-navy/50">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
             Partie {code}
           </p>
           <p className="font-display text-base font-extrabold">{pseudo}</p>
@@ -216,13 +216,13 @@ export function PlayLightClient({
       )}
 
       {fullMode && question && (
-        <section className="rounded-2xl border border-border bg-white p-4 text-center">
+        <section className="rounded-2xl border border-border bg-card p-4 text-center">
           {question.format && (
             <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-gold-warm">
               {question.format}
             </span>
           )}
-          <p className="mt-2 font-display text-base font-bold text-navy">
+          <p className="mt-2 font-display text-base font-bold text-foreground">
             {question.enonce}
           </p>
         </section>
@@ -232,7 +232,7 @@ export function PlayLightClient({
         <section className="grid flex-1 grid-cols-1 gap-3">
           {question.choices.map((c) => {
             const colorClass =
-              ANSWER_COLORS[c.idx] ?? "bg-navy/10 text-navy";
+              ANSWER_COLORS[c.idx] ?? "bg-foreground/10 text-foreground";
             return (
               <motion.button
                 key={c.idx}
@@ -270,7 +270,7 @@ function WaitingTurn({
   const isMine = question?.currentPlayerToken === myToken;
   if (!question) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center text-navy/60">
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center text-foreground/60">
         <Loader2 className="h-8 w-8 animate-spin" aria-hidden="true" />
         <p>En attente de la première question…</p>
       </div>
@@ -280,10 +280,10 @@ function WaitingTurn({
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
       <Crown className="h-10 w-10 text-gold-warm" aria-hidden="true" />
-      <p className="font-display text-2xl font-extrabold text-navy">
+      <p className="font-display text-2xl font-extrabold text-foreground">
         {question.currentPlayerPseudo}
       </p>
-      <p className="text-navy/60">est en train de jouer…</p>
+      <p className="text-foreground/60">est en train de jouer…</p>
     </div>
   );
 }

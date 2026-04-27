@@ -202,7 +202,7 @@ export function VoiceInput({
           type="button"
           onClick={() => submit()}
           disabled={disabled || text.trim() === ""}
-          className="flex h-11 items-center gap-1.5 rounded-md bg-gold px-4 font-bold text-navy shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_16px_rgba(245,183,0,0.45)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-11 items-center gap-1.5 rounded-md bg-gold px-4 font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_16px_rgba(245,183,0,0.45)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Send className="h-4 w-4" aria-hidden="true" />
           Valider

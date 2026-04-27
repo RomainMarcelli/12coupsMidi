@@ -66,15 +66,15 @@ export default function Home() {
             <Brain className="h-7 w-7" aria-hidden="true" />
           </div>
           <div className="flex-1">
-            <h2 className="font-display text-xl font-bold text-navy">
+            <h2 className="font-display text-xl font-bold text-foreground">
               Mode Révision
             </h2>
-            <p className="text-sm text-navy/70">
+            <p className="text-sm text-foreground/70">
               Rejoue tes questions ratées.
             </p>
           </div>
           <ChevronRight
-            className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-life-green"
+            className="h-6 w-6 text-foreground/30 transition-transform group-hover:translate-x-1 group-hover:text-life-green"
             aria-hidden="true"
           />
         </Link>
@@ -88,19 +88,19 @@ export default function Home() {
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h2 className="font-display text-xl font-bold text-navy">
+              <h2 className="font-display text-xl font-bold text-foreground">
                 Étoile Mystérieuse
               </h2>
-              <span className="rounded-full bg-cream-deep px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy/60">
+              <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground/60">
                 Bonus
               </span>
             </div>
-            <p className="text-sm text-navy/70">
+            <p className="text-sm text-foreground/70">
               Devine la célébrité avec 5 indices.
             </p>
           </div>
           <ChevronRight
-            className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-sky"
+            className="h-6 w-6 text-foreground/30 transition-transform group-hover:translate-x-1 group-hover:text-sky"
             aria-hidden="true"
           />
         </Link>
@@ -139,10 +139,10 @@ function HeroTile({ href, title, subtitle }: HeroTileProps) {
           <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
             Parcours complet
           </p>
-          <h1 className="mt-1 font-display text-3xl font-extrabold text-navy sm:text-4xl">
+          <h1 className="mt-1 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
             {title}
           </h1>
-          <p className="mt-2 text-navy/75 sm:text-lg">{subtitle}</p>
+          <p className="mt-2 text-foreground/75 sm:text-lg">{subtitle}</p>
         </div>
         <ChevronRight
           className="h-8 w-8 text-gold-warm transition-transform group-hover:translate-x-2"
@@ -200,8 +200,8 @@ function Tile({ href, title, subtitle, icon: Icon, accent }: TileProps) {
         <Icon className="h-6 w-6" aria-hidden="true" />
       </div>
       <div className="flex-1">
-        <h3 className="font-display text-lg font-bold text-navy">{title}</h3>
-        <p className="text-sm text-navy/60">{subtitle}</p>
+        <h3 className="font-display text-lg font-bold text-foreground">{title}</h3>
+        <p className="text-sm text-foreground/60">{subtitle}</p>
       </div>
     </Link>
   );

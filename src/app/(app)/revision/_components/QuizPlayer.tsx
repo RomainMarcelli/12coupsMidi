@@ -1,13 +1,29 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-import { ArrowRight, Check, RotateCcw, Send, Trophy, X } from "lucide-react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import {
+  ArrowRight,
+  BookOpen,
+  Check,
+  Clock,
+  Home,
+  RefreshCw,
+  RotateCcw,
+  Send,
+  Trophy,
+  X,
+  Zap,
+} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { AnswerButton } from "@/components/game/AnswerButton";
 import { FavoriteStar } from "@/components/game/FavoriteStar";
 import { SpeakerButton } from "@/components/game/SpeakerButton";
 import { Button } from "@/components/ui/button";
-import { resolveCorrectAnswerLabel } from "@/lib/game-logic/answer-display";
+import {
+  isGenericChoiceLabel,
+  resolveCorrectAnswerLabel,
+} from "@/lib/game-logic/answer-display";
 import { isMatch } from "@/lib/matching/fuzzy-match";
 import { buildTTSFeedbackText, useAutoPlayTTS } from "@/lib/tts-helpers";
 import { playSound } from "@/lib/sounds";
@@ -39,21 +55,32 @@ export function QuizPlayer({
     wrong: 0,
   });
 
+  // E2.3 — Tracking du temps de session pour afficher temps total +
+  // moyenne par question dans le DoneScreen. Set à chaque (re)démarrage.
+  const sessionStartedAtRef = useRef<number>(Date.now());
+  const sessionEndedAtRef = useRef<number | null>(null);
+
   if (phase.kind === "done") {
+    const totalMs =
+      (sessionEndedAtRef.current ?? Date.now()) - sessionStartedAtRef.current;
     return (
       <DoneScreen
         correct={phase.correct}
         wrong={phase.wrong}
         total={questions.length}
-        onRestart={() =>
-          setPhase({ kind: "playing", idx: 0, correct: 0, wrong: 0 })
-        }
+        totalMs={totalMs}
+        onRestart={() => {
+          sessionStartedAtRef.current = Date.now();
+          sessionEndedAtRef.current = null;
+          setPhase({ kind: "playing", idx: 0, correct: 0, wrong: 0 });
+        }}
       />
     );
   }
 
   const q = questions[phase.idx];
   if (!q) {
+    sessionEndedAtRef.current = Date.now();
     onDone?.({ correct: phase.correct, wrong: phase.wrong });
     setPhase({ kind: "done", correct: phase.correct, wrong: phase.wrong });
     return null;
@@ -71,6 +98,7 @@ export function QuizPlayer({
         const correct = phase.correct + (isCorrect ? 1 : 0);
         const wrong = phase.wrong + (isCorrect ? 0 : 1);
         if (next >= questions.length) {
+          sessionEndedAtRef.current = Date.now();
           onDone?.({ correct, wrong });
           setPhase({ kind: "done", correct, wrong });
         } else {
@@ -104,6 +132,11 @@ function PlayCard({
       }
   >(null);
   const [, startTransition] = useTransition();
+  // E1.3 — Timestamp du moment où le feedback a été affiché. Sert à
+  // ignorer les Entrée arrivant moins de 300 ms après, pour éviter
+  // qu'un même appui valide ET passe à la suivante en un seul coup
+  // (bug observé en Marathon libre).
+  const feedbackSetAtRef = useRef<number>(0);
 
   // Lecture auto TTS : énoncé + choix (si quizz_2/4) au mount, puis
   // feedback complet quand l'utilisateur a répondu.
@@ -133,6 +166,7 @@ function PlayCard({
     if (feedback) return;
     if (isCorrect) playSound("ding");
     else playSound("buzz");
+    feedbackSetAtRef.current = Date.now();
     setFeedback({ kind: isCorrect ? "correct" : "wrong", correctText });
     if (trackWrong) {
       startTransition(async () => {
@@ -150,6 +184,11 @@ function PlayCard({
     const fb = feedback; // capture pour TS narrowing dans le handler
     function onKey(e: KeyboardEvent) {
       if (e.key !== "Enter") return;
+      if (e.repeat) return;
+      // E1.3 — Anti double-fire : si feedback vient juste d'apparaître
+      // (< 300 ms), on ignore l'Entrée. Évite qu'un appui Entrée qui
+      // valide la réponse ne déclenche aussi le passage à la suivante.
+      if (Date.now() - feedbackSetAtRef.current < 300) return;
       // Si l'utilisateur tape encore dans un input/textarea, on n'intercepte
       // pas (Entrée a alors d'autres usages comme valider la saisie).
       const active = document.activeElement;
@@ -184,7 +223,7 @@ function PlayCard({
         <div className="flex items-center gap-2">
           {question.category && (
             <span
-              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-navy"
+              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-on-color"
               style={{ backgroundColor: question.category.couleur ?? "#F5B700" }}
             >
               {question.category.nom}
@@ -281,6 +320,25 @@ function PlayCard({
                   </p>
                 ) : null;
               })()}
+            {/* E2.1 — Sur une bonne réponse à libellé générique
+                (« L'un », « Vrai », …), on affiche la résolution
+                « L'un = La France » pour que l'utilisateur sache à
+                quoi correspondait son choix. */}
+            {feedback.kind === "correct" &&
+              isGenericChoiceLabel(feedback.correctText) &&
+              (() => {
+                const label = resolveCorrectAnswerLabel(
+                  feedback.correctText,
+                  question.explication,
+                );
+                return label ? (
+                  <p className="mt-1 text-foreground">
+                    {feedback.correctText}{" "}
+                    <span className="text-foreground/50">=</span>{" "}
+                    <strong className="text-life-green">{label}</strong>
+                  </p>
+                ) : null;
+              })()}
             {question.explication && (
               <p
                 className={cn(
@@ -370,7 +428,10 @@ function TextStage({
         onChange={(e) => setVal(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && val.trim() && !disabled) {
+            // E1.3 — stopPropagation pour empêcher le même Enter de
+            // remonter jusqu'au listener global "passer à la suivante".
             e.preventDefault();
+            e.stopPropagation();
             onAnswer(val.trim());
           }
         }}
@@ -383,7 +444,7 @@ function TextStage({
         type="button"
         onClick={() => onAnswer(val.trim())}
         disabled={disabled || val.trim() === ""}
-        className="flex h-11 items-center gap-1.5 rounded-md bg-gold px-4 font-bold text-navy shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-11 items-center gap-1.5 rounded-md bg-gold px-4 font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Send className="h-4 w-4" aria-hidden="true" />
         Valider
@@ -392,48 +453,282 @@ function TextStage({
   );
 }
 
+/**
+ * Écran de fin de session — refonte E2.3.
+ *
+ * Au-delà du score brut, on offre :
+ *   - Un titre dynamique adapté au pourcentage.
+ *   - Un cercle de progression animé (1.5 s) avec le pourcentage au centre.
+ *   - 4 stats détaillées : bonnes, erreurs, temps total, temps moyen.
+ *   - Confettis dorés si score ≥ 80 %.
+ *   - 3 boutons d'action : Recommencer (gold), Voir mes erreurs (vers
+ *     /revision où l'user choisit « Retravailler »), Retour à l'accueil.
+ */
 function DoneScreen({
   correct,
   wrong,
   total,
+  totalMs,
   onRestart,
 }: {
   correct: number;
   wrong: number;
   total: number;
+  totalMs: number;
   onRestart: () => void;
 }) {
   const ratio = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const totalSec = Math.max(1, Math.round(totalMs / 1000));
+  const avgSec = total > 0 ? Math.round(totalSec / total) : 0;
+
+  const title =
+    ratio === 100
+      ? { icon: Trophy, text: "Session parfaite !", glow: true }
+      : ratio >= 80
+        ? { icon: Trophy, text: "Excellent travail !", glow: true }
+        : ratio >= 60
+          ? { icon: Check, text: "Bien joué !", glow: false }
+          : { icon: Zap, text: "Continue à t'entraîner !", glow: false };
+
+  const TitleIcon = title.icon;
+  const showConfetti = ratio >= 80;
+
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-5 p-8 text-center">
+    <main className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 overflow-hidden p-6 text-center sm:p-8">
+      {showConfetti && <SessionConfetti />}
+
       <motion.div
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        className="flex h-28 w-28 items-center justify-center rounded-3xl bg-gold/20 text-gold-warm shadow-[0_0_64px_rgba(245,183,0,0.45)]"
+        initial={{ scale: 0.5, opacity: 0, y: -8 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 16 }}
+        className={cn(
+          "flex h-20 w-20 items-center justify-center rounded-3xl bg-gold/20 text-gold-warm",
+          title.glow && "shadow-[0_0_64px_rgba(245,183,0,0.55)]",
+        )}
       >
-        <Trophy className="h-14 w-14" aria-hidden="true" fill="currentColor" />
+        <TitleIcon
+          className="h-10 w-10"
+          aria-hidden="true"
+          fill={title.glow ? "currentColor" : "none"}
+        />
       </motion.div>
-      <div>
-        <h1 className="font-display text-3xl font-extrabold text-foreground">
-          Session terminée — {ratio} %
-        </h1>
-        <p className="mt-2 text-foreground/70">
-          <span className="inline-flex items-center gap-1 text-life-green">
-            <Check className="h-4 w-4" aria-hidden="true" />
-            {correct} bonne{correct > 1 ? "s" : ""}
-          </span>
-          {" · "}
-          <span className="inline-flex items-center gap-1 text-buzz">
-            <X className="h-4 w-4" aria-hidden="true" />
-            {wrong} erreur{wrong > 1 ? "s" : ""}
-          </span>
-        </p>
+
+      <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+        {title.text}
+      </h1>
+
+      {/* Cercle de progression animé */}
+      <CircularProgress percent={ratio} />
+
+      {/* Stats détaillées */}
+      <div className="grid w-full max-w-md grid-cols-2 gap-3">
+        <StatCard
+          icon={Check}
+          label={`bonne${correct > 1 ? "s" : ""}`}
+          value={correct.toString()}
+          accent="green"
+        />
+        <StatCard
+          icon={X}
+          label={`erreur${wrong > 1 ? "s" : ""}`}
+          value={wrong.toString()}
+          accent="red"
+        />
+        <StatCard
+          icon={Clock}
+          label="temps total"
+          value={formatDuration(totalSec)}
+          accent="navy"
+        />
+        <StatCard
+          icon={Zap}
+          label="par question"
+          value={`${avgSec} s`}
+          accent="gold"
+        />
       </div>
-      <Button variant="gold" size="lg" onClick={onRestart}>
-        <RotateCcw className="h-4 w-4" aria-hidden="true" />
-        Recommencer
-      </Button>
+
+      {/* G1.2 — 4 actions : Recommencer / Voir mes erreurs (lecture
+          seule) / Refaire mes erreurs (quizz) / Accueil. Le timestamp
+          `t=` force un remount côté revision-client.tsx, qui résout
+          le bug "le 2e clic ne fait rien" si on est déjà sur
+          ?mode=retravailler. */}
+      <div className="grid w-full max-w-2xl grid-cols-2 gap-2 sm:grid-cols-4">
+        <Button variant="gold" size="lg" onClick={onRestart}>
+          <RotateCcw className="h-4 w-4" aria-hidden="true" />
+          Recommencer
+        </Button>
+        <Link
+          href={`/revision?mode=erreurs-lecture&t=${Date.now()}`}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-buzz/40 bg-buzz/5 px-5 text-sm font-bold text-buzz transition-all hover:scale-[1.02] hover:border-buzz hover:bg-buzz/10 hover:shadow-[0_0_20px_rgba(230,57,70,0.25)]"
+        >
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
+          Voir mes erreurs
+        </Link>
+        <Link
+          href={`/revision?mode=retravailler&t=${Date.now()}`}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-buzz/40 bg-buzz/5 px-5 text-sm font-bold text-buzz transition-all hover:scale-[1.02] hover:border-buzz hover:bg-buzz/10 hover:shadow-[0_0_20px_rgba(230,57,70,0.25)]"
+        >
+          <RefreshCw className="h-4 w-4" aria-hidden="true" />
+          Refaire mes erreurs
+        </Link>
+        <Link
+          href="/"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-gold/50 bg-card px-5 text-sm font-bold text-foreground transition-all hover:scale-[1.02] hover:border-gold hover:bg-gold/10 hover:shadow-[0_0_20px_rgba(245,183,0,0.25)]"
+        >
+          <Home className="h-4 w-4" aria-hidden="true" />
+          Accueil
+        </Link>
+      </div>
     </main>
+  );
+}
+
+/**
+ * Cercle de progression circulaire SVG animé.
+ * Anneau qui se remplit en 1.5 s avec le pourcentage au centre.
+ */
+function CircularProgress({ percent }: { percent: number }) {
+  const size = 140;
+  const stroke = 12;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - percent / 100);
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        {/* Track */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="currentColor"
+          strokeWidth={stroke}
+          fill="none"
+          className="text-foreground/10"
+        />
+        {/* Fill animé */}
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="currentColor"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          fill="none"
+          className={cn(
+            percent >= 80
+              ? "text-life-green"
+              : percent >= 60
+                ? "text-gold"
+                : "text-buzz",
+          )}
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: dashOffset }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <motion.p
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="font-display text-4xl font-extrabold text-foreground"
+        >
+          {percent}
+          <span className="text-2xl">%</span>
+        </motion.p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Petite card de stat colorée pour le DoneScreen.
+ */
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  accent,
+}: {
+  icon: typeof Trophy;
+  label: string;
+  value: string;
+  accent: "green" | "red" | "navy" | "gold";
+}) {
+  const accentClass = {
+    green: "text-life-green border-life-green/30 bg-life-green/5",
+    red: "text-buzz border-buzz/30 bg-buzz/5",
+    navy: "text-foreground border-border bg-card",
+    gold: "text-gold-warm border-gold/30 bg-gold/5",
+  }[accent];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      className={cn(
+        "flex items-center gap-3 rounded-xl border p-3 text-left",
+        accentClass,
+      )}
+    >
+      <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+      <div className="flex flex-col leading-tight">
+        <span className="font-display text-xl font-extrabold">{value}</span>
+        <span className="text-[11px] uppercase tracking-wider text-foreground/60">
+          {label}
+        </span>
+      </div>
+    </motion.div>
+  );
+}
+
+function formatDuration(totalSec: number): string {
+  if (totalSec < 60) return `${totalSec} s`;
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  return sec === 0 ? `${min} min` : `${min} min ${sec} s`;
+}
+
+/** Confettis dorés sur fond de session terminée (≥ 80 %). */
+function SessionConfetti() {
+  const count = 18;
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      {Array.from({ length: count }).map((_, i) => {
+        const left = ((i * 11) % 100) + (i % 3) * 2;
+        const delay = (i % 6) * 0.1;
+        const duration = 2.6 + (i % 4) * 0.3;
+        const color =
+          i % 4 === 0
+            ? "bg-gold"
+            : i % 4 === 1
+              ? "bg-gold-warm"
+              : i % 4 === 2
+                ? "bg-life-green"
+                : "bg-sky";
+        return (
+          <motion.span
+            key={i}
+            className={cn("absolute h-2.5 w-1.5 rounded-sm", color)}
+            style={{ left: `${left}%`, top: -10 }}
+            initial={{ y: 0, opacity: 0, rotate: 0 }}
+            animate={{
+              y: ["0%", "120vh"],
+              opacity: [0, 1, 1, 0],
+              rotate: [0, 360, 720],
+            }}
+            transition={{ duration, delay, ease: "easeIn" }}
+          />
+        );
+      })}
+    </div>
   );
 }

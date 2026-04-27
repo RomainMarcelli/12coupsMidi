@@ -48,8 +48,11 @@ export function ColorTransitionOverlay({
   const reducedMotion = useReducedMotion();
   const [visible, setVisible] = useState(true);
 
-  const duration = reducedMotion ? 500 : 2000;
   const isRed = to === "red";
+  // E1.5 — Rouge = 4s (lecture confortable + dramatique), Jaune = 3s
+  // (un poil plus long pour cohérence visuelle, le joueur n'est pas
+  // immédiatement éliminé). Reduced-motion : 500ms quoi qu'il en soit.
+  const duration = reducedMotion ? 500 : isRed ? 4000 : 3000;
 
   useEffect(() => {
     // Joue le son d'alerte au début de l'overlay
@@ -103,7 +106,7 @@ export function ColorTransitionOverlay({
               aria-hidden="true"
               className={cn(
                 "absolute inset-2 rounded-3xl border-4",
-                isRed ? "border-cream/60" : "border-navy/40",
+                isRed ? "border-white/60" : "border-[#0b1f4d]/40",
               )}
               animate={{ opacity: [0.3, 1, 0.3] }}
               transition={{ duration: 0.8, repeat: 2 }}
@@ -151,7 +154,7 @@ export function ColorTransitionOverlay({
 
           {/* Contenu central */}
           <motion.div
-            className="relative flex flex-col items-center gap-3 px-6 text-center text-cream"
+            className="relative flex flex-col items-center gap-3 px-6 text-center text-white"
             initial={{ scale: 0.6, opacity: 0 }}
             animate={
               reducedMotion
@@ -175,8 +178,8 @@ export function ColorTransitionOverlay({
               className={cn(
                 "flex h-24 w-24 items-center justify-center rounded-full sm:h-32 sm:w-32",
                 isRed
-                  ? "bg-cream/15 text-cream shadow-[0_0_120px_rgba(255,255,255,0.5)]"
-                  : "bg-navy/20 text-navy shadow-[0_0_80px_rgba(245,197,24,0.7)]",
+                  ? "bg-white/15 text-white shadow-[0_0_120px_rgba(255,255,255,0.5)]"
+                  : "bg-[#0b1f4d]/20 text-[#0b1f4d] shadow-[0_0_80px_rgba(245,197,24,0.7)]",
               )}
             >
               {isRed ? (
@@ -193,8 +196,8 @@ export function ColorTransitionOverlay({
               className={cn(
                 "font-display text-5xl font-extrabold uppercase tracking-widest sm:text-7xl",
                 isRed
-                  ? "text-cream drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]"
-                  : "text-navy drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
+                  ? "text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]"
+                  : "text-[#0b1f4d] drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
               )}
             >
               {isRed ? "Rouge" : "Attention"}
@@ -202,14 +205,14 @@ export function ColorTransitionOverlay({
             <p
               className={cn(
                 "font-display text-xl font-bold sm:text-3xl",
-                isRed ? "text-cream/95" : "text-navy/85",
+                isRed ? "text-white/95" : "text-[#0b1f4d]/85",
               )}
             >
               {playerName}{" "}
               {isRed ? "est en danger !" : "passe au JAUNE"}
             </p>
             {isRed && (
-              <p className="text-sm font-semibold uppercase tracking-widest text-cream/85 sm:text-base">
+              <p className="text-sm font-semibold uppercase tracking-widest text-white/85 sm:text-base">
                 Préparation du duel…
               </p>
             )}
@@ -280,7 +283,7 @@ function ParticleEffect({
     return (
       <motion.span
         aria-hidden="true"
-        className="absolute left-1/2 top-1/2 h-2 w-2 rounded-full bg-cream"
+        className="absolute left-1/2 top-1/2 h-2 w-2 rounded-full bg-[#ffffff]"
         style={{ marginLeft: -4, marginTop: -4 }}
         initial={{ x: 0, y: 0, opacity: 0, scale: 0.5 }}
         animate={{
@@ -299,7 +302,7 @@ function ParticleEffect({
   return (
     <motion.span
       aria-hidden="true"
-      className="absolute h-3 w-1.5 rounded-sm bg-navy/70"
+      className="absolute h-3 w-1.5 rounded-sm bg-[#0b1f4d]/70"
       style={{ left: `${left}%`, top: -10 }}
       initial={{ y: 0, opacity: 0, rotate: 0 }}
       animate={{

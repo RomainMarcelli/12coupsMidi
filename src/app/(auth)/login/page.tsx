@@ -20,17 +20,17 @@ export default function LoginPage() {
             priority
           />
         </div>
-        <h1 className="font-display text-3xl font-extrabold text-navy">
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
           Les <span className="text-gold-warm">12 coups</span> de Mahylan
         </h1>
-        <p className="text-sm text-navy/70">
+        <p className="text-sm text-foreground/70">
           Entraîne-toi aux 12 Coups de Midi.
         </p>
       </div>
 
       <LoginForm />
 
-      <p className="max-w-xs text-center text-xs text-navy/50">
+      <p className="max-w-xs text-center text-xs text-foreground/50">
         En t'inscrivant, tu acceptes que cette app soit purement personnelle —
         pas de données revendues, pas de pub.
       </p>

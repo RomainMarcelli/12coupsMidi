@@ -107,7 +107,7 @@ export function TransitionDuelOverlay({
           <p className="font-display text-lg font-extrabold uppercase tracking-wide text-buzz">
             {pseudo} passe au rouge
           </p>
-          <p className="mt-1 text-sm text-navy/80">
+          <p className="mt-1 text-sm text-foreground/80">
             Préparation du duel. Tu peux relire la bonne réponse et
             l&apos;explication, le duel démarre dans{" "}
             <strong className="tabular-nums text-buzz">{remaining} s</strong>.
@@ -121,7 +121,7 @@ export function TransitionDuelOverlay({
           onClick={handleClick}
           aria-label="Passer au duel"
           className={cn(
-            "inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-buzz px-6 font-bold uppercase tracking-wide text-cream shadow-[0_4px_0_0_#a32634] transition-all",
+            "inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-buzz px-6 font-bold uppercase tracking-wide text-white shadow-[0_4px_0_0_#a32634] transition-all",
             "hover:-translate-y-px hover:shadow-[0_6px_18px_rgba(230,57,70,0.55)]",
             "active:translate-y-px active:shadow-[0_2px_0_0_#a32634]",
           )}

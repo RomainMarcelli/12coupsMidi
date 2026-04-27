@@ -291,6 +291,15 @@
 
 /* ----- Utilitaires ----- */
 @layer utilities {
+  /*
+   * Texte navy figé (E3.3 audit dark mode).
+   * À utiliser sur les fonds COLORÉS qui ne flip pas en dark
+   * (bg-gold, style={{backgroundColor: catégorieCouleur}}, …).
+   * Le `text-navy` standard flip en blanc en dark → contraste cassé.
+   */
+  .text-on-color {
+    color: #0b1f4d;
+  }
   /* Glow or — boutons gold, boutons d'action */
   .glow-gold {
     box-shadow:

@@ -2,7 +2,7 @@
 
 PWA d'entraînement aux 12 Coups — multi-modes (Coup d'envoi, Coup par Coup, Face-à-Face, parcours complet, Révision/Apprentissage). Stack : Next.js 16 + TypeScript + Tailwind v4 + Supabase.
 
-Voir le cahier des charges historique dans [MIDI_MASTER_PROJET.md](./MIDI_MASTER_PROJET.md), le journal des phases dans [PROGRESS.md](./PROGRESS.md), les décisions techniques dans [DECISIONS.md](./DECISIONS.md), et le journal des changements dans [CHANGELOG.md](./CHANGELOG.md).
+Voir le cahier des charges historique dans [MIDI_MASTER_PROJET.md](./docs/MIDI_MASTER_PROJET.md), le journal des phases dans [PROGRESS.md](./docs/PROGRESS.md), les décisions techniques dans [DECISIONS.md](./docs/DECISIONS.md), et le journal des changements dans [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 
@@ -103,7 +103,7 @@ npx supabase gen types typescript --project-id <ton-project-ref> --schema public
 
 ## 5. Architecture
 
-Voir `MIDI_MASTER_PROJET.md §3`. Résumé des dossiers clés :
+Voir `docs/MIDI_MASTER_PROJET.md §3`. Résumé des dossiers clés :
 
 ```
 src/
@@ -131,5 +131,5 @@ supabase/
 
 - **Magic link ne marche pas** : vérifier §3.3 (Redirect URLs) et que `NEXT_PUBLIC_APP_URL` matche ton origin.
 - **"Unauthorized" sur une requête** : les policies RLS sont strictes. Vérifier que le user est bien authentifié et que la table a une policy adaptée (voir `0001_init.sql`).
-- **Erreur Turbopack / WorkerError** : `npm run build` doit être lancé avec `--webpack` (déjà configuré). Cf. [DECISIONS.md](./DECISIONS.md).
+- **Erreur Turbopack / WorkerError** : `npm run build` doit être lancé avec `--webpack` (déjà configuré). Cf. [DECISIONS.md](./docs/DECISIONS.md).
 - **Types désynchros après une migration** : relancer `supabase gen types` (§3.6).

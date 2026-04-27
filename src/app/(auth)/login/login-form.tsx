@@ -27,7 +27,7 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-sm">
       {/* Tabs */}
-      <div className="mb-5 grid grid-cols-2 rounded-lg border border-border bg-cream-deep p-1">
+      <div className="mb-5 grid grid-cols-2 rounded-lg border border-border bg-muted p-1">
         <TabButton
           active={mode === "signin"}
           onClick={() => setMode("signin")}
@@ -66,7 +66,8 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="flex h-12 items-center justify-center gap-2 rounded-md bg-gold font-bold text-navy shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-12 items-center justify-center gap-2 rounded-md bg-gold font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-60"
+
         >
           {isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -115,8 +116,8 @@ function TabButton({
       className={cn(
         "flex items-center justify-center gap-1.5 rounded-md py-2 text-sm font-semibold transition-all",
         active
-          ? "bg-white text-navy shadow-sm"
-          : "text-navy/60 hover:text-navy",
+          ? "bg-card text-foreground shadow-sm"
+          : "text-foreground/60 hover:text-foreground",
       )}
     >
       <Icon className="h-4 w-4" aria-hidden="true" />
@@ -135,16 +136,16 @@ function Field({
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="flex flex-col gap-1.5 text-sm">
-      <span className="font-semibold text-navy">{label}</span>
+      <span className="font-semibold text-foreground">{label}</span>
       <div className="relative">
         <Icon
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-navy/40"
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/40"
           aria-hidden="true"
         />
         <input
           {...props}
           required
-          className="h-11 w-full rounded-md border border-border bg-white pl-10 pr-3 text-sm text-navy placeholder-navy/30 focus:border-gold focus:outline-none disabled:opacity-50"
+          className="h-11 w-full rounded-md border border-border bg-card pl-10 pr-3 text-sm text-foreground placeholder-foreground/30 focus:border-gold focus:outline-none disabled:opacity-50"
         />
       </div>
     </label>

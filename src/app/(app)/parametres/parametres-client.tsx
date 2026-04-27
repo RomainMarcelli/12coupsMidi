@@ -7,6 +7,7 @@ import {
   Eye,
   EyeOff,
   Key,
+  Keyboard,
   Loader2,
   Mail,
   Mic,
@@ -24,7 +25,18 @@ import {
   VolumeX,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { ShortcutsPanel } from "@/components/parametres/ShortcutsPanel";
 import { VoiceInstallHelp } from "@/components/parametres/VoiceInstallHelp";
+import { AvatarPicker } from "@/components/avatars/AvatarPicker";
+import {
+  fetchNotificationSettings,
+  saveNotificationSettings,
+} from "@/lib/notifications/actions";
+import {
+  DAY_LABELS,
+  DEFAULT_NOTIFICATION_SETTINGS,
+  type NotificationSettings,
+} from "@/lib/notifications/types";
 import { Button } from "@/components/ui/button";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import {
@@ -55,13 +67,20 @@ export interface ParametresInitial {
   settings: Partial<UserSettings>;
 }
 
-type TabId = "apparence" | "audio" | "profil" | "notifs" | "compte";
+type TabId =
+  | "apparence"
+  | "audio"
+  | "profil"
+  | "notifs"
+  | "raccourcis"
+  | "compte";
 
 const TABS: Array<{ id: TabId; label: string; icon: typeof Palette }> = [
   { id: "apparence", label: "Apparence", icon: Palette },
   { id: "audio", label: "Audio & Voix", icon: Volume2 },
   { id: "profil", label: "Profil", icon: User },
   { id: "notifs", label: "Notifications", icon: Bell },
+  { id: "raccourcis", label: "Raccourcis", icon: Keyboard },
   { id: "compte", label: "Compte", icon: Trophy },
 ];
 
@@ -111,6 +130,7 @@ export function ParametresClient({ initial }: { initial: ParametresInitial }) {
         />
       )}
       {tab === "notifs" && <NotifsPanel initial={initial.settings} />}
+      {tab === "raccourcis" && <ShortcutsPanel />}
       {tab === "compte" && (
         <AccountPanel
           email={initial.email}
@@ -563,6 +583,7 @@ function ProfilePanel({
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
   const [pending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [showPicker, setShowPicker] = useState(false);
 
   function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -626,20 +647,34 @@ function ProfilePanel({
         )}
 
         <div className="flex flex-col gap-2">
-          <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground hover:border-gold/50 hover:bg-gold/10">
+          <button
+            type="button"
+            onClick={() => setShowPicker(true)}
+            className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md border border-gold/40 bg-gold/10 px-3 py-1.5 text-sm font-bold text-foreground hover:border-gold hover:bg-gold/20"
+          >
             <Upload className="h-4 w-4" aria-hidden="true" />
-            Changer la photo
-            <input
-              type="file"
-              accept="image/*"
-              onChange={onFile}
-              className="hidden"
-              disabled={pending}
-            />
-          </label>
-          <p className="text-xs text-foreground/50">JPG/PNG, 4 Mo max.</p>
+            Choisir un avatar
+          </button>
+          <p className="text-xs text-foreground/50">
+            Pack, génération aléatoire, ou import.
+          </p>
         </div>
       </div>
+
+      <AvatarPicker
+        open={showPicker}
+        currentUrl={avatarUrl}
+        onClose={() => setShowPicker(false)}
+        onPick={(url) => {
+          startTransition(async () => {
+            const save = await saveProfile({ avatarUrl: url });
+            if (save.status === "ok") {
+              setAvatarUrl(url);
+              setFeedback("Avatar mis à jour.");
+            } else setFeedback(`Erreur : ${save.message}`);
+          });
+        }}
+      />
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-foreground">
@@ -974,13 +1009,43 @@ function NotifsPanel({ initial }: { initial: Partial<UserSettings> }) {
   const update = useSettingsStore((s) => s.update);
   const [, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [notifSettings, setNotifSettings] = useState<NotificationSettings>(
+    DEFAULT_NOTIFICATION_SETTINGS,
+  );
+  const [loadingNotif, setLoadingNotif] = useState(true);
 
-  const enabled = settings.dailyNotif ?? initial.dailyNotif ?? false;
+  const pushEnabled = settings.dailyNotif ?? initial.dailyNotif ?? false;
+
+  // Charge les préférences notifs côté serveur (E4.2/E4.3)
+  useEffect(() => {
+    let alive = true;
+    void fetchNotificationSettings().then((s) => {
+      if (!alive) return;
+      setNotifSettings(s);
+      setLoadingNotif(false);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   function patch(p: Partial<UserSettings>) {
     update(p);
     startTransition(async () => {
       const res = await saveUserSettings(p);
+      if (res.status === "ok") {
+        setFeedback("Enregistré");
+      } else {
+        setFeedback(`Erreur : ${res.message}`);
+      }
+    });
+  }
+
+  function patchNotif(p: Partial<NotificationSettings>) {
+    const next = { ...notifSettings, ...p };
+    setNotifSettings(next);
+    startTransition(async () => {
+      const res = await saveNotificationSettings(next);
       if (res.status === "ok") {
         setFeedback("Enregistré");
       } else {
@@ -1003,35 +1068,205 @@ function NotifsPanel({ initial }: { initial: Partial<UserSettings> }) {
     }
   }
 
+  function toggleDay(day: number) {
+    const cur = notifSettings.email_days;
+    const has = cur.includes(day);
+    const next = has ? cur.filter((d) => d !== day) : [...cur, day];
+    patchNotif({ email_days: next.sort() });
+  }
+
+  const noneActive = !pushEnabled && !notifSettings.email_daily;
+
   return (
-    <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 glow-card">
-      <div>
-        <h2 className="font-display text-lg font-bold text-foreground">
-          Notifications
-        </h2>
-        <p className="text-sm text-foreground/70">
-          Active un rappel quotidien pour rester en streak.
-        </p>
+    <section className="flex flex-col gap-4">
+      {/* Bandeau d'invitation si rien d'activé */}
+      {noneActive && !loadingNotif && (
+        <div className="flex items-center gap-3 rounded-xl border border-gold/40 bg-gradient-to-br from-gold/10 to-sky/10 p-4">
+          <Bell
+            className="h-6 w-6 shrink-0 text-gold-warm"
+            aria-hidden="true"
+          />
+          <p className="text-sm text-foreground">
+            <strong>Active au moins une notification</strong> pour ne pas
+            perdre ton streak !
+          </p>
+        </div>
+      )}
+
+      {/* Récap visuel */}
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div
+          className={cn(
+            "flex items-center gap-3 rounded-xl border p-3 text-sm",
+            pushEnabled
+              ? "border-life-green/40 bg-life-green/5 text-foreground"
+              : "border-border bg-card text-foreground/55",
+          )}
+        >
+          <Bell
+            className={cn(
+              "h-5 w-5",
+              pushEnabled ? "text-life-green" : "text-foreground/40",
+            )}
+            aria-hidden="true"
+          />
+          <span className="flex-1">
+            <strong className="font-bold">Push :</strong>{" "}
+            {pushEnabled ? "Activées" : "Désactivées"}
+          </span>
+        </div>
+        <div
+          className={cn(
+            "flex items-center gap-3 rounded-xl border p-3 text-sm",
+            notifSettings.email_daily
+              ? "border-life-green/40 bg-life-green/5 text-foreground"
+              : "border-border bg-card text-foreground/55",
+          )}
+        >
+          <Mail
+            className={cn(
+              "h-5 w-5",
+              notifSettings.email_daily
+                ? "text-life-green"
+                : "text-foreground/40",
+            )}
+            aria-hidden="true"
+          />
+          <span className="flex-1">
+            <strong className="font-bold">Email quotidien :</strong>{" "}
+            {notifSettings.email_daily ? "Activé" : "Désactivé"}
+          </span>
+        </div>
       </div>
 
-      <Row
-        label="Rappel quotidien"
-        desc="Une notification par jour si tu n'as pas joué."
-        icon={Bell}
-        right={
-          <ToggleSwitch
-            checked={enabled}
-            onChange={(v) => {
-              if (v) {
-                void requestPermission();
-              } else {
-                patch({ dailyNotif: false });
-              }
-            }}
-            label="Rappel quotidien"
-          />
-        }
-      />
+      {/* Push browser */}
+      <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 glow-card">
+        <div>
+          <h2 className="font-display text-lg font-bold text-foreground">
+            Notifications navigateur
+          </h2>
+          <p className="text-sm text-foreground/70">
+            Un rappel push quand tu n&apos;as pas joué.
+          </p>
+        </div>
+
+        <Row
+          label="Rappel quotidien"
+          desc="Une notification par jour si tu n'as pas joué."
+          icon={Bell}
+          right={
+            <ToggleSwitch
+              checked={pushEnabled}
+              onChange={(v) => {
+                if (v) {
+                  void requestPermission();
+                } else {
+                  patch({ dailyNotif: false });
+                }
+              }}
+              label="Rappel quotidien"
+            />
+          }
+        />
+      </section>
+
+      {/* Mail quotidien (E4.2) */}
+      <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 glow-card">
+        <div>
+          <h2 className="font-display text-lg font-bold text-foreground">
+            Email quotidien
+          </h2>
+          <p className="text-sm text-foreground/70">
+            Reçois un mail à l&apos;heure et aux jours de ton choix si tu
+            n&apos;as pas joué.
+          </p>
+        </div>
+
+        <Row
+          label="Recevoir un email quotidien"
+          desc="Tu peux le couper à tout moment."
+          icon={Mail}
+          right={
+            <ToggleSwitch
+              checked={notifSettings.email_daily}
+              onChange={(v) => patchNotif({ email_daily: v })}
+              label="Email quotidien"
+            />
+          }
+        />
+
+        {notifSettings.email_daily && (
+          <div className="flex flex-col gap-3 rounded-xl border border-border bg-background/40 p-3">
+            <div className="flex items-center justify-between gap-3">
+              <label
+                htmlFor="email-time"
+                className="flex flex-col text-sm font-bold text-foreground"
+              >
+                Heure d&apos;envoi
+                <span className="text-xs font-normal text-foreground/55">
+                  Heure locale
+                </span>
+              </label>
+              <input
+                id="email-time"
+                type="time"
+                value={notifSettings.email_time}
+                onChange={(e) =>
+                  patchNotif({ email_time: e.target.value || "18:00" })
+                }
+                className="h-10 rounded-md border border-border bg-card px-3 font-mono text-sm text-foreground focus:border-gold focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <p className="text-sm font-bold text-foreground">
+                Jours de la semaine
+              </p>
+              <p className="mb-2 text-xs text-foreground/55">
+                Coche les jours où tu veux recevoir le mail.
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {DAY_LABELS.map(({ id, label }) => {
+                  const active = notifSettings.email_days.includes(id);
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => toggleDay(id)}
+                      className={cn(
+                        "rounded-md border px-3 py-1.5 text-sm font-bold transition-colors",
+                        active
+                          ? "border-gold bg-gold/15 text-foreground"
+                          : "border-border bg-card text-foreground/55 hover:border-gold/40",
+                      )}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <p className="text-xs text-foreground/55">
+              Aperçu : tu recevras un mail à{" "}
+              <strong className="font-mono text-foreground">
+                {notifSettings.email_time}
+              </strong>{" "}
+              les{" "}
+              <strong className="text-foreground">
+                {notifSettings.email_days.length === 7
+                  ? "tous les jours"
+                  : DAY_LABELS.filter((d) =>
+                      notifSettings.email_days.includes(d.id),
+                    )
+                      .map((d) => d.label.toLowerCase())
+                      .join(", ")}
+              </strong>{" "}
+              te rappelant de jouer.
+            </p>
+          </div>
+        )}
+      </section>
 
       {feedback && <p className="text-xs text-foreground/60">{feedback}</p>}
     </section>

@@ -161,6 +161,14 @@ export function FaceAFaceClient({
   const advanceQuestion = useCallback(
     (reason: "wrong" | "pass" | "switch" | "bot-wrong" | "bot-pass") => {
       const prev = currentQIdx;
+      // Anti-doublons : si on a déjà parcouru tout le pool, on reset le
+      // tracker pour repartir sur un cycle propre. Le seul moyen d'avoir
+      // 2x la même question dans une session est d'épuiser le pool —
+      // ce reset garantit qu'on n'aura pas 2x la même AVANT d'avoir vu
+      // toutes les autres.
+      if (usedIdxRef.current.size >= initialQuestions.length) {
+        usedIdxRef.current = new Set();
+      }
       const nextIdx = nextQuestionIndex(
         initialQuestions.length,
         usedIdxRef.current,
@@ -577,7 +585,7 @@ export function FaceAFaceClient({
                   <span
                     className={cn(
                       "text-xs font-bold uppercase tracking-wider",
-                      flash.kind === "wrong" ? "text-buzz" : "text-navy/60",
+                      flash.kind === "wrong" ? "text-buzz" : "text-foreground/60",
                     )}
                   >
                     {flash.kind === "wrong"
@@ -588,9 +596,9 @@ export function FaceAFaceClient({
                         ? "Le bot passe"
                         : "Passé"}
                   </span>
-                  <span className="text-sm text-navy">
+                  <span className="text-sm text-foreground">
                     La bonne réponse était :{" "}
-                    <strong className="text-navy">{flash.correctAnswer}</strong>
+                    <strong className="text-foreground">{flash.correctAnswer}</strong>
                   </span>
                 </motion.div>
               )}
@@ -603,7 +611,10 @@ export function FaceAFaceClient({
                 <VoiceInput
                   onSubmit={handleHumanAnswer}
                   placeholder="Ta réponse…"
-                  disabled={phase !== "playing"}
+                  // Bug fix : on désactive aussi pendant la fenêtre de
+                  // feedback (flash actif) pour empêcher de continuer à
+                  // taper sur une question qui va basculer dans 1.4 s.
+                  disabled={phase !== "playing" || flash !== null}
                   hideVoice={!voiceEnabled}
                   focusKey={`${activeIdx}-${currentQIdx}`}
                 />
@@ -611,13 +622,13 @@ export function FaceAFaceClient({
                   <button
                     type="button"
                     onClick={handlePass}
-                    disabled={phase !== "playing"}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-navy/20 bg-white/60 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-navy/40 hover:bg-navy/5 disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled={phase !== "playing" || flash !== null}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-foreground/20 bg-card/60 px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-foreground/40 hover:bg-foreground/5 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <SkipForward className="h-4 w-4" aria-hidden="true" />
                     Passer
                   </button>
-                  <p className="text-[11px] text-navy/40">
+                  <p className="text-[11px] text-foreground/40">
                     Raccourcis : <kbd className="rounded bg-navy/5 px-1">Espace</kbd>{" "}
                     <kbd className="rounded bg-navy/5 px-1">Entrée</kbd>{" "}
                     <kbd className="rounded bg-navy/5 px-1">$</kbd>{" "}
@@ -663,10 +674,10 @@ function ModeSelectScreen({
         <p className="text-sm font-bold uppercase tracking-widest text-buzz">
           Jeu final
         </p>
-        <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
+        <h1 className="font-display text-4xl font-extrabold text-foreground sm:text-5xl">
           Le Coup Fatal
         </h1>
-        <p className="text-navy/70 sm:text-lg">
+        <p className="text-foreground/70 sm:text-lg">
           60 s par joueur. Bonne réponse fige ton chrono, l&apos;adversaire
           joue.
         </p>
@@ -690,8 +701,8 @@ function ModeSelectScreen({
       </div>
 
       {mode === "vs_bot" && (
-        <div className="flex w-full flex-col gap-2 rounded-xl border border-border bg-white p-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-navy/50">
+        <div className="flex w-full flex-col gap-2 rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-foreground/50">
             Difficulté du Bot
           </p>
           <div className="grid grid-cols-3 gap-2">
@@ -703,8 +714,8 @@ function ModeSelectScreen({
                 className={cn(
                   "rounded-md border px-3 py-2 text-sm font-semibold capitalize transition-all",
                   botDifficulty === d
-                    ? "border-gold bg-gold/20 text-navy shadow-[0_2px_0_0_#e89e00]"
-                    : "border-border bg-white text-navy/70 hover:border-gold/40 hover:bg-gold/5",
+                    ? "border-gold bg-gold/20 text-foreground shadow-[0_2px_0_0_#e89e00]"
+                    : "border-border bg-card text-foreground/70 hover:border-gold/40 hover:bg-gold/5",
                 )}
               >
                 {d}
@@ -718,14 +729,14 @@ function ModeSelectScreen({
       )}
 
       {/* Toggle voix */}
-      <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-white p-4">
+      <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
         <div className="flex items-center gap-3">
           <div
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-lg",
               voiceEnabled
                 ? "bg-gold/20 text-gold-warm"
-                : "bg-navy/10 text-navy/60",
+                : "bg-navy/10 text-foreground/60",
             )}
           >
             {voiceEnabled ? (
@@ -735,10 +746,10 @@ function ModeSelectScreen({
             )}
           </div>
           <div className="text-left">
-            <p className="font-display text-sm font-bold text-navy">
+            <p className="font-display text-sm font-bold text-foreground">
               Reconnaissance vocale
             </p>
-            <p className="text-xs text-navy/60">
+            <p className="text-xs text-foreground/60">
               {voiceEnabled
                 ? "Dicte ta réponse au micro"
                 : "Clavier uniquement (focus auto)"}
@@ -781,19 +792,19 @@ function ModeCard({
         "flex flex-col items-center gap-2 rounded-2xl border p-5 transition-all",
         selected
           ? "border-gold bg-gold/10 shadow-[0_4px_24px_rgba(245,183,0,0.2)]"
-          : "border-border bg-white hover:border-gold/50 hover:bg-gold/5",
+          : "border-border bg-card hover:border-gold/50 hover:bg-gold/5",
       )}
     >
       <div
         className={cn(
           "flex h-12 w-12 items-center justify-center rounded-xl",
-          selected ? "bg-gold/25 text-gold-warm" : "bg-navy/10 text-navy/70",
+          selected ? "bg-gold/25 text-gold-warm" : "bg-navy/10 text-foreground/70",
         )}
       >
         <Icon className="h-6 w-6" aria-hidden="true" />
       </div>
-      <div className="font-display text-lg font-bold text-navy">{label}</div>
-      <p className="text-xs text-navy/60">{desc}</p>
+      <div className="font-display text-lg font-bold text-foreground">{label}</div>
+      <p className="text-xs text-foreground/60">{desc}</p>
     </button>
   );
 }
@@ -819,29 +830,29 @@ function PseudosScreen({
       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky/15 text-sky">
         <Users className="h-8 w-8" aria-hidden="true" />
       </div>
-      <h1 className="font-display text-3xl font-extrabold text-navy">
+      <h1 className="font-display text-3xl font-extrabold text-foreground">
         Qui joue ?
       </h1>
 
       <div className="flex w-full flex-col gap-3">
-        <label className="flex flex-col gap-1 text-sm font-semibold text-navy">
+        <label className="flex flex-col gap-1 text-sm font-semibold text-foreground">
           Joueur 1
           <input
             type="text"
             value={p1}
             onChange={(e) => setP1(e.target.value)}
-            className="h-11 rounded-md border border-border bg-white px-3 text-base text-navy focus:border-gold focus:outline-none"
+            className="h-11 rounded-md border border-border bg-card px-3 text-base text-foreground focus:border-gold focus:outline-none"
             autoFocus
             maxLength={24}
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm font-semibold text-navy">
+        <label className="flex flex-col gap-1 text-sm font-semibold text-foreground">
           Joueur 2
           <input
             type="text"
             value={p2}
             onChange={(e) => setP2(e.target.value)}
-            className="h-11 rounded-md border border-border bg-white px-3 text-base text-navy focus:border-gold focus:outline-none"
+            className="h-11 rounded-md border border-border bg-card px-3 text-base text-foreground focus:border-gold focus:outline-none"
             placeholder="Ton ami…"
             maxLength={24}
           />
@@ -852,7 +863,7 @@ function PseudosScreen({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Retour
         </button>
@@ -897,15 +908,15 @@ function IntroScreen({
         <p className="font-display text-sm font-bold uppercase tracking-widest text-buzz">
           Coup Fatal · {mode === "vs_bot" ? `Bot ${BOT_PROFILES[botDifficulty].label}` : "vs Ami"}
         </p>
-        <h1 className="font-display text-4xl font-extrabold text-navy sm:text-5xl">
-          {p1Name} <span className="text-navy/30">vs</span> {p2Name}
+        <h1 className="font-display text-4xl font-extrabold text-foreground sm:text-5xl">
+          {p1Name} <span className="text-foreground/30">vs</span> {p2Name}
         </h1>
-        <p className="text-xs uppercase tracking-widest text-navy/40">
+        <p className="text-xs uppercase tracking-widest text-foreground/40">
           {voiceEnabled ? "Voix + Clavier" : "Clavier uniquement"}
         </p>
       </div>
 
-      <ul className="flex flex-col gap-2 rounded-xl border border-border bg-white p-5 text-left text-sm text-navy/80 glow-card">
+      <ul className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5 text-left text-sm text-foreground/80 glow-card">
         <li className="flex items-start gap-2">
           <Sword className="mt-1 h-4 w-4 shrink-0 text-buzz" aria-hidden="true" />
           <span>
@@ -932,14 +943,14 @@ function IntroScreen({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Retour
         </button>
         <button
           type="button"
           onClick={onStart}
-          className="inline-flex items-center gap-2 rounded-xl bg-gold px-8 py-4 font-display text-lg font-extrabold uppercase tracking-wide text-navy shadow-[0_6px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,183,0,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
+          className="inline-flex items-center gap-2 rounded-xl bg-gold px-8 py-4 font-display text-lg font-extrabold uppercase tracking-wide text-on-color shadow-[0_6px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(245,183,0,0.55)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
         >
           <Play className="h-5 w-5" aria-hidden="true" fill="currentColor" />
           Lancer le duel
@@ -973,7 +984,7 @@ function PlayerCard({
         "relative overflow-hidden rounded-2xl border p-4 transition-all",
         active
           ? "border-gold bg-gold/10 shadow-[0_0_24px_rgba(245,183,0,0.35)]"
-          : "border-border bg-white opacity-70",
+          : "border-border bg-card opacity-70",
       )}
     >
       <div className="flex items-center gap-2">
@@ -984,7 +995,7 @@ function PlayerCard({
               ? "bg-sky/15 text-sky"
               : active
                 ? "bg-gold/25 text-gold-warm"
-                : "bg-navy/10 text-navy/70",
+                : "bg-navy/10 text-foreground/70",
           )}
         >
           {isBot ? (
@@ -993,11 +1004,11 @@ function PlayerCard({
             <Crown className="h-5 w-5" aria-hidden="true" />
           )}
         </div>
-        <span className="flex-1 truncate font-display text-sm font-bold text-navy">
+        <span className="flex-1 truncate font-display text-sm font-bold text-foreground">
           {name}
         </span>
         {active && (
-          <span className="animate-pulse rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy">
+          <span className="animate-pulse rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-on-color">
             À toi
           </span>
         )}
@@ -1008,13 +1019,13 @@ function PlayerCard({
           critical
             ? "animate-pulse text-buzz"
             : active
-              ? "text-navy"
-              : "text-navy/60",
+              ? "text-foreground"
+              : "text-foreground/60",
         )}
       >
         {whole}
         <span className="text-xl">.{tenths}</span>
-        <span className="text-base text-navy/40">s</span>
+        <span className="text-base text-foreground/40">s</span>
       </div>
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-navy/10">
         <div
@@ -1031,11 +1042,11 @@ function PlayerCard({
 
 function BotThinking({ difficulty }: { difficulty: BotDifficulty }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-white p-6 glow-card">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 glow-card">
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sky/15 text-sky">
         <Brain className="h-8 w-8 animate-pulse" aria-hidden="true" />
       </div>
-      <p className="font-display text-lg font-bold text-navy">
+      <p className="font-display text-lg font-bold text-foreground">
         Le bot réfléchit
         <motion.span
           initial={{ opacity: 0 }}
@@ -1045,7 +1056,7 @@ function BotThinking({ difficulty }: { difficulty: BotDifficulty }) {
           …
         </motion.span>
       </p>
-      <p className="text-xs uppercase tracking-widest text-navy/40">
+      <p className="text-xs uppercase tracking-widest text-foreground/40">
         Difficulté {BOT_PROFILES[difficulty].label}
       </p>
     </div>
@@ -1082,7 +1093,7 @@ function TransitionPanel({
         <p className="text-xs font-bold uppercase tracking-widest text-life-green">
           Bonne réponse
         </p>
-        <h2 className="mt-1 font-display text-2xl font-extrabold text-navy">
+        <h2 className="mt-1 font-display text-2xl font-extrabold text-foreground">
           {whoJustAnsweredIsBot
             ? `Le bot a trouvé : ${currentAnswer}`
             : `${whoJustAnswered} a trouvé : ${currentAnswer}`}
@@ -1092,10 +1103,10 @@ function TransitionPanel({
       <div className="h-px w-20 bg-navy/15" />
 
       <div className="flex flex-col items-center gap-2">
-        <p className="text-sm uppercase tracking-widest text-navy/50">
+        <p className="text-sm uppercase tracking-widest text-foreground/50">
           {nextIsBot ? "Au tour du bot" : "Au tour de"}
         </p>
-        <p className="font-display text-3xl font-extrabold text-navy">
+        <p className="font-display text-3xl font-extrabold text-foreground">
           {nextPlayerName}
         </p>
       </div>
@@ -1103,7 +1114,7 @@ function TransitionPanel({
       <button
         type="button"
         onClick={onContinue}
-        className="inline-flex items-center gap-2 rounded-xl bg-gold px-6 py-3 font-display text-base font-extrabold uppercase tracking-wide text-navy shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(245,183,0,0.45)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
+        className="inline-flex items-center gap-2 rounded-xl bg-gold px-6 py-3 font-display text-base font-extrabold uppercase tracking-wide text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(245,183,0,0.45)] active:translate-y-0 active:shadow-[0_2px_0_0_#e89e00]"
       >
         <Play className="h-4 w-4" aria-hidden="true" fill="currentColor" />
         Lancer le tour
@@ -1172,11 +1183,11 @@ function ResultsScreen({
       </motion.div>
 
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-4xl font-extrabold text-navy">
+        <h1 className="font-display text-4xl font-extrabold text-foreground">
           {userWon ? "Victoire !" : mode === "vs_ami" ? "Défaite" : "Le bot l'emporte"}
         </h1>
-        <p className="text-navy/70 sm:text-lg">
-          <strong className="text-navy">{winnerName}</strong> fait tomber
+        <p className="text-foreground/70 sm:text-lg">
+          <strong className="text-foreground">{winnerName}</strong> fait tomber
           {" "}
           <strong>{userWon ? p2Name : p1Name}</strong>.
         </p>
@@ -1204,7 +1215,7 @@ function ResultsScreen({
           aria-hidden="true"
           fill="currentColor"
         />
-        <span className="font-display text-lg font-bold text-navy">
+        <span className="font-display text-lg font-bold text-foreground">
           {isSaving
             ? "Enregistrement…"
             : xpGained !== null
@@ -1228,7 +1239,7 @@ function ResultsScreen({
         </Button>
         <Link
           href="/"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-white/60 px-4 text-sm font-semibold text-navy transition-colors hover:bg-gold/20 hover:border-gold"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gold/50 bg-card/60 px-4 text-sm font-semibold text-foreground transition-colors hover:bg-gold/20 hover:border-gold"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
           Accueil
@@ -1266,23 +1277,23 @@ function PlayerStatCard({
             fill="currentColor"
           />
         )}
-        <span className="truncate font-display text-sm font-bold text-navy">
+        <span className="truncate font-display text-sm font-bold text-foreground">
           {name}
         </span>
       </div>
       <div className="flex flex-col gap-1 text-xs">
         <div className="flex items-center justify-between">
-          <span className="uppercase tracking-wider text-navy/50">Bonnes</span>
+          <span className="uppercase tracking-wider text-foreground/50">Bonnes</span>
           <span className="font-display text-lg font-extrabold text-life-green">
             {correct}
           </span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="uppercase tracking-wider text-navy/50">Restant</span>
+          <span className="uppercase tracking-wider text-foreground/50">Restant</span>
           <span
             className={cn(
               "font-display text-lg font-extrabold tabular-nums",
-              timeLeftMs <= 0 ? "text-buzz" : "text-navy",
+              timeLeftMs <= 0 ? "text-buzz" : "text-foreground",
             )}
           >
             {formatSecondsTenths(timeLeftMs)}

@@ -415,11 +415,11 @@ function MaitreCard({
             />{" "}
             Tableau de bord Maître de Midi
           </p>
-          <p className="mt-2 font-display text-6xl font-extrabold leading-none text-navy sm:text-7xl">
+          <p className="mt-2 font-display text-6xl font-extrabold leading-none text-foreground sm:text-7xl">
             {pct}
             <span className="text-3xl font-bold text-gold-warm">%</span>
           </p>
-          <p className="mt-2 max-w-md text-sm text-navy/75">
+          <p className="mt-2 max-w-md text-sm text-foreground/75">
             {pct >= 90
               ? "Tu es à un cheveu du titre. Continue !"
               : pct >= 60
@@ -451,8 +451,8 @@ function MaitreCard({
           </div>
         </div>
 
-        <div className="flex w-full max-w-xs flex-col gap-2 rounded-2xl border border-gold/30 bg-white/60 p-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-navy/60">
+        <div className="flex w-full max-w-xs flex-col gap-2 rounded-2xl border border-gold/30 bg-card/60 p-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-foreground/60">
             Détail
           </p>
           <Bar2
@@ -483,8 +483,8 @@ function MaitreCard({
 
 function Pill({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-navy/15 bg-white/70 px-3 py-1 text-navy">
-      <span className="text-navy/50">{label} :</span>
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card/70 px-3 py-1 text-foreground">
+      <span className="text-foreground/50">{label} :</span>
       <strong>{value}</strong>
     </span>
   );
@@ -502,10 +502,10 @@ function Bar2({
   return (
     <div>
       <div className="flex items-center justify-between text-xs">
-        <span className="text-navy/70">{label}</span>
-        <span className="font-bold text-navy tabular-nums">{value} %</span>
+        <span className="text-foreground/70">{label}</span>
+        <span className="font-bold text-foreground tabular-nums">{value} %</span>
       </div>
-      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-navy/10">
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
         <div
           className="h-full transition-all"
           style={{ width: `${value}%`, backgroundColor: color }}

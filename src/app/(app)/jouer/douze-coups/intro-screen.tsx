@@ -57,7 +57,7 @@ export function DcIntroScreen({ onEnd, duration = 3200 }: IntroScreenProps) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="font-display text-4xl font-extrabold uppercase tracking-widest text-navy sm:text-5xl"
+        className="font-display text-4xl font-extrabold uppercase tracking-widest text-foreground sm:text-5xl"
       >
         Les 12 Coups
         <br />
@@ -68,9 +68,9 @@ export function DcIntroScreen({ onEnd, duration = 3200 }: IntroScreenProps) {
         initial={{ opacity: 0, scale: 0.7 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.6, type: "spring", stiffness: 220, damping: 18 }}
-        className="rounded-full border-2 border-gold bg-white/80 px-4 py-2 font-display text-sm font-bold uppercase tracking-wider text-navy sm:text-base"
+        className="rounded-full border-2 border-gold bg-card/80 px-4 py-2 font-display text-sm font-bold uppercase tracking-wider text-foreground sm:text-base"
       >
-        1<sup>er</sup> Jeu · Le Coup d&apos;Envoi
+        1<sup>er</sup>  Jeu · Le Coup d&apos;Envoi
       </motion.p>
     </main>
   );

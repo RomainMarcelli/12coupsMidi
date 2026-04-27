@@ -319,7 +319,7 @@ function Versus({
             : { scale: [0, 1.4, 1], rotate: [-45, 10, 0], opacity: 1 }
         }
         transition={{ duration: reduced ? 0.2 : 0.6, delay: 0.15 }}
-        className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-buzz text-cream shadow-[0_0_40px_rgba(230,57,70,0.6)]"
+        className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-buzz text-white shadow-[0_0_40px_rgba(230,57,70,0.6)]"
       >
         <span className="font-display text-3xl font-black">VS</span>
       </motion.div>

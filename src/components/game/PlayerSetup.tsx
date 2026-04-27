@@ -182,10 +182,10 @@ export function PlayerSetup({
           <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
             Préparation
           </p>
-          <h1 className="font-display text-4xl font-extrabold text-navy">
+          <h1 className="font-display text-4xl font-extrabold text-foreground">
             {gameLabel}
           </h1>
-          <p className="text-navy/70">Tu joues contre qui ?</p>
+          <p className="text-foreground/70">Tu joues contre qui ?</p>
         </div>
 
         <div className="grid w-full gap-3 sm:grid-cols-2">
@@ -207,7 +207,7 @@ export function PlayerSetup({
           <button
             type="button"
             onClick={onBack}
-            className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+            className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
           >
             Retour
           </button>
@@ -223,7 +223,7 @@ export function PlayerSetup({
         <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-sky/15 text-sky">
           <Users className="h-10 w-10" aria-hidden="true" />
         </div>
-        <h1 className="font-display text-3xl font-extrabold text-navy">
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
           Humains — comment ?
         </h1>
 
@@ -252,7 +252,7 @@ export function PlayerSetup({
         <button
           type="button"
           onClick={() => setPhase("mode")}
-          className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Retour
         </button>
@@ -267,18 +267,18 @@ export function PlayerSetup({
         <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
           {gameLabel} · Configuration
         </p>
-        <h1 className="font-display text-3xl font-extrabold text-navy">
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
           Les joueurs
         </h1>
       </div>
 
       {/* Toggle règles officielles */}
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-white p-4">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
         <div className="text-left">
-          <p className="font-display text-sm font-bold text-navy">
+          <p className="font-display text-sm font-bold text-foreground">
             Règles officielles
           </p>
-          <p className="text-xs text-navy/60">
+          <p className="text-xs text-foreground/60">
             {isOfficialRules
               ? `4 joueurs max (comme à la TV)`
               : `Libre, jusqu'à ${FREE_MAX_PLAYERS} joueurs`}
@@ -293,8 +293,8 @@ export function PlayerSetup({
 
       {/* Difficulté bot (seulement vs_bots) */}
       {mode === "vs_bots" && (
-        <div className="flex flex-col gap-2 rounded-xl border border-border bg-white p-4">
-          <p className="text-xs font-bold uppercase tracking-widest text-navy/50">
+        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-bold uppercase tracking-widest text-foreground/50">
             Difficulté des bots
           </p>
           <div className="grid grid-cols-3 gap-2">
@@ -306,8 +306,8 @@ export function PlayerSetup({
                 className={cn(
                   "rounded-md border px-3 py-2 text-sm font-semibold capitalize transition-all",
                   botDifficulty === d
-                    ? "border-gold bg-gold/20 text-navy shadow-[0_2px_0_0_#e89e00]"
-                    : "border-border bg-white text-navy/70 hover:border-gold/40 hover:bg-gold/5",
+                    ? "border-gold bg-gold/20 text-foreground shadow-[0_2px_0_0_#e89e00]"
+                    : "border-border bg-card text-foreground/70 hover:border-gold/40 hover:bg-gold/5",
                 )}
               >
                 {d}
@@ -321,12 +321,12 @@ export function PlayerSetup({
       )}
 
       {/* Nombre de joueurs */}
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-white p-4">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
         <div className="text-left">
-          <p className="font-display text-sm font-bold text-navy">
+          <p className="font-display text-sm font-bold text-foreground">
             Joueurs : {players.length}
           </p>
-          <p className="text-xs text-navy/60">
+          <p className="text-xs text-foreground/60">
             Min {MIN_PLAYERS} · Max {maxPlayers}
           </p>
         </div>
@@ -336,7 +336,7 @@ export function PlayerSetup({
             onClick={() => handleChangeCount(-1)}
             disabled={players.length <= MIN_PLAYERS}
             aria-label="Moins un joueur"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-navy hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Minus className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -345,7 +345,7 @@ export function PlayerSetup({
             onClick={() => handleChangeCount(1)}
             disabled={players.length >= maxPlayers}
             aria-label="Un joueur de plus"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-white text-navy hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground hover:border-gold/50 hover:bg-gold/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -357,7 +357,7 @@ export function PlayerSetup({
         {players.map((p, i) => (
           <li
             key={p.id}
-            className="flex items-center gap-3 rounded-xl border border-border bg-white p-3"
+            className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
           >
             <div
               className={cn(
@@ -381,11 +381,11 @@ export function PlayerSetup({
               maxLength={24}
               placeholder={p.isBot ? "" : `Joueur ${i + 1}`}
               className={cn(
-                "h-10 flex-1 rounded-md border border-border bg-white px-3 text-base text-navy focus:border-gold focus:outline-none",
+                "h-10 flex-1 rounded-md border border-border bg-card px-3 text-base text-foreground focus:border-gold focus:outline-none",
                 p.isBot && "cursor-not-allowed bg-navy/5",
               )}
             />
-            <span className="text-xs uppercase tracking-wider text-navy/40">
+            <span className="text-xs uppercase tracking-wider text-foreground/40">
               #{i + 1}
             </span>
           </li>
@@ -407,7 +407,7 @@ export function PlayerSetup({
           onClick={() =>
             setPhase(mode === "vs_bots" ? "mode" : "humans-subpick")
           }
-          className="rounded-md border border-border bg-white px-4 py-2 text-sm font-semibold text-navy/70 hover:border-navy/40"
+          className="rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/70 hover:border-navy/40"
         >
           Retour
         </button>
@@ -453,21 +453,21 @@ function BigChoiceCard({
         "relative flex flex-col items-center gap-2 rounded-2xl border p-6 transition-all",
         disabled
           ? "cursor-not-allowed border-border bg-navy/5 opacity-60"
-          : "border-border bg-white hover:border-gold/50 hover:bg-gold/5 hover:scale-[1.02]",
+          : "border-border bg-card hover:border-gold/50 hover:bg-gold/5 hover:scale-[1.02]",
       )}
     >
       <div
         className={cn(
           "flex h-14 w-14 items-center justify-center rounded-xl",
-          disabled ? "bg-navy/10 text-navy/40" : "bg-gold/20 text-gold-warm",
+          disabled ? "bg-navy/10 text-foreground/40" : "bg-gold/20 text-gold-warm",
         )}
       >
         <Icon className="h-7 w-7" aria-hidden="true" />
       </div>
-      <div className="font-display text-lg font-bold text-navy">{label}</div>
-      <p className="text-xs text-navy/60">{desc}</p>
+      <div className="font-display text-lg font-bold text-foreground">{label}</div>
+      <p className="text-xs text-foreground/60">{desc}</p>
       {badge && (
-        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-cream-deep px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy/60">
+        <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground/60">
           <Lock className="h-3 w-3" aria-hidden="true" />
           {badge}
         </span>

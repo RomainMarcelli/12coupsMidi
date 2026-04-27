@@ -12,6 +12,18 @@ export interface PlayerConfig {
   isBot: boolean;
   /** Identifiant local pour différencier plusieurs joueurs humains. */
   id: string;
+  /**
+   * Avatar du joueur (URL Storage typiquement). Optionnel : null/absent
+   * → l'icône par défaut (Crown/Bot) est affichée. Sert pour l'écran
+   * de fin de duel et autres écrans visuels.
+   */
+  avatarUrl?: string | null;
+  /**
+   * Cagnotte courante du joueur (€). Optionnelle pour ne pas casser les
+   * call sites qui ne passent pas l'info. Utilisée pour afficher le
+   * montant transféré sur l'écran de fin de duel.
+   */
+  cagnotte?: number;
 }
 
 export interface MultiConfig {

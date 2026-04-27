@@ -111,10 +111,10 @@ export function PlayJoinClient({
         <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-buzz/15 text-buzz">
           <WifiOff className="h-10 w-10" aria-hidden="true" />
         </div>
-        <h1 className="font-display text-2xl font-extrabold text-navy">
+        <h1 className="font-display text-2xl font-extrabold text-foreground">
           Code invalide
         </h1>
-        <p className="max-w-xs text-navy/60">
+        <p className="max-w-xs text-foreground/60">
           Le code <strong>{code}</strong> ne correspond à aucune partie en
           cours. Vérifie auprès de l&apos;hôte.
         </p>
@@ -126,13 +126,13 @@ export function PlayJoinClient({
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center">
         <Loader2 className="h-10 w-10 animate-spin text-gold-warm" aria-hidden="true" />
-        <p className="text-navy/70">Reconnexion à la partie {code}…</p>
+        <p className="text-foreground/70">Reconnexion à la partie {code}…</p>
       </main>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col gap-5 bg-cream p-5">
+    <main className="flex min-h-screen flex-col gap-5 bg-background p-5">
       <header className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/20 text-gold-warm">
           <Tv className="h-5 w-5" aria-hidden="true" />
@@ -141,7 +141,7 @@ export function PlayJoinClient({
           <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
             Partie {code}
           </p>
-          <h1 className="font-display text-xl font-extrabold text-navy">
+          <h1 className="font-display text-xl font-extrabold text-foreground">
             Rejoindre la soirée
           </h1>
         </div>
@@ -150,13 +150,13 @@ export function PlayJoinClient({
       {initialStatus && initialStatus !== "waiting" && (
         <div
           role="status"
-          className="rounded-xl border border-sky/40 bg-sky/10 px-4 py-2 text-sm text-navy"
+          className="rounded-xl border border-sky/40 bg-sky/10 px-4 py-2 text-sm text-foreground"
         >
           La partie a déjà commencé — tu rejoindras en cours.
         </div>
       )}
 
-      <section className="flex flex-col gap-4 rounded-2xl border border-border bg-white p-5">
+      <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -178,7 +178,7 @@ export function PlayJoinClient({
             )}
             {uploading && (
               <span className="absolute inset-0 flex items-center justify-center bg-navy/40">
-                <Loader2 className="h-5 w-5 animate-spin text-cream" aria-hidden="true" />
+                <Loader2 className="h-5 w-5 animate-spin text-white" aria-hidden="true" />
               </span>
             )}
           </button>
@@ -195,17 +195,17 @@ export function PlayJoinClient({
             onChange={(e) => setPseudo(e.target.value)}
             placeholder="Ton pseudo"
             maxLength={20}
-            className="h-12 flex-1 rounded-xl border border-border bg-white px-4 text-lg font-semibold text-navy focus:border-gold focus:outline-none"
+            className="h-12 flex-1 rounded-xl border border-border bg-card px-4 text-lg font-semibold text-foreground focus:border-gold focus:outline-none"
           />
         </div>
-        <p className="text-xs text-navy/50">
+        <p className="text-xs text-foreground/50">
           La photo est optionnelle — tu peux mettre un emoji-style avatar
           plus tard si tu veux.
         </p>
       </section>
 
-      <section className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-5">
-        <p className="text-xs font-bold uppercase tracking-widest text-navy/50">
+      <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+        <p className="text-xs font-bold uppercase tracking-widest text-foreground/50">
           Mode d&apos;affichage
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -274,12 +274,12 @@ function ModeCard({
         "flex flex-col items-center gap-1 rounded-xl border-2 p-3 text-center transition-colors",
         selected
           ? "border-gold bg-gold/10"
-          : "border-border bg-white hover:border-gold/50",
+          : "border-border bg-card hover:border-gold/50",
       )}
     >
       <Icon className="h-5 w-5 text-gold-warm" aria-hidden="true" />
-      <p className="font-display text-sm font-bold text-navy">{title}</p>
-      <p className="text-[11px] text-navy/60">{desc}</p>
+      <p className="font-display text-sm font-bold text-foreground">{title}</p>
+      <p className="text-[11px] text-foreground/60">{desc}</p>
     </button>
   );
 }

@@ -46,7 +46,7 @@ export function ToggleSwitch({
       <span
         aria-hidden="true"
         className={cn(
-          "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200",
+          "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white dark:bg-white shadow-md transition-transform duration-200",
           checked ? "translate-x-5" : "translate-x-0",
         )}
       />

@@ -95,7 +95,7 @@ export function FlashcardPlayer({ questions }: FlashcardPlayerProps) {
       <div className="flex justify-between gap-2">
         {q.category && (
           <span
-            className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-navy"
+            className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-on-color"
             style={{ backgroundColor: q.category.couleur ?? "#F5B700" }}
           >
             {q.category.nom}

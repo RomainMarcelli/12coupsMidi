@@ -41,7 +41,7 @@ export function QuestionCard({
         <div className="flex items-center gap-2">
           {category && (
             <span
-              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-midnight"
+              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-on-color"
               style={{ backgroundColor: categoryColor ?? "var(--color-gold)" }}
             >
               {category}

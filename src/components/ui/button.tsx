@@ -19,11 +19,11 @@ const buttonVariants = cva(
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
         gold:
-          "bg-gold text-navy font-bold shadow-[0_4px_0_0_#e89e00] hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00]",
+          "bg-gold text-on-color font-bold shadow-[0_4px_0_0_#e89e00] hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00]",
         buzz:
           "bg-buzz text-white font-bold shadow-[0_4px_0_0_#a82531] hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(230,57,70,0.5)] active:translate-y-px active:shadow-[0_2px_0_0_#a82531]",
         "ghost-gold":
-          "border border-gold/50 text-navy bg-white/60 hover:bg-gold/20 hover:border-gold hover:text-navy",
+          "border border-gold/50 text-foreground bg-card hover:bg-gold/20 hover:border-gold",
       },
       size: {
         default:

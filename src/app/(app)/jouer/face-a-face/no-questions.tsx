@@ -7,10 +7,10 @@ export function NoFafQuestions() {
       <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-buzz/15 text-buzz">
         <Sword className="h-10 w-10" aria-hidden="true" />
       </div>
-      <h1 className="font-display text-3xl font-extrabold text-navy">
+      <h1 className="font-display text-3xl font-extrabold text-foreground">
         Pas assez de questions
       </h1>
-      <p className="text-navy/70">
+      <p className="text-foreground/70">
         Il faut au moins 5 questions de type <code>face_a_face</code> en base
         pour lancer le duel. Importe-les depuis{" "}
         <code>/admin/questions/import</code> ou lance{" "}
@@ -18,7 +18,7 @@ export function NoFafQuestions() {
       </p>
       <Link
         href="/"
-        className="rounded-md bg-gold px-4 py-2 font-semibold text-navy shadow-[0_4px_0_0_#e89e00]"
+        className="rounded-md bg-gold px-4 py-2 font-semibold text-on-color shadow-[0_4px_0_0_#e89e00]"
       >
         Retour accueil
       </Link>

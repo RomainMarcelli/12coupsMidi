@@ -73,10 +73,10 @@ export default function JouerPage() {
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-extrabold text-navy sm:text-4xl">
+        <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
           Choisis ton jeu
         </h1>
-        <p className="text-navy/70">
+        <p className="text-foreground/70">
           Les 4 épreuves de l'émission. Pour l'enchaînement complet, lance le
           parcours depuis l'accueil.
         </p>
@@ -89,7 +89,7 @@ export default function JouerPage() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-navy/50">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-foreground/50">
           Bonus
         </h2>
         {BONUS_GAMES.map((g) => (
@@ -132,11 +132,11 @@ function GameRow({ game }: { game: GameItem }) {
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl font-bold text-navy">
+          <h2 className="font-display text-xl font-bold text-foreground">
             {game.title}
           </h2>
           {!game.available && (
-            <span className="rounded-full bg-cream-deep px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-navy/60">
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground/60">
               Bientôt
             </span>
           )}
@@ -146,10 +146,10 @@ function GameRow({ game }: { game: GameItem }) {
             </span>
           )}
         </div>
-        <p className="text-sm text-navy/70">{game.subtitle}</p>
+        <p className="text-sm text-foreground/70">{game.subtitle}</p>
       </div>
       <ChevronRight
-        className="h-6 w-6 text-navy/30 transition-transform group-hover:translate-x-1 group-hover:text-gold-warm"
+        className="h-6 w-6 text-foreground/30 transition-transform group-hover:translate-x-1 group-hover:text-gold-warm"
         aria-hidden="true"
       />
     </Link>

@@ -87,10 +87,10 @@ export default async function AdminQuestionsPage({
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-extrabold text-navy">
+          <h1 className="font-display text-3xl font-extrabold text-foreground">
             Questions
           </h1>
-          <p className="text-sm text-navy/70">
+          <p className="text-sm text-foreground/70">
             {total} question{total > 1 ? "s" : ""} en base · page {page} / {totalPages}
           </p>
         </div>
@@ -112,7 +112,7 @@ export default async function AdminQuestionsPage({
           </Link>
           <a
             href="/api/questions/export"
-            className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-navy/80 transition-colors hover:border-cream hover:text-navy"
+            className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             Exporter

@@ -168,7 +168,7 @@ function Section({
 }) {
   return (
     <section className="flex flex-col gap-4 rounded-2xl border border-border bg-card/50 p-6">
-      <h2 className="font-display text-xl font-bold text-navy">{title}</h2>
+      <h2 className="font-display text-xl font-bold text-foreground">{title}</h2>
       <div className="flex flex-col gap-4">{children}</div>
     </section>
   );
