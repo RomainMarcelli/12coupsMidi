@@ -72,6 +72,12 @@ export interface DcPlayer {
   pseudo: string;
   isBot: boolean;
   botLevel?: BotDifficulty;
+  /**
+   * Photo du joueur (humain seulement, optionnelle). URL publique
+   * Supabase Storage typiquement, ou DiceBear pour l'avatar du compte
+   * connecté. Null/absent = on affiche l'icône par défaut (Crown / Bot).
+   */
+  avatarUrl?: string | null;
   /** Couleur visuelle attribuée au slot (ne change pas en cours de partie). */
   color: DcPlayerColor;
   /** Cagnotte courante (€). Ne bouge que via duels / face-à-face final. */
@@ -79,6 +85,13 @@ export interface DcPlayer {
   /** Erreurs accumulées dans le jeu courant (remis à 0 après duel gagné / passage au jeu suivant). */
   errors: number;
   isEliminated: boolean;
+  /**
+   * Horodatage `Date.now()` du moment où le joueur a été éliminé. Sert au
+   * tri du classement final : ordre d'élimination inverse (le dernier
+   * éliminé finit 2e, le premier éliminé finit dernier). `null` tant que
+   * le joueur est en lice.
+   */
+  eliminatedAt: number | null;
   correctCount: number;
   wrongCount: number;
 }
@@ -238,13 +251,21 @@ export function applyDuelResult(
   challengerId: string,
   challengedId: string,
   adversaryCorrect: boolean,
+  /** Horodatage de l'élimination (utilisé par le tri du classement). */
+  now: number = Date.now(),
 ): DcPlayer[] {
   const loserId = adversaryCorrect ? challengerId : challengedId;
   const winnerId = adversaryCorrect ? challengedId : challengerId;
 
   return players.map((p) => {
     if (p.id === loserId) {
-      return { ...p, isEliminated: true, cagnotte: 0, errors: 0 };
+      return {
+        ...p,
+        isEliminated: true,
+        eliminatedAt: now,
+        cagnotte: 0,
+        errors: 0,
+      };
     }
     if (p.id === winnerId) {
       const loser = players.find((pl) => pl.id === loserId);
@@ -315,14 +336,41 @@ export function nextPhaseAfter(
 }
 
 /**
- * Construit l'ordre de podium final (vainqueur en premier).
- * Trié par (non-éliminé > éliminé) puis cagnotte décroissante.
+ * Construit l'ordre de podium final.
+ *
+ * Règle (validée user) : **uniquement l'ordre d'élimination inverse**.
+ *  - Position 1 : le vainqueur (seul non éliminé en fin de partie)
+ *  - Position 2 : dernier éliminé (perdant du face-à-face final)
+ *  - Position 3 : avant-dernier éliminé
+ *  - …
+ *  - Position N : tout premier éliminé de la partie
+ *
+ * Le système de duel garantit qu'il y a toujours UN éliminé unique par
+ * confrontation (pas de double-élimination simultanée), donc pas besoin
+ * de gérer les égalités. Le nombre de bonnes réponses ou la cagnotte
+ * sont des stats descriptives, pas des critères de tri.
+ *
+ * Fallback de compat : si `eliminatedAt` est manquant (vieux state ou
+ * chemin de code qui aurait oublié de le poser), on dégrade vers la
+ * cagnotte décroissante pour ne pas mélanger silencieusement l'ordre.
  */
 export function dcPodium(players: DcPlayer[]): DcPlayer[] {
   return [...players].sort((a, b) => {
-    if (a.isEliminated !== b.isEliminated) {
-      return a.isEliminated ? 1 : -1;
+    // Non-éliminés (vainqueur) en tête
+    if (!a.isEliminated && b.isEliminated) return -1;
+    if (a.isEliminated && !b.isEliminated) return 1;
+
+    // Entre éliminés : `eliminatedAt` le plus grand (le plus récent) en
+    // premier → meilleure position dans le classement final.
+    if (a.isEliminated && b.isEliminated) {
+      const ta = a.eliminatedAt;
+      const tb = b.eliminatedAt;
+      if (ta != null && tb != null && ta !== tb) return tb - ta;
+      // Fallback : cagnotte (descendante)
+      return b.cagnotte - a.cagnotte;
     }
-    return b.cagnotte - a.cagnotte;
+
+    // Cas théoriquement impossible : 2 non-éliminés en fin de partie
+    return 0;
   });
 }

@@ -444,7 +444,10 @@ export function CoupDEnvoiClient({
         />
       </AnimatePresence>
       <div className="flex justify-center">
-        <SpeakerButton text={displayEnonce} />
+        <SpeakerButton
+          text={displayEnonce}
+          choices={currentQuestion.reponses.map((r) => r.text)}
+        />
       </div>
 
       {/* Indicateur tour actif */}

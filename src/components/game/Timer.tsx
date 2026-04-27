@@ -35,6 +35,11 @@ export function Timer({
   className,
 }: TimerProps) {
   const [remaining, setRemaining] = useState(duration);
+  // Source de vérité du temps restant (lue dans le tick) — évite d'appeler
+  // `onEndRef.current()` dans le callback `setRemaining(prev => …)` qui
+  // est considéré "pendant le render" par React 19 et provoque
+  // "Cannot update a component while rendering a different component".
+  const remainingRef = useRef(duration);
   const lastTickRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
   const endedRef = useRef(false);
@@ -44,6 +49,7 @@ export function Timer({
   // Reset si la durée change (changement de question p.ex.)
   useEffect(() => {
     setRemaining(duration);
+    remainingRef.current = duration;
     endedRef.current = false;
     lastTickRef.current = null;
   }, [duration]);
@@ -60,14 +66,18 @@ export function Timer({
       const deltaSec = (now - lastTickRef.current) / 1000;
       lastTickRef.current = now;
 
-      setRemaining((prev) => {
-        const next = Math.max(0, prev - deltaSec);
-        if (next === 0 && !endedRef.current) {
-          endedRef.current = true;
-          onEndRef.current();
-        }
-        return next;
-      });
+      const next = Math.max(0, remainingRef.current - deltaSec);
+      remainingRef.current = next;
+      setRemaining(next);
+
+      // Notification de fin HORS du callback setState — évite le warning
+      // "Cannot update a component (X) while rendering a different
+      // component (Timer)" en React 19 strict mode.
+      if (next === 0 && !endedRef.current) {
+        endedRef.current = true;
+        onEndRef.current();
+        return;
+      }
 
       if (!endedRef.current) {
         rafRef.current = requestAnimationFrame(tick);

@@ -7,6 +7,10 @@ const PUBLIC_PATHS = new Set<string>(["/login"]);
 function isPublicPath(pathname: string) {
   if (PUBLIC_PATHS.has(pathname)) return true;
   if (pathname.startsWith("/auth/")) return true;
+  // Mode TV Soirée : les téléphones invités rejoignent une room sans
+  // login. Les routes /play/* sont donc publiques (la sécurité est
+  // assurée par le code à 4 chiffres + le player_token).
+  if (pathname.startsWith("/play/") || pathname === "/play") return true;
   return false;
 }
 

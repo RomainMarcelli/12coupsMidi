@@ -33,6 +33,7 @@ export interface DcSetupInput {
     pseudo: string;
     isBot: boolean;
     botLevel?: BotDifficulty;
+    avatarUrl?: string | null;
   }>;
   categories: CategoryRow[];
   quizz4CountByCategory: Map<number, number>;
@@ -122,10 +123,12 @@ export const useDouzeCoupsStore = create<DouzeCoupsState>((set, get) => ({
       pseudo: p.pseudo.trim(),
       isBot: p.isBot,
       botLevel: p.botLevel,
+      avatarUrl: p.avatarUrl ?? null,
       color: DC_PLAYER_COLORS[idx % DC_PLAYER_COLORS.length]!,
       cagnotte: DC_STARTING_CAGNOTTE,
       errors: 0,
       isEliminated: false,
+      eliminatedAt: null,
       correctCount: 0,
       wrongCount: 0,
     }));
@@ -289,9 +292,12 @@ export const useDouzeCoupsStore = create<DouzeCoupsState>((set, get) => ({
     set((s) => {
       const loser = s.players.find((p) => p.id === loserId);
       const loot = loser?.cagnotte ?? 0;
+      const now = Date.now();
       const updated = s.players.map((p) => {
         if (p.id === loserId) {
-          return { ...p, isEliminated: true, cagnotte: 0 };
+          // Le perdant du face-à-face final est par construction le
+          // DERNIER éliminé de la partie → finit 2e du classement.
+          return { ...p, isEliminated: true, eliminatedAt: now, cagnotte: 0 };
         }
         if (p.id === winnerId) {
           return { ...p, cagnotte: p.cagnotte + loot };

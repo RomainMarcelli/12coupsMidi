@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { ArrowRight, Check, RotateCcw, Send, Trophy, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnswerButton } from "@/components/game/AnswerButton";
 import { FavoriteStar } from "@/components/game/FavoriteStar";
 import { SpeakerButton } from "@/components/game/SpeakerButton";
 import { Button } from "@/components/ui/button";
+import { resolveCorrectAnswerLabel } from "@/lib/game-logic/answer-display";
 import { isMatch } from "@/lib/matching/fuzzy-match";
+import { buildTTSFeedbackText, useAutoPlayTTS } from "@/lib/tts-helpers";
 import { playSound } from "@/lib/sounds";
 import { cn } from "@/lib/utils";
 import type { RevQuestion } from "@/lib/revision/types";
@@ -103,6 +105,30 @@ function PlayCard({
   >(null);
   const [, startTransition] = useTransition();
 
+  // Lecture auto TTS : énoncé + choix (si quizz_2/4) au mount, puis
+  // feedback complet quand l'utilisateur a répondu.
+  const ttsFeedback = feedback
+    ? buildTTSFeedbackText({
+        isCorrect: feedback.kind === "correct",
+        correctLabel:
+          feedback.kind === "wrong"
+            ? resolveCorrectAnswerLabel(
+                feedback.correctText,
+                question.explication,
+              )
+            : null,
+        explanation: question.explication,
+      })
+    : null;
+  useAutoPlayTTS({
+    enonce: question.enonce,
+    choices:
+      question.type === "quizz_2" || question.type === "quizz_4"
+        ? question.reponses.map((r) => r.text)
+        : undefined,
+    feedbackText: ttsFeedback,
+  });
+
   function record(isCorrect: boolean, correctText: string) {
     if (feedback) return;
     if (isCorrect) playSound("ding");
@@ -114,6 +140,27 @@ function PlayCard({
       });
     }
   }
+
+  // Quand le feedback est affiché, la touche Entrée doit déclencher
+  // "Passer à la suivante" (équivalent du clic bouton "Suivante").
+  // On évite le double-handling si le focus est encore dans l'input
+  // de saisie de réponse (TextStage).
+  useEffect(() => {
+    if (!feedback) return;
+    const fb = feedback; // capture pour TS narrowing dans le handler
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== "Enter") return;
+      // Si l'utilisateur tape encore dans un input/textarea, on n'intercepte
+      // pas (Entrée a alors d'autres usages comme valider la saisie).
+      const active = document.activeElement;
+      const tag = active?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      e.preventDefault();
+      onDone(fb.kind === "correct");
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [feedback, onDone]);
 
   const progress = Math.round(((index + 1) / total) * 100);
 
@@ -157,7 +204,18 @@ function PlayCard({
         </h2>
       </div>
       <div className="flex justify-center">
-        <SpeakerButton text={question.enonce} />
+        <SpeakerButton
+          text={question.enonce}
+          choices={
+            question.type === "quizz_2" || question.type === "quizz_4"
+              ? question.reponses.map((r) => r.text)
+              : undefined
+          }
+          explanation={
+            feedback?.kind === "wrong" ? question.explication : undefined
+          }
+          autoPlay={false}
+        />
       </div>
 
       {/* UI selon le type */}
@@ -210,16 +268,32 @@ function PlayCard({
                 ? "Bonne réponse"
                 : "Mauvaise réponse"}
             </p>
-            {feedback.kind === "wrong" && (
-              <p className="mt-1 text-foreground">
-                La bonne réponse&nbsp;:{" "}
-                <strong className="text-life-green">
-                  {feedback.correctText || "—"}
-                </strong>
-              </p>
-            )}
+            {feedback.kind === "wrong" &&
+              (() => {
+                const label = resolveCorrectAnswerLabel(
+                  feedback.correctText,
+                  question.explication,
+                );
+                return label ? (
+                  <p className="mt-1 text-foreground">
+                    La bonne réponse&nbsp;:{" "}
+                    <strong className="text-life-green">{label}</strong>
+                  </p>
+                ) : null;
+              })()}
             {question.explication && (
-              <p className="mt-2 text-sm text-foreground/70">
+              <p
+                className={cn(
+                  "text-sm",
+                  feedback.kind === "wrong" &&
+                    !resolveCorrectAnswerLabel(
+                      feedback.correctText,
+                      question.explication,
+                    )
+                    ? "mt-1 font-semibold text-foreground"
+                    : "mt-2 text-foreground/70",
+                )}
+              >
                 {question.explication}
               </p>
             )}

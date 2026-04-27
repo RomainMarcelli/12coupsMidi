@@ -32,12 +32,27 @@ export function FeedbackCountdown({
 }: FeedbackCountdownProps) {
   const [remaining, setRemaining] = useState(seconds);
   const firedRef = useRef(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   // Reset si la durée change (changement de question).
   useEffect(() => {
     setRemaining(seconds);
     firedRef.current = false;
   }, [seconds]);
+
+  // Scroll auto vers le bouton dès qu'il apparaît (mobile : il est
+  // souvent en bas hors écran après une longue question + feedback).
+  // Léger délai pour laisser le rendu/anim entrer en jeu avant de
+  // cibler l'élément, sinon on scrolle vers une position transitoire.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      wrapperRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (paused) return;
@@ -64,7 +79,10 @@ export function FeedbackCountdown({
   const ratio = Math.max(0, Math.min(1, 1 - remaining / seconds));
 
   return (
-    <div className={cn("flex flex-col items-end gap-2", className)}>
+    <div
+      ref={wrapperRef}
+      className={cn("flex flex-col items-end gap-2", className)}
+    >
       <button
         type="button"
         onClick={handleClick}

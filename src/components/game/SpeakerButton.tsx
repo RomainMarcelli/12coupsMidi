@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pause, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSetting } from "@/lib/settings";
@@ -15,8 +15,19 @@ import {
 } from "@/lib/tts";
 
 interface SpeakerButtonProps {
-  /** Texte à lire. */
+  /** Texte principal à lire (l'énoncé). */
   text: string;
+  /**
+   * Choix de réponses optionnels — lus à la suite de la question avec
+   * un séparateur " ou " entre chaque (formats quizz_2 typiquement).
+   * Si non fourni, seul `text` est lu.
+   */
+  choices?: string[];
+  /**
+   * Explication optionnelle à lire en plus (mode "feedback" après réponse).
+   * Par défaut, pas lue. Quand fournie, elle vient s'ajouter à la fin.
+   */
+  explanation?: string | null;
   /**
    * Force l'activation/désactivation. Si non fourni, on s'aligne sur le
    * setting global "Mode TV" (ttsAutoPlay) pour l'autoPlay, mais le bouton
@@ -26,19 +37,49 @@ interface SpeakerButtonProps {
   /**
    * Lit auto le `text` au montage / quand le texte change.
    * Si non fourni, on s'aligne sur le setting global `ttsAutoPlay`.
+   *
+   * Dédup intégrée : un même contenu n'est lu auto qu'UNE fois par
+   * cycle de vie du composant. Si la question reste affichée et que
+   * d'autres états changent (feedback, etc.), pas de relecture.
    */
   autoPlay?: boolean;
   className?: string;
 }
 
+/** Construit le texte complet à lire en concaténant question + choix + explication. */
+function buildSpeechText(
+  text: string,
+  choices?: string[],
+  explanation?: string | null,
+): string {
+  const parts: string[] = [text];
+  if (choices && choices.length > 0) {
+    // Filtre les labels vides puis joint avec " ou " (séparateur naturel
+    // pour les formats binaires "L'un ou l'autre"). Pour les quizz_4 ça
+    // reste lisible aussi : "Paris ou Lyon ou Marseille ou Nantes".
+    const cleaned = choices.map((c) => c.trim()).filter(Boolean);
+    if (cleaned.length > 0) {
+      parts.push(cleaned.join(" ou "));
+    }
+  }
+  if (explanation && explanation.trim()) {
+    parts.push(explanation.trim());
+  }
+  return parts.join(". ");
+}
+
 /**
- * Bouton haut-parleur : lit / pause / reprend la lecture du texte.
- * Le bouton reste affiché même si le Mode TV est off — l'utilisateur peut
- * toujours cliquer pour entendre la question. Caché uniquement si le
- * navigateur ne supporte pas Web Speech API ou si `enabled === false`.
+ * Bouton haut-parleur : lit / pause / reprend la lecture.
+ *
+ * Lit dans l'ordre : énoncé → choix joints par " ou " → explication.
+ * Le bouton reste cliquable pour relire à la demande même quand l'auto-play
+ * a déjà eu lieu, mais ne re-déclenche PAS automatiquement une lecture si
+ * le contenu n'a pas changé (anti-spam quand le composant re-render).
  */
 export function SpeakerButton({
   text,
+  choices,
+  explanation,
   enabled,
   autoPlay,
   className,
@@ -49,19 +90,31 @@ export function SpeakerButton({
   const effectiveEnabled = enabled ?? true;
   const effectiveAutoPlay = autoPlay ?? ttsAutoSetting;
 
+  const fullText = buildSpeechText(text, choices, explanation);
+  // On dédupe l'auto-play sur la base du texte de la question seule : un
+  // changement de feedback (qui ajoute l'explication) ne doit PAS relancer
+  // une lecture auto. C'est volontaire — c'est à l'user de cliquer pour
+  // entendre l'explication s'il le souhaite.
+  const autoplayKey = text;
+  const lastAutoPlayedRef = useRef<string | null>(null);
+
   useEffect(() => {
     return ttsSubscribe(setState);
   }, []);
 
-  // Auto-play à chaque changement de texte (Mode TV)
   useEffect(() => {
     if (!effectiveEnabled || !effectiveAutoPlay) return;
-    if (!text) return;
-    ttsSpeak(text);
+    if (!autoplayKey) return;
+    // Dédup : pas de relecture pour la même question.
+    if (lastAutoPlayedRef.current === autoplayKey) return;
+    lastAutoPlayedRef.current = autoplayKey;
+    // Pour l'auto-play, on lit énoncé + choix (mais PAS l'explication —
+    // elle n'a pas encore de raison d'être révélée à l'auto-play initial).
+    ttsSpeak(buildSpeechText(text, choices, null));
     return () => {
       ttsStop();
     };
-  }, [effectiveEnabled, effectiveAutoPlay, text]);
+  }, [effectiveEnabled, effectiveAutoPlay, autoplayKey, text, choices]);
 
   if (!effectiveEnabled || !isTtsSupported()) return null;
 
@@ -71,7 +124,10 @@ export function SpeakerButton({
     } else if (state === "paused") {
       ttsResume();
     } else {
-      ttsSpeak(text);
+      // Au clic manuel, on lit TOUT le contenu disponible (énoncé +
+      // choix + explication si présente). C'est l'utilisateur qui choisit
+      // d'entendre l'explication en re-cliquant.
+      ttsSpeak(fullText);
     }
   }
 
@@ -80,7 +136,7 @@ export function SpeakerButton({
       ? "Mettre en pause"
       : state === "paused"
         ? "Reprendre"
-        : "Écouter la question";
+        : "Écouter";
 
   return (
     <button

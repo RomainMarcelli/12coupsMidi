@@ -32,6 +32,7 @@ function player(
     cagnotte: DC_STARTING_CAGNOTTE,
     errors: 0,
     isEliminated: false,
+    eliminatedAt: null,
     correctCount: 0,
     wrongCount: 0,
     ...overrides,
@@ -199,12 +200,20 @@ describe("applyDuelResult", () => {
       player("rouge", { cagnotte: 10_000, errors: 2 }),
       player("adv", { cagnotte: 15_000, errors: 1 }),
     ];
-    const out = applyDuelResult(ps, "rouge", "adv", /* adversaryCorrect */ true);
+    const out = applyDuelResult(
+      ps,
+      "rouge",
+      "adv",
+      /* adversaryCorrect */ true,
+      /* now */ 12345,
+    );
     const rouge = out.find((p) => p.id === "rouge")!;
     const adv = out.find((p) => p.id === "adv")!;
     expect(rouge.isEliminated).toBe(true);
+    expect(rouge.eliminatedAt).toBe(12345);
     expect(rouge.cagnotte).toBe(0);
     expect(adv.cagnotte).toBe(25_000);
+    expect(adv.eliminatedAt).toBeNull();
     // L'adversaire survit → ses erreurs sont remises à 0
     expect(adv.errors).toBe(0);
   });
@@ -274,15 +283,54 @@ describe("nextPhaseAfter", () => {
 });
 
 describe("dcPodium", () => {
-  it("classe vivants en premier puis par cagnotte desc", () => {
+  it("classe le vainqueur (non-éliminé) en premier puis par eliminatedAt desc", () => {
+    // Scénario typique de fin de partie : un vainqueur, 3 éliminés à
+    // différents moments. Le DERNIER éliminé doit finir 2e, le PREMIER
+    // dernier — peu importe leur cagnotte ou leurs bonnes réponses.
     const ps = [
-      player("a", { cagnotte: 5_000 }),
-      player("b", { cagnotte: 15_000 }),
-      player("c", { cagnotte: 30_000, isEliminated: true }),
-      player("d", { cagnotte: 10_000 }),
+      player("rom1", {
+        isEliminated: true,
+        eliminatedAt: 1000, // éliminé tôt (Jeu 1)
+        correctCount: 0,
+      }),
+      player("rom2", {
+        isEliminated: true,
+        eliminatedAt: 2000, // éliminé en milieu (Jeu 2)
+        correctCount: 6,
+      }),
+      player("rom3", {
+        isEliminated: false, // vainqueur
+        cagnotte: 40_000,
+        correctCount: 6,
+      }),
+      player("rom4", {
+        isEliminated: true,
+        eliminatedAt: 3000, // dernier éliminé (face-à-face final)
+        correctCount: 4,
+      }),
     ];
     const podium = dcPodium(ps).map((p) => p.id);
-    // b (15k vivant) > d (10k vivant) > a (5k vivant) > c (éliminé même si 30k)
-    expect(podium).toEqual(["b", "d", "a", "c"]);
+    expect(podium).toEqual(["rom3", "rom4", "rom2", "rom1"]);
+  });
+
+  it("ignore le nombre de bonnes réponses dans le tri", () => {
+    // rom2 a plus de bonnes réponses que rom4 mais a été éliminé avant
+    // → rom4 finit devant rom2.
+    const ps = [
+      player("v", { isEliminated: false }),
+      player("rom2", { isEliminated: true, eliminatedAt: 100, correctCount: 99 }),
+      player("rom4", { isEliminated: true, eliminatedAt: 200, correctCount: 1 }),
+    ];
+    expect(dcPodium(ps).map((p) => p.id)).toEqual(["v", "rom4", "rom2"]);
+  });
+
+  it("fallback cagnotte si eliminatedAt absent (compat ancien state)", () => {
+    const ps = [
+      player("v", { isEliminated: false }),
+      player("a", { isEliminated: true, eliminatedAt: null, cagnotte: 5_000 }),
+      player("b", { isEliminated: true, eliminatedAt: null, cagnotte: 15_000 }),
+    ];
+    // Pas de timestamp → on retombe sur la cagnotte décroissante
+    expect(dcPodium(ps).map((p) => p.id)).toEqual(["v", "b", "a"]);
   });
 });

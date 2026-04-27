@@ -50,6 +50,7 @@ type Mode =
   | "apprendre"
   | "flashcards"
   | "marathon"
+  | "marathon-libre"
   | "defi"
   | "fiche"
   | "favoris";
@@ -91,6 +92,7 @@ export function RevisionClient(props: RevisionClientProps) {
         <FlashcardsMode categories={props.categories} />
       )}
       {mode === "marathon" && <MarathonMode categories={props.categories} />}
+      {mode === "marathon-libre" && <MarathonLibreMode />}
       {mode === "defi" && <DefiMode />}
       {mode === "fiche" && <FicheMode categories={props.categories} />}
       {mode === "favoris" && <FavorisMode />}
@@ -164,6 +166,13 @@ function Hub({
           icon={Timer}
           accent="life-green"
           onClick={() => onPick("marathon")}
+        />
+        <ModeCard
+          title="Marathon libre"
+          desc="50 questions à réponse 100 % libre (texte au clavier)"
+          icon={Timer}
+          accent="sky"
+          onClick={() => onPick("marathon-libre")}
         />
         <ModeCard
           title="Défi du jour"
@@ -338,6 +347,86 @@ function MarathonMode({ categories }: { categories: CategoryRow[] }) {
       heroTitle="Marathon"
       heroSubtitle="Lance 50 questions d'affilée — pas de timer, juste de l'endurance."
     />
+  );
+}
+
+// ===========================================================================
+// MODE 4-bis — Marathon LIBRE (50 questions face_a_face)
+// ===========================================================================
+// Tire UNIQUEMENT dans le pool `face_a_face` (réponses vraiment libres avec
+// alias riches). Évite le bug du Marathon classique où, pour les quizz_2
+// format "L'un ou l'autre", la saisie texte ne pouvait jamais matcher des
+// labels génériques ("L'un", "L'autre").
+//
+// Pas de configurateur — on lance direct, c'est l'esprit "challenge endurance".
+function MarathonLibreMode() {
+  const [questions, setQuestions] = useState<RevQuestion[] | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function start() {
+    setError(null);
+    startTransition(async () => {
+      const res = await fetchQuestionsForRevision({
+        categoryIds: [],
+        difficulties: [],
+        types: ["face_a_face"],
+        count: 50,
+      });
+      if (res.status === "error") {
+        setError(res.message);
+      } else if (res.questions.length === 0) {
+        setError(
+          "Aucune question à réponse libre disponible. Vérifie que des questions de type `face_a_face` existent en base.",
+        );
+      } else {
+        setQuestions(res.questions);
+      }
+    });
+  }
+
+  if (questions) {
+    return <QuizPlayer questions={questions} trackWrong />;
+  }
+
+  return (
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 p-6 text-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-sky/15 text-sky">
+        <Timer className="h-10 w-10" aria-hidden="true" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <p className="text-xs font-bold uppercase tracking-widest text-sky">
+          Marathon — Réponses libres
+        </p>
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
+          50 questions à taper au clavier
+        </h1>
+        <p className="max-w-md text-foreground/70">
+          Pas de boutons, pas de QCM. Tape ta réponse en toutes lettres :
+          le système accepte les variantes courantes (alias) et tolère les
+          fautes de frappe sur les noms longs. <strong>Strict</strong> en
+          revanche pour les dates et années.
+        </p>
+      </div>
+      {error && (
+        <p
+          role="alert"
+          className="rounded-md border border-buzz/40 bg-buzz/10 px-4 py-2 text-sm text-buzz"
+        >
+          {error}
+        </p>
+      )}
+      <Button
+        variant="gold"
+        size="lg"
+        onClick={start}
+        disabled={isPending}
+        className="text-lg"
+      >
+        <Timer className="h-5 w-5" aria-hidden="true" />
+        {isPending ? "Préparation…" : "Commencer le marathon"}
+      </Button>
+    </main>
   );
 }
 

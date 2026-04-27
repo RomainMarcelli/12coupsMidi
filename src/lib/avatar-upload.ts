@@ -30,6 +30,16 @@ const TARGET_QUALITY = 0.85;
 
 export async function uploadAvatarClient(
   file: File,
+  /**
+   * Bucket Supabase Storage cible. Par défaut `avatars` (profil principal).
+   * Utilisable pour `saved-players-avatars` aussi (cf. saved_players).
+   */
+  bucket: "avatars" | "saved-players-avatars" = "avatars",
+  /**
+   * Préfixe du nom de fichier (avant l'horodatage). Utile pour isoler
+   * plusieurs avatars dans le même dossier user (un par saved_player).
+   */
+  filenamePrefix = "avatar",
 ): Promise<UploadAvatarResult | UploadAvatarError> {
   if (!file.type.startsWith("image/")) {
     return { status: "error", message: "Le fichier doit être une image." };
@@ -57,10 +67,10 @@ export async function uploadAvatarClient(
 
   const ext = blob.type === "image/webp" ? "webp" : "jpg";
   // Cache-buster via timestamp pour forcer le re-fetch après update.
-  const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+  const path = `${user.id}/${filenamePrefix}-${Date.now()}.${ext}`;
 
   const { error: upErr } = await supabase.storage
-    .from("avatars")
+    .from(bucket)
     .upload(path, blob, {
       contentType: blob.type,
       cacheControl: "3600",
@@ -71,7 +81,7 @@ export async function uploadAvatarClient(
     return { status: "error", message: upErr.message };
   }
 
-  const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+  const { data: pub } = supabase.storage.from(bucket).getPublicUrl(path);
   return { status: "ok", url: pub.publicUrl };
 }
 

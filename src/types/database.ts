@@ -88,6 +88,80 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["user_favorites"]["Insert"]>;
         Relationships: [];
       };
+      saved_players: {
+        Row: {
+          id: string;
+          owner_id: string;
+          pseudo: string;
+          avatar_url: string | null;
+          games_played: number;
+          games_won: number;
+          last_played_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          owner_id: string;
+          pseudo: string;
+          avatar_url?: string | null;
+          games_played?: number;
+          games_won?: number;
+          last_played_at?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["saved_players"]["Insert"]>;
+        Relationships: [];
+      };
+      tv_rooms: {
+        Row: {
+          id: string;
+          code: string;
+          host_id: string;
+          status: "waiting" | "playing" | "paused" | "ended";
+          game_mode: string;
+          state: Json;
+          created_at: string;
+          ended_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          host_id: string;
+          status?: "waiting" | "playing" | "paused" | "ended";
+          game_mode: string;
+          state?: Json;
+          created_at?: string;
+          ended_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["tv_rooms"]["Insert"]>;
+        Relationships: [];
+      };
+      tv_room_players: {
+        Row: {
+          id: string;
+          room_id: string;
+          player_token: string;
+          pseudo: string;
+          avatar_url: string | null;
+          position: number | null;
+          is_connected: boolean;
+          last_seen_at: string;
+          joined_at: string;
+        };
+        Insert: {
+          id?: string;
+          room_id: string;
+          player_token: string;
+          pseudo: string;
+          avatar_url?: string | null;
+          position?: number | null;
+          is_connected?: boolean;
+          last_seen_at?: string;
+          joined_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["tv_room_players"]["Insert"]>;
+        Relationships: [];
+      };
       categories: {
         Row: {
           id: number;

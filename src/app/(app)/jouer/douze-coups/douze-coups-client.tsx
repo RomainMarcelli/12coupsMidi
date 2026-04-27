@@ -23,6 +23,13 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AnswerButton } from "@/components/game/AnswerButton";
 import { DuelPanel } from "@/components/game/DuelPanel";
+import { AnimEffect } from "@/components/animations/AnimEffect";
+import { ColorTransitionOverlay } from "@/components/game/ColorTransitionOverlay";
+import { resolveCorrectAnswerLabel } from "@/lib/game-logic/answer-display";
+import {
+  buildTTSFeedbackText,
+  useAutoPlayTTS,
+} from "@/lib/tts-helpers";
 import { FeedbackCountdown } from "@/components/game/FeedbackCountdown";
 import { TransitionDuelOverlay } from "@/components/game/TransitionDuelOverlay";
 import { LifeBar } from "@/components/game/LifeBar";
@@ -73,6 +80,10 @@ import {
   useDouzeCoupsStore,
   availableDuelThemes,
 } from "@/stores/douzeCoupsStore";
+import {
+  recordGamePlayed,
+  upsertSavedPlayer,
+} from "@/lib/saved-players/actions";
 import { saveDouzeCoupsSession, type SaveDcResult } from "./actions";
 import { DcSetupScreen, type DcSetupResult } from "./setup-screen";
 import { DcIntroScreen } from "./intro-screen";
@@ -90,6 +101,10 @@ interface DouzeCoupsClientProps {
   fafQuestions: FafQuestion[];
   categories: CategoryRow[];
   userPseudo: string;
+  /** Avatar du compte connecté (pour pré-remplir le slot 0 du setup). */
+  userAvatarUrl?: string | null;
+  /** Joueurs locaux mémorisés pour autocomplétion + photos. */
+  savedPlayers: import("@/lib/saved-players/actions").SavedPlayer[];
 }
 
 // ===========================================================================
@@ -105,6 +120,8 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
     fafQuestions,
     categories,
     userPseudo,
+    userAvatarUrl,
+    savedPlayers,
   } = props;
 
   const phase = useDouzeCoupsStore((s) => s.phase);
@@ -114,6 +131,64 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
   const reset = useDouzeCoupsStore((s) => s.reset);
   const players = useDouzeCoupsStore((s) => s.players);
   const userPlayerId = players[0]?.id ?? "";
+  // Phase de retour du duel pour décider du stage à rendre pendant
+  // `transition_duel`. Doit être appelé AVANT les early returns sinon
+  // violation des Rules of Hooks (le hook n'est pas appelé pendant les
+  // phases setup/intro qui retournent tôt).
+  const pendingReturnPhase = useDouzeCoupsStore(
+    (s) => s.pendingDuel?.returnPhase ?? null,
+  );
+
+  // ---------------------------------------------------------------------
+  // Détection transitions vert→jaune et jaune→rouge → overlay plein écran
+  // ---------------------------------------------------------------------
+  // On compare les errors courants à un snapshot des errors précédents
+  // (par playerId) pour détecter les passages de palier. Quand un joueur
+  // passe au rouge, l'overlay s'enchaîne naturellement avec la phase
+  // `transition_duel` qui prend le relais derrière (sas 20s).
+  // Une seule overlay à la fois (file d'attente) pour éviter d'empiler.
+  const prevErrorsRef = useRef<Map<string, number>>(new Map());
+  const [colorOverlay, setColorOverlay] = useState<{
+    to: "yellow" | "red";
+    playerName: string;
+    /** Suffixe pour forcer un remount si une 2e transition arrive vite. */
+    nonce: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (phase === "setup" || phase === "intro" || phase === "results") {
+      prevErrorsRef.current.clear();
+      return;
+    }
+    let triggeredYellow: { name: string } | null = null;
+    let triggeredRed: { name: string } | null = null;
+    for (const p of players) {
+      const prev = prevErrorsRef.current.get(p.id) ?? 0;
+      // Ne déclenche pas si le joueur est déjà éliminé (errors résiduels)
+      if (!p.isEliminated) {
+        if (prev < 1 && p.errors >= 1 && p.errors < 2) {
+          triggeredYellow = { name: p.pseudo };
+        } else if (prev < 2 && p.errors >= 2) {
+          triggeredRed = { name: p.pseudo };
+        }
+      }
+      prevErrorsRef.current.set(p.id, p.errors);
+    }
+    // Le rouge prime sur le jaune (cas pathologique 0→2 d'un coup).
+    if (triggeredRed) {
+      setColorOverlay({
+        to: "red",
+        playerName: triggeredRed.name,
+        nonce: Date.now(),
+      });
+    } else if (triggeredYellow) {
+      setColorOverlay({
+        to: "yellow",
+        playerName: triggeredYellow.name,
+        nonce: Date.now(),
+      });
+    }
+  }, [players, phase]);
 
   // On retient la dernière config de setup pour pouvoir relancer une partie
   // identique sans repasser par le formulaire complet (rematch).
@@ -142,6 +217,29 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
     }
     setLastSetup(result);
     setSpectatorAcked(false);
+    // Sauvegarde OPT-IN : seuls les joueurs humains slots ≥ 1 ayant
+    // explicitement coché "Enregistrer ce joueur" sont mémorisés en BDD.
+    // Le slot 0 = compte connecté est déjà dans `profiles`, jamais
+    // dédoublonné dans saved_players.
+    void Promise.all(
+      result.players
+        .map((p, idx) => ({ ...p, idx }))
+        .filter(
+          (p) =>
+            p.idx > 0 &&
+            !p.isBot &&
+            p.pseudo.trim().length > 0 &&
+            p.saveToBdd === true,
+        )
+        .map((p) =>
+          upsertSavedPlayer({
+            pseudo: p.pseudo,
+            avatarUrl: p.avatarUrl ?? null,
+          }),
+        ),
+    ).catch(() => {
+      // best-effort
+    });
     startIntro();
     return true;
   }
@@ -154,7 +252,14 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
   }
 
   if (phase === "setup") {
-    return <DcSetupScreen userPseudo={userPseudo} onReady={startGame} />;
+    return (
+      <DcSetupScreen
+        userPseudo={userPseudo}
+        userAvatarUrl={userAvatarUrl ?? null}
+        savedPlayers={savedPlayers}
+        onReady={startGame}
+      />
+    );
   }
 
   if (phase === "intro") {
@@ -173,14 +278,6 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
     userEliminated && phase !== "results" && !spectatorAcked;
   const showFloatingRestart =
     userEliminated && phase !== "results" && spectatorAcked && canRestart;
-
-  // Pendant `transition_duel`, on garde le rendu du jeu en cours pour
-  // que l'utilisateur continue à voir la question + le feedback complet
-  // (bonne réponse, explication). Le stage gère lui-même l'overlay du
-  // sas 20 s et le freeze des interactions.
-  const pendingReturnPhase = useDouzeCoupsStore(
-    (s) => s.pendingDuel?.returnPhase ?? null,
-  );
 
   function renderStage() {
     if (phase === "jeu1") return <DcJeu1Stage ceQuestions={ceQuestions} />;
@@ -212,6 +309,14 @@ export function DouzeCoupsClient(props: DouzeCoupsClientProps) {
       )}
       {renderStage()}
       <FloatingRestartButton visible={showFloatingRestart} onRestart={rematch} />
+      {colorOverlay && (
+        <ColorTransitionOverlay
+          key={`color-${colorOverlay.nonce}`}
+          to={colorOverlay.to}
+          playerName={colorOverlay.playerName}
+          onComplete={() => setColorOverlay(null)}
+        />
+      )}
     </>
   );
 }
@@ -280,11 +385,18 @@ function PlayerBadge({
       <div className="flex items-center gap-1.5">
         <div
           className={cn(
-            "flex h-6 w-6 shrink-0 items-center justify-center rounded-md",
+            "flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md",
             colorStyle.iconBg,
           )}
         >
-          {player.isBot ? (
+          {player.avatarUrl && !player.isBot ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={player.avatarUrl}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : player.isBot ? (
             <Bot className="h-3.5 w-3.5" aria-hidden="true" />
           ) : (
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
@@ -383,11 +495,17 @@ function formatMoney(amount: number): string {
 // ===========================================================================
 
 function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
+  const phase = useDouzeCoupsStore((s) => s.phase);
   const players = useDouzeCoupsStore((s) => s.players);
   const currentPlayerIdx = useDouzeCoupsStore((s) => s.currentPlayerIdx);
+  const pendingDuel = useDouzeCoupsStore((s) => s.pendingDuel);
   const recordCorrect = useDouzeCoupsStore((s) => s.recordCorrect);
   const recordWrong = useDouzeCoupsStore((s) => s.recordWrong);
   const nextPlayer = useDouzeCoupsStore((s) => s.nextPlayer);
+  const startDuelPhase = useDouzeCoupsStore((s) => s.startDuelPhase);
+
+  // Vrai dès que la 2e erreur a déclenché le sas avant duel.
+  const inTransitionDuel = phase === "transition_duel";
 
   const [qIdx, setQIdx] = useState(0);
   const usedIdxRef = useRef<Set<number>>(new Set([0]));
@@ -408,6 +526,30 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
 
   const currentPlayer = players[currentPlayerIdx];
   const currentQuestion = ceQuestions[qIdx];
+
+  // Lecture auto TTS : énoncé + 2 choix au mount, puis feedback dès que
+  // l'utilisateur a répondu (avec stop si on enchaîne avant la fin).
+  const ttsFeedback =
+    feedback?.kind === "wrong"
+      ? buildTTSFeedbackText({
+          isCorrect: false,
+          correctLabel: resolveCorrectAnswerLabel(
+            feedback.correctText,
+            feedback.explication,
+          ),
+          explanation: feedback.explication,
+        })
+      : feedback?.kind === "correct" && currentQuestion?.explication
+        ? buildTTSFeedbackText({
+            isCorrect: true,
+            explanation: currentQuestion.explication,
+          })
+        : null;
+  useAutoPlayTTS({
+    enonce: currentQuestion?.enonce ?? "",
+    choices: currentQuestion?.reponses.map((r) => r.text) ?? [],
+    feedbackText: ttsFeedback,
+  });
 
   useEffect(() => {
     return () => {
@@ -465,11 +607,12 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
     [currentQuestion, currentPlayer, recordCorrect, recordWrong, advanceToNext],
   );
 
-  // Bot auto-answer
+  // Bot auto-answer (gelé pendant le sas transition_duel)
   useEffect(() => {
     if (!currentPlayer?.isBot) return;
     if (!currentQuestion) return;
     if (isTransitioningRef.current) return;
+    if (inTransitionDuel) return;
     const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen");
     const t = window.setTimeout(() => {
       if (isTransitioningRef.current) return;
@@ -479,11 +622,12 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
       processAnswer(correct ? correctIdx : wrongIdx);
     }, delay);
     return () => window.clearTimeout(t);
-  }, [currentPlayer, currentQuestion, processAnswer]);
+  }, [currentPlayer, currentQuestion, processAnswer, inTransitionDuel]);
 
-  // Keyboard shortcuts for humans
+  // Keyboard shortcuts for humans (gelés pendant le sas transition_duel)
   useEffect(() => {
     if (currentPlayer?.isBot) return;
+    if (inTransitionDuel) return;
     function onKey(e: KeyboardEvent) {
       if (e.repeat) return;
       if (
@@ -504,7 +648,7 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [currentPlayer, processAnswer]);
+  }, [currentPlayer, processAnswer, inTransitionDuel]);
 
   if (!currentQuestion || !currentPlayer) return null;
   const displayEnonce = stripFormatPrefix(currentQuestion.enonce);
@@ -523,6 +667,11 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
         )}
         <SpeakerButton
           text={`${formatLbl ? formatLbl + ". " : ""}${displayEnonce}`}
+          choices={currentQuestion.reponses.map((r) => r.text)}
+          explanation={
+            feedback?.kind === "wrong" ? feedback.explication : undefined
+          }
+          autoPlay={false}
         />
       </div>
 
@@ -567,12 +716,26 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
 
       <WrongFeedback feedback={feedback} />
 
+      {/* Pendant `transition_duel` : on cache le bouton "Passer à la suite"
+          (on ne change plus de question) et on affiche l'overlay rouge
+          de sas 20 s avec bouton "Passer au duel". */}
+      {inTransitionDuel && pendingDuel && (
+        <TransitionDuelOverlay
+          pseudo={
+            players.find((p) => p.id === pendingDuel.challengerId)?.pseudo ??
+            currentPlayer.pseudo
+          }
+          seconds={20}
+          onStartDuel={startDuelPhase}
+        />
+      )}
+
       {/* Bouton "Passer à la suite" + countdown, visible dès qu'une réponse
           a été enregistrée. Humain : 30 s pour lire / relire l'explication.
           Bot : 8 s avec bouton "Suivant" pour permettre à l'humain
           spectateur de voir la bonne réponse + l'explication des bots
           mais d'accélérer s'il a déjà compris. */}
-      {feedback && (
+      {feedback && !inTransitionDuel && (
         <FeedbackCountdown
           key={`countdown-${currentQuestion.id}-${currentPlayerIdx}`}
           seconds={currentPlayer.isBot ? 8 : 30}
@@ -606,6 +769,13 @@ function WrongFeedback({
     | null;
 }) {
   if (!feedback || feedback.kind !== "wrong") return null;
+  // Résolution du libellé : si `correctText` vaut un placeholder type
+  // "L'autre", on tente de l'extraire depuis l'explication. Si rien de
+  // probant, on affiche l'explication seule en gras.
+  const label = resolveCorrectAnswerLabel(
+    feedback.correctText,
+    feedback.explication,
+  );
   return (
     <motion.div
       initial={{ opacity: 0, y: -6 }}
@@ -615,12 +785,16 @@ function WrongFeedback({
       <p className="font-display text-base font-bold text-buzz">
         Mauvaise réponse
       </p>
-      <p className="mt-1">
-        La bonne réponse était&nbsp;:{" "}
-        <strong className="text-life-green">{feedback.correctText}</strong>
-      </p>
+      {label && (
+        <p className="mt-1">
+          La bonne réponse était&nbsp;:{" "}
+          <strong className="text-life-green">{label}</strong>
+        </p>
+      )}
       {feedback.explication && (
-        <p className="mt-2 text-navy/80">{feedback.explication}</p>
+        <p className={cn("text-navy/80", label ? "mt-2" : "mt-1 font-semibold text-navy")}>
+          {feedback.explication}
+        </p>
       )}
     </motion.div>
   );
@@ -799,19 +973,25 @@ function RougeAnnounce({ player }: { player: DcPlayer | null }) {
 // ===========================================================================
 
 function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
+  const phase = useDouzeCoupsStore((s) => s.phase);
   const players = useDouzeCoupsStore((s) => s.players);
   const currentPlayerIdx = useDouzeCoupsStore((s) => s.currentPlayerIdx);
+  const pendingDuel = useDouzeCoupsStore((s) => s.pendingDuel);
   const recordCorrect = useDouzeCoupsStore((s) => s.recordCorrect);
   const recordWrong = useDouzeCoupsStore((s) => s.recordWrong);
   const nextPlayer = useDouzeCoupsStore((s) => s.nextPlayer);
   const advanceToFaceAFace = useDouzeCoupsStore((s) => s.advanceToFaceAFace);
   const forceResetErrorsJeu2 = useDouzeCoupsStore((s) => s.forceResetErrorsJeu2);
+  const startDuelPhase = useDouzeCoupsStore((s) => s.startDuelPhase);
 
   const [roundIdx, setRoundIdx] = useState(0);
   const [clicked, setClicked] = useState<Set<string>>(new Set());
   const [shakeText, setShakeText] = useState<string | null>(null);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const isTransitioningRef = useRef(false);
+
+  // Vrai dès que la 2e erreur a déclenché le sas avant duel.
+  const inTransitionDuel = phase === "transition_duel";
 
   // Safety net : à l'entrée en Jeu 2, on s'assure que tous les survivants
   // sont à 0 erreur (pour éviter un bug où une erreur résiduelle de Jeu 1
@@ -823,13 +1003,32 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
   const currentPlayer = players[currentPlayerIdx];
   const current = cpcRounds[roundIdx];
 
+  // Lecture auto TTS Jeu 2 : énoncé "Trouve l'intrus parmi : X, Y, … ou Z".
+  // Pas de feedback auto ici (l'écran de propositions reste figé 1.8 s
+  // mais l'intrus ne change pas — on évite la verbosité).
+  useAutoPlayTTS({
+    enonce: current?.theme
+      ? `${current.theme}. Trouve l'intrus`
+      : "",
+    choices: current?.propositions.map((p) => p.text) ?? [],
+  });
+
   const endRound = useCallback(
     (hitIntrus: boolean) => {
       setShowingFeedback(true);
       window.setTimeout(() => {
+        // Si entre-temps on est passé en sas avant duel, on NE change pas
+        // le round / le tour : l'écran doit rester figé pour que l'humain
+        // lise l'intrus + l'explication. Le passage de phase suivant sera
+        // déclenché par `startDuelPhase()` puis par le résultat du duel.
+        const currentPhase = useDouzeCoupsStore.getState().phase;
+        if (currentPhase === "transition_duel") {
+          setShowingFeedback(false);
+          isTransitioningRef.current = false;
+          return;
+        }
         setShowingFeedback(false);
         setClicked(new Set());
-        // passe au round suivant (ou recycle)
         setRoundIdx((i) => (i + 1) % cpcRounds.length);
         nextPlayer();
         isTransitioningRef.current = false;
@@ -882,12 +1081,13 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
     ],
   );
 
-  // Bot auto-click
+  // Bot auto-click (gelé pendant le sas transition_duel)
   useEffect(() => {
     if (!currentPlayer?.isBot) return;
     if (!current) return;
     if (isTransitioningRef.current) return;
     if (showingFeedback) return;
+    if (inTransitionDuel) return;
     const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen");
     const t = window.setTimeout(() => {
       if (isTransitioningRef.current) return;
@@ -900,7 +1100,14 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
       if (prop) processClick(prop.text, prop.isValid);
     }, delay);
     return () => window.clearTimeout(t);
-  }, [currentPlayer, current, clicked, showingFeedback, processClick]);
+  }, [
+    currentPlayer,
+    current,
+    clicked,
+    showingFeedback,
+    processClick,
+    inTransitionDuel,
+  ]);
 
   // Skip to face-a-face if <=2 alive
   useEffect(() => {
@@ -936,6 +1143,8 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
         <div className="mt-3 flex justify-center">
           <SpeakerButton
             text={`${current.theme}. Six propositions liées, évite l'intrus.`}
+            choices={current.propositions.map((p) => p.text)}
+            autoPlay={false}
           />
         </div>
       </div>
@@ -966,13 +1175,30 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
               state={state}
               shaking={shakeText === prop.text}
               disabled={
-                isClicked || showingFeedback || currentPlayer.isBot
+                isClicked ||
+                showingFeedback ||
+                currentPlayer.isBot ||
+                inTransitionDuel
               }
               onClick={() => processClick(prop.text, prop.isValid)}
             />
           );
         })}
       </div>
+
+      {/* Sas 20 s avant duel : on garde l'écran Jeu 2 figé (intrus révélé,
+          propositions en feedback) et on ajoute en bas un encart rouge
+          avec bouton "Passer au duel" + countdown. */}
+      {inTransitionDuel && pendingDuel && (
+        <TransitionDuelOverlay
+          pseudo={
+            players.find((p) => p.id === pendingDuel.challengerId)?.pseudo ??
+            currentPlayer.pseudo
+          }
+          seconds={20}
+          onStartDuel={startDuelPhase}
+        />
+      )}
     </main>
   );
 }
@@ -1063,6 +1289,13 @@ function DcFaceAFaceStage({
 
   const activePlayer = activeIdx === 0 ? p1 : p2;
   const currentQuestion = fafQuestions[qIdx];
+
+  // Lecture auto TTS Face-à-Face : énoncé seul (réponse libre, pas de
+  // propositions). Le feedback est trop court ici pour mériter une
+  // lecture (transition automatique 1.4 s → on enchaîne vite).
+  useAutoPlayTTS({
+    enonce: phaseLocal === "playing" ? (currentQuestion?.enonce ?? "") : "",
+  });
 
   // Chrono tick
   useEffect(() => {
@@ -1163,6 +1396,38 @@ function DcFaceAFaceStage({
     setPhaseLocal("playing");
   }, [phaseLocal, advance]);
 
+  // Raccourcis clavier pour "Passer" — voir le commentaire identique dans
+  // face-a-face-client.tsx. Si focus dans un champ de saisie, on laisse
+  // le navigateur gérer (Entrée valide la réponse via le form).
+  useEffect(() => {
+    if (phaseLocal !== "playing") return;
+    if (activePlayer?.isBot) return;
+
+    function isTypingTarget(el: Element | null): boolean {
+      if (!el) return false;
+      const tag = el.tagName;
+      return (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        (el as HTMLElement).isContentEditable === true
+      );
+    }
+
+    function onKey(e: KeyboardEvent) {
+      if (e.repeat) return;
+      if (isTypingTarget(document.activeElement)) return;
+      const key = e.key;
+      const isPassKey =
+        key === "$" || key === " " || key === "Enter" || key === "ArrowRight";
+      if (!isPassKey) return;
+      e.preventDefault();
+      handlePass();
+    }
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phaseLocal, activePlayer, handlePass]);
+
   // Bot answer
   useEffect(() => {
     if (phaseLocal !== "playing") return;
@@ -1251,7 +1516,7 @@ function DcFaceAFaceStage({
             difficulte={currentQuestion.difficulte}
           />
           <div className="flex justify-center">
-            <SpeakerButton text={currentQuestion.enonce} />
+            <SpeakerButton text={currentQuestion.enonce} autoPlay={false} />
           </div>
           <AnimatePresence>
             {flash && (
@@ -1287,15 +1552,23 @@ function DcFaceAFaceStage({
                 focusKey={`${activeIdx}-${qIdx}`}
                 disabled={phaseLocal !== "playing"}
               />
-              <button
-                type="button"
-                onClick={handlePass}
-                disabled={phaseLocal !== "playing"}
-                className="mx-auto inline-flex items-center gap-1.5 rounded-md border border-navy/20 bg-white/60 px-4 py-2 text-sm font-semibold text-navy hover:border-navy/40 hover:bg-navy/5 disabled:opacity-40"
-              >
-                <SkipForward className="h-4 w-4" aria-hidden="true" />
-                Passer
-              </button>
+              <div className="mx-auto flex flex-col items-center gap-1">
+                <button
+                  type="button"
+                  onClick={handlePass}
+                  disabled={phaseLocal !== "playing"}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-navy/20 bg-white/60 px-4 py-2 text-sm font-semibold text-navy hover:border-navy/40 hover:bg-navy/5 disabled:opacity-40"
+                >
+                  <SkipForward className="h-4 w-4" aria-hidden="true" />
+                  Passer
+                </button>
+                <p className="text-[11px] text-navy/40">
+                  Raccourcis : <kbd className="rounded bg-navy/5 px-1">Espace</kbd>{" "}
+                  <kbd className="rounded bg-navy/5 px-1">Entrée</kbd>{" "}
+                  <kbd className="rounded bg-navy/5 px-1">$</kbd>{" "}
+                  <kbd className="rounded bg-navy/5 px-1">→</kbd>
+                </p>
+              </div>
             </div>
           )}
         </>
@@ -1423,6 +1696,19 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
     })
       .then(setSaveResult)
       .finally(() => setIsSaving(false));
+
+    // Bump des stats des saved_players (humains slots 2+ uniquement,
+    // le slot 0 = compte connecté est suivi via game_sessions).
+    // Best-effort : on ignore les échecs.
+    const winnerId = dcPodium(players)[0]?.id ?? null;
+    void Promise.all(
+      players
+        .map((p, idx) => ({ ...p, idx }))
+        .filter((p) => p.idx > 0 && !p.isBot && p.pseudo.trim().length > 0)
+        .map((p) =>
+          recordGamePlayed({ pseudo: p.pseudo, won: p.id === winnerId }),
+        ),
+    ).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1434,27 +1720,28 @@ function DcResultsScreen({ userPlayerId }: { userPlayerId: string }) {
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
-      <motion.div
-        initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
-        animate={{ scale: 1, opacity: 1, rotate: 0 }}
-        transition={{ type: "spring", stiffness: 160, damping: 12 }}
-        className={cn(
-          "flex h-32 w-32 items-center justify-center rounded-3xl",
-          userWon
-            ? "bg-gold/20 shadow-[0_0_64px_rgba(245,183,0,0.6)]"
-            : "bg-sky/15",
-        )}
-      >
-        {userWon ? (
-          <Trophy
-            className="h-16 w-16 text-gold-warm"
-            aria-hidden="true"
-            fill="currentColor"
+      {/* Animation principale : couronne + pluie de pièces si vainqueur,
+          sinon un indicateur sky neutre. La pluie est à fond perdu en
+          overlay full-screen pour un effet "fin de partie" festif. */}
+      {userWon ? (
+        <>
+          <AnimEffect animation="winner" size="lg" autoCloseMs={0} />
+          <AnimEffect
+            animation="coins-rain"
+            size="fullscreen"
+            autoCloseMs={2200}
           />
-        ) : (
+        </>
+      ) : (
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 160, damping: 12 }}
+          className="flex h-32 w-32 items-center justify-center rounded-3xl bg-sky/15"
+        >
           <Users className="h-16 w-16 text-sky" aria-hidden="true" />
-        )}
-      </motion.div>
+        </motion.div>
+      )}
 
       <div className="flex flex-col gap-1">
         <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">

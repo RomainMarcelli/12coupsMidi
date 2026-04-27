@@ -277,6 +277,47 @@ export function FaceAFaceClient({
   ]);
 
   // -----------------------------
+  // Raccourcis clavier "Passer la question"
+  // -----------------------------
+  // À l'oral, perdre du temps à viser le bouton coûte des secondes. On
+  // accepte plusieurs touches : $ (demandée par l'user), Espace, Entrée,
+  // et flèche droite. Règles :
+  //  - Si l'utilisateur tape dans un INPUT/TEXTAREA (saisie de la réponse),
+  //    on NE touche à rien : Entrée valide la réponse via le form du
+  //    VoiceInput, $/Espace/→ s'écrivent dans le champ.
+  //  - Sinon, ces touches déclenchent `handlePass` avec preventDefault
+  //    pour éviter le scroll d'Espace ou un submit fantôme d'Entrée.
+  useEffect(() => {
+    if (phase !== "playing") return;
+    if (activeIsBot) return;
+
+    function isTypingTarget(el: Element | null): boolean {
+      if (!el) return false;
+      const tag = el.tagName;
+      return (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        (el as HTMLElement).isContentEditable === true
+      );
+    }
+
+    function onKey(e: KeyboardEvent) {
+      if (e.repeat) return;
+      // Si focus dans un champ de saisie : on ne s'en mêle pas.
+      if (isTypingTarget(document.activeElement)) return;
+      const key = e.key;
+      const isPassKey =
+        key === "$" || key === " " || key === "Enter" || key === "ArrowRight";
+      if (!isPassKey) return;
+      e.preventDefault();
+      handlePass();
+    }
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, activeIsBot, handlePass]);
+
+  // -----------------------------
   // Tour du bot : tire un délai, puis simule sa réponse
   // -----------------------------
   useEffect(() => {
@@ -566,15 +607,23 @@ export function FaceAFaceClient({
                   hideVoice={!voiceEnabled}
                   focusKey={`${activeIdx}-${currentQIdx}`}
                 />
-                <button
-                  type="button"
-                  onClick={handlePass}
-                  disabled={phase !== "playing"}
-                  className="mx-auto inline-flex items-center gap-1.5 rounded-md border border-navy/20 bg-white/60 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-navy/40 hover:bg-navy/5 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  <SkipForward className="h-4 w-4" aria-hidden="true" />
-                  Passer
-                </button>
+                <div className="flex flex-col items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={handlePass}
+                    disabled={phase !== "playing"}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-navy/20 bg-white/60 px-4 py-2 text-sm font-semibold text-navy transition-colors hover:border-navy/40 hover:bg-navy/5 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <SkipForward className="h-4 w-4" aria-hidden="true" />
+                    Passer
+                  </button>
+                  <p className="text-[11px] text-navy/40">
+                    Raccourcis : <kbd className="rounded bg-navy/5 px-1">Espace</kbd>{" "}
+                    <kbd className="rounded bg-navy/5 px-1">Entrée</kbd>{" "}
+                    <kbd className="rounded bg-navy/5 px-1">$</kbd>{" "}
+                    <kbd className="rounded bg-navy/5 px-1">→</kbd>
+                  </p>
+                </div>
               </div>
             )}
           </motion.div>

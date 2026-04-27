@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { fetchSavedPlayers } from "@/lib/saved-players/actions";
 import {
   prepareCeQuestion,
   shuffleCePool,
@@ -58,8 +59,13 @@ export default async function DouzeCoupsPage() {
       .eq("type", "face_a_face")
       .limit(200),
     supabase.from("categories").select("id, nom, slug, couleur"),
-    supabase.from("profiles").select("pseudo").maybeSingle(),
+    supabase.from("profiles").select("pseudo, avatar_url").maybeSingle(),
   ]);
+
+  // Joueurs locaux mémorisés pour l'autocomplétion + photo dans le setup.
+  // Chargé en parallèle des autres requêtes (await ci-dessus déjà groupé,
+  // ici on fait un appel séparé pour ne pas perturber la destructuration).
+  const savedPlayers = await fetchSavedPlayers();
 
   const categoriesById = new Map(
     (categories ?? []).map((c) => [c.id, c] as const),
@@ -120,6 +126,8 @@ export default async function DouzeCoupsPage() {
       fafQuestions={fafQuestions}
       categories={categories ?? []}
       userPseudo={resolveUserPseudo(profile?.pseudo)}
+      userAvatarUrl={profile?.avatar_url ?? null}
+      savedPlayers={savedPlayers}
     />
   );
 }

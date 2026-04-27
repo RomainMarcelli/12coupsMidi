@@ -35,11 +35,26 @@ export function TransitionDuelOverlay({
 }: TransitionDuelOverlayProps) {
   const [remaining, setRemaining] = useState(seconds);
   const firedRef = useRef(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setRemaining(seconds);
     firedRef.current = false;
   }, [seconds]);
+
+  // Scroll auto vers l'encart : sur mobile il est en bas du Jeu 1/Jeu 2
+  // qui a déjà beaucoup de contenu (joueurs + question + feedback).
+  // Laisse l'overlay rouge plein écran s'évacuer (anim ~2 s) avant de
+  // scroller, sinon le navigateur scrolle vers du contenu masqué.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      wrapperRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 2200);
+    return () => window.clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (remaining <= 0) {
@@ -65,6 +80,7 @@ export function TransitionDuelOverlay({
 
   return (
     <motion.div
+      ref={wrapperRef}
       role="alert"
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}

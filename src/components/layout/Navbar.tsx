@@ -7,6 +7,7 @@ import {
   RotateCcw,
   Settings,
   Shield,
+  Tv,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +23,9 @@ interface NavbarProps {
 
 const LINKS = [
   { href: "/jouer", label: "Jouer", icon: Play },
+  // Mode TV Soirée — placé juste à côté de Jouer car c'est aussi un mode
+  // de partie. Ne s'affiche pas en home pour ne pas surcharger l'accueil.
+  { href: "/tv/host", label: "Mode TV", icon: Tv },
   { href: "/revision", label: "Révision", icon: RotateCcw },
   { href: "/stats", label: "Stats", icon: BarChart3 },
 ] as const;

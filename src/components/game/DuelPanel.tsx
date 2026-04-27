@@ -12,10 +12,9 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { QuestionCard } from "@/components/game/QuestionCard";
-import { Timer } from "@/components/game/Timer";
 import { AnswerButton } from "@/components/game/AnswerButton";
+import { SpeakerButton } from "@/components/game/SpeakerButton";
 import {
-  DUEL_TIMER_SECONDS,
   pickDuelQuestion,
   pickDuelThemes,
   resolveDuel,
@@ -31,6 +30,8 @@ import {
   type BotDifficulty,
 } from "@/lib/game-logic/faceAFace";
 import type { PlayerConfig } from "@/lib/game-logic/players";
+import { resolveCorrectAnswerLabel } from "@/lib/game-logic/answer-display";
+import { buildTTSFeedbackText, useAutoPlayTTS } from "@/lib/tts-helpers";
 import { cn } from "@/lib/utils";
 import { playSound } from "@/lib/sounds";
 
@@ -77,6 +78,44 @@ export function DuelPanel({
     () => otherPlayers.find((p) => p.id === adversaryId) ?? null,
     [otherPlayers, adversaryId],
   );
+
+  // Lecture auto TTS pour la question du duel (4 choix → "A, B, C ou D"),
+  // puis lecture du feedback dès que le joueur a répondu.
+  const isWrongFeedback =
+    phase === "feedback" &&
+    duelQuestion !== null &&
+    lastSelectedIdx !== null &&
+    lastCorrectIdx !== null &&
+    lastSelectedIdx !== lastCorrectIdx;
+  const isCorrectFeedback =
+    phase === "feedback" &&
+    duelQuestion !== null &&
+    lastSelectedIdx !== null &&
+    lastCorrectIdx !== null &&
+    lastSelectedIdx === lastCorrectIdx;
+  const ttsFeedback = isWrongFeedback
+    ? buildTTSFeedbackText({
+        isCorrect: false,
+        correctLabel: resolveCorrectAnswerLabel(
+          duelQuestion!.reponses[lastCorrectIdx!]?.text ?? null,
+          duelQuestion!.explication ?? null,
+        ),
+        explanation: duelQuestion!.explication ?? null,
+      })
+    : isCorrectFeedback
+      ? buildTTSFeedbackText({
+          isCorrect: true,
+          explanation: duelQuestion!.explication ?? null,
+        })
+      : null;
+  useAutoPlayTTS({
+    enonce:
+      phase === "question" || phase === "feedback"
+        ? (duelQuestion?.enonce ?? "")
+        : "",
+    choices: duelQuestion?.reponses.map((r) => r.text) ?? [],
+    feedbackText: ttsFeedback,
+  });
 
   // Le bot choisit automatiquement un adversaire
   useEffect(() => {
@@ -194,14 +233,8 @@ export function DuelPanel({
     [phase, adversary, handleAnswerInternal],
   );
 
-  const handleTimerEnd = useCallback(() => {
-    if (phase !== "question") return;
-    if (adversary?.isBot) return;
-    if (!duelQuestion) return;
-    const correctIdx = duelQuestion.reponses.findIndex((r) => r.correct);
-    const wrongIdx = correctIdx === 0 ? 1 : 0;
-    handleAnswerInternal(wrongIdx);
-  }, [phase, adversary, duelQuestion, handleAnswerInternal]);
+  // Plus de handleTimerEnd : le duel n'a PAS de timer (cf. Bug #4 du
+  // plan post-tests). Le joueur réfléchit tranquillement.
 
   // -------- Rendu --------
 
@@ -263,11 +296,6 @@ export function DuelPanel({
         <p className="font-display text-sm font-bold text-navy">
           {adversary.pseudo} joue {adversary.isBot && "(bot)"}
         </p>
-        <Timer
-          duration={DUEL_TIMER_SECONDS}
-          onEnd={handleTimerEnd}
-          paused={phase !== "question"}
-        />
       </div>
 
       <QuestionCard
@@ -275,6 +303,16 @@ export function DuelPanel({
         enonce={duelQuestion.enonce}
         difficulte={duelQuestion.difficulte}
       />
+      <div className="flex justify-center">
+        <SpeakerButton
+          text={duelQuestion.enonce}
+          choices={duelQuestion.reponses.map((r) => r.text)}
+          explanation={
+            phase === "feedback" ? duelQuestion.explication : undefined
+          }
+          autoPlay={false}
+        />
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         {duelQuestion.reponses.map((r, idx) => {

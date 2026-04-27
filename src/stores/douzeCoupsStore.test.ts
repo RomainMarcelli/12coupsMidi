@@ -95,14 +95,34 @@ describe("douzeCoupsStore", () => {
     expect(useDouzeCoupsStore.getState().phase).toBe("jeu1");
   });
 
-  it("recordWrong bascule en duel à 2 erreurs", () => {
+  it("recordWrong bascule en sas transition_duel à 2 erreurs", () => {
     init4();
     const id = useDouzeCoupsStore.getState().players[0]!.id;
     useDouzeCoupsStore.getState().recordWrong(id, "jeu1");
     useDouzeCoupsStore.getState().recordWrong(id, "jeu1");
     const state = useDouzeCoupsStore.getState();
-    expect(state.phase).toBe("duel");
+    // Sas de 20 s avec bouton "Passer au duel" pour permettre la lecture
+    // de la bonne réponse + explication avant la bascule effective.
+    expect(state.phase).toBe("transition_duel");
     expect(state.pendingDuel?.challengerId).toBe(id);
+  });
+
+  it("startDuelPhase fait passer le sas à la phase duel", () => {
+    init4();
+    const id = useDouzeCoupsStore.getState().players[0]!.id;
+    useDouzeCoupsStore.getState().recordWrong(id, "jeu1");
+    useDouzeCoupsStore.getState().recordWrong(id, "jeu1");
+    expect(useDouzeCoupsStore.getState().phase).toBe("transition_duel");
+    useDouzeCoupsStore.getState().startDuelPhase();
+    expect(useDouzeCoupsStore.getState().phase).toBe("duel");
+  });
+
+  it("startDuelPhase est idempotent hors phase transition_duel", () => {
+    init4();
+    // init4 lance startJeu1 → phase "jeu1"
+    expect(useDouzeCoupsStore.getState().phase).toBe("jeu1");
+    useDouzeCoupsStore.getState().startDuelPhase();
+    expect(useDouzeCoupsStore.getState().phase).toBe("jeu1");
   });
 
   it("resolveDuel (bonne réponse) élimine le challenger et passe à jeu2", () => {

@@ -19,10 +19,12 @@ import {
   Trophy,
   Upload,
   User,
+  Users,
   Volume2,
   VolumeX,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { VoiceInstallHelp } from "@/components/parametres/VoiceInstallHelp";
 import { Button } from "@/components/ui/button";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import {
@@ -334,10 +336,15 @@ function VoiceSelector({
   onPatch: (p: Partial<UserSettings>) => void;
 }) {
   const settings = useSettingsStore((s) => s.settings);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [allVoices, setAllVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [loaded, setLoaded] = useState(false);
+  // Toggle pour montrer toutes les voix (français inclus + autres langues).
+  // Utile sur Chrome desktop qui propose une dizaine de voix Google neurales
+  // dans d'autres langues, certaines très naturelles même pour lire du fr.
+  const [showAllLanguages, setShowAllLanguages] = useState(false);
 
-  // Au mount : on charge la liste des voix (avec fallback voiceschanged Chrome).
+  // Au mount : on charge la liste complète des voix (avec fallback
+  // voiceschanged Chrome). On stocke TOUT, le filtre se fait au render.
   useEffect(() => {
     if (!isTtsSupported()) {
       setLoaded(true);
@@ -346,7 +353,7 @@ function VoiceSelector({
     let cancelled = false;
     loadVoices().then((all) => {
       if (cancelled) return;
-      setVoices(frenchVoices(all));
+      setAllVoices(all);
       setLoaded(true);
     });
     return () => {
@@ -354,6 +361,8 @@ function VoiceSelector({
       ttsStop();
     };
   }, []);
+
+  const voices = showAllLanguages ? allVoices : frenchVoices(allVoices);
 
   const selectedUri =
     settings.ttsVoiceUri ?? initial.ttsVoiceUri ?? null;
@@ -395,14 +404,32 @@ function VoiceSelector({
       </div>
 
       {loaded && voices.length === 0 ? (
-        <p className="rounded-md border border-buzz/40 bg-buzz/10 px-3 py-2 text-xs text-buzz">
-          Aucune voix française détectée. Installe une voix française dans les
-          paramètres système de ton appareil.
-        </p>
+        <div className="flex flex-col gap-2">
+          <p className="rounded-md border border-buzz/40 bg-buzz/10 px-3 py-2 text-xs text-buzz">
+            Aucune voix française détectée. Tu peux essayer{" "}
+            <strong>Toutes les langues</strong> ci-dessous, ou installer une
+            voix française dans les paramètres système de ton appareil.
+          </p>
+          <label className="flex items-center gap-2 text-xs text-foreground/70">
+            <input
+              type="checkbox"
+              checked={showAllLanguages}
+              onChange={(e) => setShowAllLanguages(e.target.checked)}
+              className="accent-gold"
+            />
+            Afficher toutes les langues ({allVoices.length} voix)
+          </label>
+        </div>
       ) : (
         <>
           <label className="flex flex-col gap-1 text-sm">
-            <span className="font-semibold text-foreground/80">Voix</span>
+            <span className="flex items-center justify-between text-foreground/80">
+              <span className="font-semibold">Voix</span>
+              <span className="text-[11px] text-foreground/50">
+                {voices.length} dispo{voices.length > 1 ? "s" : ""}
+                {showAllLanguages ? " (toutes langues)" : " (français)"}
+              </span>
+            </span>
             <select
               value={selectedUri ?? ""}
               onChange={(e) =>
@@ -418,6 +445,25 @@ function VoiceSelector({
               ))}
             </select>
           </label>
+
+          <label className="flex items-center gap-2 text-xs text-foreground/70">
+            <input
+              type="checkbox"
+              checked={showAllLanguages}
+              onChange={(e) => setShowAllLanguages(e.target.checked)}
+              className="accent-gold"
+            />
+            Afficher aussi les voix d&apos;autres langues
+            <span className="text-[10px] text-foreground/40">
+              ({allVoices.length - frenchVoices(allVoices).length} en plus)
+            </span>
+          </label>
+
+          {/* Notice install voix : proactive si on a très peu de voix FR
+              (≤ 2), sinon discrète. Modal avec mini-tuto Win/Mac/Android. */}
+          <VoiceInstallHelp
+            proactive={frenchVoices(allVoices).length <= 2}
+          />
 
           <SliderRow
             label="Vitesse"
@@ -1023,6 +1069,25 @@ function AccountPanel({
         <Cell label="Niveau" value={`${niveau}`} />
         <Cell label="Rôle" value={role === "admin" ? "Admin" : "Joueur"} />
       </ul>
+      <a
+        href="/parametres/joueurs"
+        className="mt-2 inline-flex items-center justify-between gap-2 rounded-xl border border-border bg-background/40 px-4 py-3 transition-colors hover:border-gold/50 hover:bg-gold/5"
+      >
+        <span className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold/15 text-gold-warm">
+            <Users className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span className="flex flex-col">
+            <span className="font-display text-sm font-bold text-foreground">
+              Mes joueurs sauvegardés
+            </span>
+            <span className="text-xs text-foreground/60">
+              Gérer pseudos & photos pour les parties locales
+            </span>
+          </span>
+        </span>
+        <span className="text-xl text-foreground/40">›</span>
+      </a>
     </section>
   );
 }

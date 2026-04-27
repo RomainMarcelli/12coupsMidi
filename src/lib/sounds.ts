@@ -11,7 +11,16 @@
  *   playSound("ding");
  */
 
-type SoundName = "tick" | "ding" | "buzz" | "win" | "lose" | "tension" | "duel";
+type SoundName =
+  | "tick"
+  | "ding"
+  | "buzz"
+  | "win"
+  | "lose"
+  | "tension"
+  | "duel"
+  | "yellow-warn"
+  | "red-alert";
 
 let ctx: AudioContext | null = null;
 
@@ -123,6 +132,22 @@ const SOUNDS: Record<SoundName, () => void> = {
       { freq: 880, duration: 0.12, type: "square", gain: 0.35 },
       { freq: 440, duration: 0.12, type: "square", gain: 0.35, delay: 0.15 },
       { freq: 110, duration: 0.6, type: "sawtooth", gain: 0.3, delay: 0.3 },
+    ]),
+  // Yellow warn — bip court bi-tons "ding-dong" (avertissement style
+  // métro), pas trop dramatique. Pour l'overlay JAUNE.
+  "yellow-warn": () =>
+    playTones([
+      { freq: 660, duration: 0.18, type: "triangle", gain: 0.32 },
+      { freq: 880, duration: 0.22, type: "triangle", gain: 0.32, delay: 0.2 },
+    ]),
+  // Red alert — sirène 2 tons descendante (style alerte/police), 2
+  // cycles. Plus impactant que le buzz simple. Pour l'overlay ROUGE.
+  "red-alert": () =>
+    playTones([
+      { freq: 880, duration: 0.28, type: "sawtooth", gain: 0.35 },
+      { freq: 440, duration: 0.28, type: "sawtooth", gain: 0.35, delay: 0.3 },
+      { freq: 880, duration: 0.28, type: "sawtooth", gain: 0.35, delay: 0.65 },
+      { freq: 440, duration: 0.4, type: "sawtooth", gain: 0.35, delay: 0.95 },
     ]),
 };
 
