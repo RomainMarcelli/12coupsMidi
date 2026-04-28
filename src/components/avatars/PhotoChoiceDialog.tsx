@@ -45,11 +45,40 @@ export function PhotoChoiceDialog({
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  // J4.3 — Détection passive de la disponibilité caméra :
+  //   1. UA mobile → on assume qu'il y a une caméra.
+  //   2. Desktop  → enumerateDevices() liste les périphériques SANS
+  //      déclencher la permission utilisateur (≠ getUserMedia qui
+  //      promptait). Note : sans permission, les `label` sont vides
+  //      mais le `kind` reste utilisable, c'est exactement ce qu'on
+  //      veut ici.
+  const [hasCamera, setHasCamera] = useState(false);
 
   useEffect(() => {
     if (typeof navigator === "undefined") return;
-    setIsMobile(/Mobi|Android/i.test(navigator.userAgent));
+    let cancelled = false;
+    async function detect() {
+      const isMobileUA = /Mobi|Android/i.test(navigator.userAgent);
+      if (isMobileUA) {
+        if (!cancelled) setHasCamera(true);
+        return;
+      }
+      if (!navigator.mediaDevices?.enumerateDevices) {
+        if (!cancelled) setHasCamera(false);
+        return;
+      }
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasVideoInput = devices.some((d) => d.kind === "videoinput");
+        if (!cancelled) setHasCamera(hasVideoInput);
+      } catch {
+        if (!cancelled) setHasCamera(false);
+      }
+    }
+    void detect();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -117,8 +146,12 @@ export function PhotoChoiceDialog({
               <ChoiceCard
                 icon={Camera}
                 title="Prendre une photo"
-                desc={isMobile ? "Ouvre l'appareil photo" : "Mobile uniquement"}
-                disabled={!isMobile || uploading}
+                desc={
+                  hasCamera
+                    ? "Ouvre l'appareil photo"
+                    : "Aucune caméra détectée"
+                }
+                disabled={!hasCamera || uploading}
                 onClick={() => cameraInputRef.current?.click()}
                 accent="gold"
               />

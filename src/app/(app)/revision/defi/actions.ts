@@ -159,6 +159,13 @@ export interface ChallengeResult {
 /**
  * H3 — Soumet le résultat d'un défi joué. Une seule soumission par
  * couple (user, date) — la PRIMARY KEY garantit l'unicité côté BDD.
+ *
+ * K1 — Ajout de logs serveur + vérification post-INSERT pour
+ * diagnostiquer le bug "résultat non enregistré sans erreur visible".
+ * On chaîne `.select(...).maybeSingle()` pour forcer Supabase à
+ * retourner la ligne insérée — si elle est null sans `error`, ça
+ * signifie qu'une RLS a filtré silencieusement le retour (cas
+ * théorique, mais ceinture-bretelle).
  */
 export async function submitDailyChallengeResult(input: {
   date: string;
@@ -172,15 +179,44 @@ export async function submitDailyChallengeResult(input: {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { error } = await supabase.from("daily_challenge_results").insert({
-    user_id: user.id,
+  console.log("[defi:server] submitDailyChallengeResult start", {
+    userId: user.id,
     date: input.date,
-    correct_count: input.correctCount,
-    total_count: input.totalCount,
-    answers: input.answers as unknown as Json,
+    correctCount: input.correctCount,
+    totalCount: input.totalCount,
+    answersLen: input.answers.length,
   });
 
-  if (error) return { status: "error", message: error.message };
+  const { data, error } = await supabase
+    .from("daily_challenge_results")
+    .insert({
+      user_id: user.id,
+      date: input.date,
+      correct_count: input.correctCount,
+      total_count: input.totalCount,
+      answers: input.answers as unknown as Json,
+    })
+    .select("user_id, date, correct_count, total_count")
+    .maybeSingle();
+
+  if (error) {
+    console.error("[defi:server] INSERT error", {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+    });
+    return { status: "error", message: error.message };
+  }
+  if (!data) {
+    console.error("[defi:server] INSERT returned no row (RLS filter ?)");
+    return {
+      status: "error",
+      message:
+        "L'enregistrement n'a retourné aucune ligne (problème RLS suspecté). Contacte l'admin.",
+    };
+  }
+  console.log("[defi:server] INSERT OK", data);
   revalidatePath("/revision/defi");
   revalidatePath("/revision");
   return { status: "ok" };
@@ -197,9 +233,15 @@ export interface DailyStats {
   bestStreak: number;
   /** [{ date, percent }] sur les 30 derniers jours. */
   last30: Array<{ date: string; percent: number }>;
-  /** I3.2 — Comptes pour le PieChart "Parfaits / Réussis / Ratés". */
+  /**
+   * J3.2 — Compteurs pour le PieChart "Répartition des défis" en
+   * 5 buckets de score. Plus granulaire que les 3 d'I3.2 — la
+   * tranche 50-99 % était trop large.
+   */
   perfectCount: number;
-  passedCount: number;
+  excellentCount: number;
+  goodCount: number;
+  averageCount: number;
   failedCount: number;
 }
 
@@ -287,16 +329,20 @@ export async function fetchDailyStats(): Promise<
         : 0,
   }));
 
-  // I3.2 — Comptes pour le camembert : on classe chaque résultat
-  // selon son ratio. Parfait = 100 %, Réussi = 50-99 %, Raté = < 50 %.
+  // J3.2 — Comptes pour le camembert en 5 buckets : Parfaits (100%),
+  // Excellents (80-99%), Bons (60-79%), Moyens (40-59%), Ratés (<40%).
   let perfectCount = 0;
-  let passedCount = 0;
+  let excellentCount = 0;
+  let goodCount = 0;
+  let averageCount = 0;
   let failedCount = 0;
   for (const r of all) {
     if (r.total_count <= 0) continue;
-    const ratio = r.correct_count / r.total_count;
-    if (ratio >= 1) perfectCount += 1;
-    else if (ratio >= 0.5) passedCount += 1;
+    const pct = (r.correct_count / r.total_count) * 100;
+    if (pct >= 100) perfectCount += 1;
+    else if (pct >= 80) excellentCount += 1;
+    else if (pct >= 60) goodCount += 1;
+    else if (pct >= 40) averageCount += 1;
     else failedCount += 1;
   }
 
@@ -309,7 +355,9 @@ export async function fetchDailyStats(): Promise<
       bestStreak,
       last30,
       perfectCount,
-      passedCount,
+      excellentCount,
+      goodCount,
+      averageCount,
       failedCount,
     },
   };
@@ -343,20 +391,29 @@ export async function fetchMonthChallenges(input: {
   const monthStr = String(input.month).padStart(2, "0");
   const yearStr = String(input.year);
   const start = `${yearStr}-${monthStr}-01`;
-  const end = `${yearStr}-${monthStr}-31`;
+  // K1bis — Bug critique : `end = "${yearStr}-${monthStr}-31"` produit
+  // une date invalide pour les mois ≤ 30 jours (avril, juin, septembre,
+  // novembre, février). Postgres rejette `'2026-04-31'::date` avec
+  // "date/time field value out of range" → la requête plante
+  // silencieusement (le code ne checke pas l'erreur), `results` est
+  // null, et le calendrier ne montre AUCUN jour en vert même quand
+  // les rows existent. Fix : utiliser `< start du mois suivant`.
+  const nextMonthYear = input.month === 12 ? input.year + 1 : input.year;
+  const nextMonthNum = input.month === 12 ? 1 : input.month + 1;
+  const startNextMonth = `${nextMonthYear}-${String(nextMonthNum).padStart(2, "0")}-01`;
 
   const [{ data: challenges }, { data: results }] = await Promise.all([
     supabase
       .from("daily_challenges")
       .select("date")
       .gte("date", start)
-      .lte("date", end),
+      .lt("date", startNextMonth),
     supabase
       .from("daily_challenge_results")
       .select("date, correct_count, total_count")
       .eq("user_id", user.id)
       .gte("date", start)
-      .lte("date", end),
+      .lt("date", startNextMonth),
   ]);
 
   const days: Record<

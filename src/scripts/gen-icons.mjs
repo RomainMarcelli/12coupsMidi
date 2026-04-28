@@ -1,5 +1,10 @@
 /**
- * Génère toutes les icônes PWA + favicon depuis `public/logo.png`.
+ * Génère toutes les icônes PWA + favicon depuis `public/logos/generic/logo.png`.
+ *
+ * K5 — La source est le logo générique (`public/logos/generic/logo.png`),
+ * fourni en PNG par l'utilisateur. Pour mettre à jour les icônes
+ * après un changement de logo, remplace ce fichier puis lance
+ * `npm run gen-icons`.
  *
  * Sortie (toutes à la racine de `public/`) :
  *   - favicon.ico            (16 + 32 + 48, ICO multi-résolution PNG-inside)
@@ -23,7 +28,9 @@ const publicDir = resolve(projectRoot, "public");
 // Fond pour les versions maskable / Apple : navy nuit (cohérent avec dark theme).
 const MASKABLE_BG = "#0A0E27";
 
-const sourcePng = await readFile(resolve(publicDir, "logo.png"));
+const sourcePng = await readFile(
+  resolve(publicDir, "logos/generic/logo.png"),
+);
 
 // ---------------------------------------------------------------------------
 // PNG transparents (favicons + PWA "any")

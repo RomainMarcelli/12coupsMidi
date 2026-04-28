@@ -45,8 +45,10 @@ export function QuestionsTable({ questions, categories }: QuestionsTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border">
-      <table className="w-full divide-y divide-border text-sm">
+    /* K3.2 — overflow-x-auto pour permettre le scroll horizontal en
+       mobile. Sans ça, la table était coupée à droite sur < 640px. */
+    <div className="overflow-x-auto rounded-xl border border-border">
+      <table className="w-full min-w-[640px] divide-y divide-border text-sm">
         <thead className="bg-muted text-xs uppercase tracking-wider text-foreground/60">
           <tr>
             <th className="px-4 py-3 text-left">Type</th>

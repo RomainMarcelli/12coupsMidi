@@ -28,10 +28,9 @@ export function AvatarsAdminClient({ initialAvatars, initialError }: Props) {
   const [error, setError] = useState<string | null>(initialError);
   const [uploading, setUploading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  // I4.1 — État du lightbox : null = fermé, sinon l'avatar à afficher.
-  const [lightboxAvatar, setLightboxAvatar] = useState<CustomAvatarRow | null>(
-    null,
-  );
+  // I4.1 + J4.1 — État du lightbox : index dans `avatars` (-1 = fermé).
+  // Permet la navigation flèches/swipe entre les avatars.
+  const [lightboxIndex, setLightboxIndex] = useState<number>(-1);
   const [, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -130,7 +129,7 @@ export function AvatarsAdminClient({ initialAvatars, initialError }: Props) {
           </p>
         ) : (
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-7">
-            {avatars.map((a) => (
+            {avatars.map((a, i) => (
               <li
                 key={a.id}
                 className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
@@ -140,7 +139,7 @@ export function AvatarsAdminClient({ initialAvatars, initialError }: Props) {
                     image et fournit une vraie modal. */}
                 <button
                   type="button"
-                  onClick={() => setLightboxAvatar(a)}
+                  onClick={() => setLightboxIndex(i)}
                   className="block h-full w-full"
                   aria-label="Voir l'avatar en grand"
                   title="Voir en grand"
@@ -182,17 +181,23 @@ export function AvatarsAdminClient({ initialAvatars, initialError }: Props) {
         confirmVariant="danger"
       />
 
-      {/* I4.1 — Lightbox d'aperçu (image agrandie + tags + bouton supprimer). */}
+      {/* I4.1 + J4.1 — Lightbox avec navigation flèches/swipe entre
+          tous les avatars de la liste. */}
       <AvatarLightbox
-        open={lightboxAvatar !== null}
-        url={lightboxAvatar?.url ?? null}
-        tags={lightboxAvatar?.tags ?? []}
-        uploadedAtIso={lightboxAvatar?.createdAt ?? null}
-        onClose={() => setLightboxAvatar(null)}
+        open={lightboxIndex >= 0}
+        avatars={avatars.map((a) => ({
+          url: a.url,
+          tags: a.tags,
+          uploadedAtIso: a.createdAt,
+        }))}
+        currentIndex={lightboxIndex}
+        onNavigate={(i) => setLightboxIndex(i)}
+        onClose={() => setLightboxIndex(-1)}
         onDelete={() => {
-          if (lightboxAvatar) {
-            setDeleteId(lightboxAvatar.id);
-            setLightboxAvatar(null);
+          const a = avatars[lightboxIndex];
+          if (a) {
+            setDeleteId(a.id);
+            setLightboxIndex(-1);
           }
         }}
       />

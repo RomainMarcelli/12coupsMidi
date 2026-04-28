@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
@@ -45,7 +45,13 @@ import { QuizPlayer } from "./_components/QuizPlayer";
 import { FlashcardPlayer } from "./_components/FlashcardPlayer";
 import { ErrorsReader } from "./_components/ErrorsReader";
 import { FavoriteIdsContext } from "./_components/favorite-ids-context";
+import {
+  ReviewBatcherContext,
+  type ReviewBatcherValue,
+} from "./_components/review-batcher-context";
+import { markErrorsAsReviewed } from "./actions";
 import { shuffle } from "@/lib/utils/array";
+import { pushRecentIds, readRecentIds } from "@/lib/revision/recent-ids";
 
 export interface CategoryRow {
   id: number;
@@ -97,46 +103,113 @@ const VALID_MODES: ReadonlyArray<Mode> = [
 ];
 
 export function RevisionClient(props: RevisionClientProps) {
-  // F1.1 — Support du param `?mode=...` pour permettre la navigation
-  // directe vers "Retravailler" (depuis le bouton "Voir mes erreurs"
-  // de la fin de session) ou n'importe quel sous-mode.
+  // J1.1 — URL = source de vérité unique pour `mode`.
+  //
+  // Avant : useState(mode) + useEffect [searchParams] resync. Bug : le
+  // useEffect se déclenchait après une revalidatePath (qui change la
+  // référence de searchParams sans changer l'URL) et résettait mode
+  // depuis une URL stale → utilisateur éjecté vers retravailler en
+  // plein Marathon. Détails : docs/BUG_J1_1_INVESTIGATION.md.
+  //
+  // Après : mode est dérivé directement de l'URL, et `setMode` fait
+  // toujours un `router.push`. URL et UI restent toujours synchros.
   const searchParams = useSearchParams();
   const router = useRouter();
   // I1.5 — Set figé des IDs favoris, partagé à tous les QuizPlayer enfants
   // via FavoriteIdsContext.
   const favoriteIdSet = new Set(props.favoriteIds);
-  const initialMode: Mode = (() => {
-    const m = searchParams.get("mode");
-    if (m && (VALID_MODES as ReadonlyArray<string>).includes(m)) return m as Mode;
-    return "hub";
-  })();
-  const [mode, setMode] = useState<Mode>(initialMode);
 
-  // Si l'URL change après mount (back/forward), on resync.
-  useEffect(() => {
-    const m = searchParams.get("mode");
-    if (m && (VALID_MODES as ReadonlyArray<string>).includes(m)) {
-      setMode(m as Mode);
-    }
-  }, [searchParams]);
+  const urlMode = searchParams.get("mode");
+  const mode: Mode =
+    urlMode && (VALID_MODES as ReadonlyArray<string>).includes(urlMode)
+      ? (urlMode as Mode)
+      : "hub";
 
-  // I1.2 — Quand l'utilisateur entre dans un mode qui dépend des
-  // wrong_answers (lecture ou refaire), on force un refresh RSC pour
-  // re-fetcher les données serveur. Sinon, après un Marathon où il
-  // vient de générer de nouvelles erreurs, la liste reste vide tant
-  // qu'il n'a pas reload manuellement la page (les props sont figées
-  // au mount).
+  // J1.2 — File centrale pour le batcher de "marquer comme révisé".
+  // QuizPlayer y pousse via le contexte ; le bouton "Retour aux modes"
+  // appelle flush() avant de naviguer pour éviter de perdre les bonnes
+  // réponses non encore validées par "Suivant".
+  const pendingReviewedRef = useRef<Set<string>>(new Set());
+
+  const reviewBatcher: ReviewBatcherValue = useMemo(
+    () => ({
+      addPending: (id: string) => {
+        pendingReviewedRef.current.add(id);
+      },
+      flush: () => {
+        if (pendingReviewedRef.current.size === 0) return;
+        const ids = Array.from(pendingReviewedRef.current);
+        pendingReviewedRef.current = new Set();
+        // Fire-and-forget : on ne bloque pas la navigation sur l'aller-
+        // retour serveur. Si l'INSERT/DELETE échoue côté BDD, le user
+        // garde ses erreurs en mémoire — pas pire qu'avant.
+        void markErrorsAsReviewed(ids);
+      },
+      flushViaBeacon: () => {
+        const ids = Array.from(pendingReviewedRef.current);
+        if (ids.length === 0) return;
+        pendingReviewedRef.current = new Set();
+        const blob = new Blob([JSON.stringify({ questionIds: ids })], {
+          type: "application/json",
+        });
+        if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+          navigator.sendBeacon("/api/revision/mark-reviewed", blob);
+        } else {
+          void fetch("/api/revision/mark-reviewed", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ questionIds: ids }),
+            keepalive: true,
+          }).catch(() => undefined);
+        }
+      },
+    }),
+    [],
+  );
+
+  // J1.2 — beforeunload / pagehide / visibilitychange remontés ici
+  // (avant : dans QuizPlayer). On profite du provider parent : couvre
+  // tous les modes, pas seulement quand QuizPlayer est monté.
   useEffect(() => {
-    if (mode === "erreurs-lecture" || mode === "retravailler") {
-      router.refresh();
+    function flushBeacon() {
+      reviewBatcher.flushViaBeacon();
     }
-  }, [mode, router]);
+    function onVisibilityChange() {
+      if (document.visibilityState === "hidden") flushBeacon();
+    }
+    window.addEventListener("beforeunload", flushBeacon);
+    window.addEventListener("pagehide", flushBeacon);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("beforeunload", flushBeacon);
+      window.removeEventListener("pagehide", flushBeacon);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [reviewBatcher]);
+
+  const setMode = useCallback(
+    (newMode: Mode) => {
+      // J1.2 — Flush immédiat avant toute navigation : si l'utilisateur
+      // a répondu correctement à une question en mode Refaire mais n'a
+      // pas cliqué "Suivant", on déclenche maintenant le DELETE BDD.
+      reviewBatcher.flush();
+      if (newMode === "hub") {
+        // J1.4 — "Retour aux modes" → URL nettoyée, plus de query stale.
+        router.push("/revision");
+      } else {
+        router.push(`/revision?mode=${newMode}`);
+      }
+    },
+    [router, reviewBatcher],
+  );
 
   if (mode === "hub") {
     return (
-      <FavoriteIdsContext.Provider value={favoriteIdSet}>
-        <Hub onPick={setMode} props={props} />
-      </FavoriteIdsContext.Provider>
+      <ReviewBatcherContext.Provider value={reviewBatcher}>
+        <FavoriteIdsContext.Provider value={favoriteIdSet}>
+          <Hub onPick={setMode} props={props} />
+        </FavoriteIdsContext.Provider>
+      </ReviewBatcherContext.Provider>
     );
   }
 
@@ -147,6 +220,7 @@ export function RevisionClient(props: RevisionClientProps) {
   const remountKey = searchParams.toString();
 
   return (
+    <ReviewBatcherContext.Provider value={reviewBatcher}>
     <FavoriteIdsContext.Provider value={favoriteIdSet}>
       <div className="flex flex-1 flex-col">
         <div className="mx-auto w-full max-w-4xl px-4 pt-4">
@@ -177,6 +251,7 @@ export function RevisionClient(props: RevisionClientProps) {
         {mode === "favoris" && <FavorisMode />}
       </div>
     </FavoriteIdsContext.Provider>
+    </ReviewBatcherContext.Provider>
   );
 }
 
@@ -534,6 +609,9 @@ function MarathonLibreMode() {
         difficulties: [],
         types: ["face_a_face"],
         count: 50,
+        // J1.5 — Évite les questions déjà tirées dans les 5 dernières
+        // sessions (mémoire courte terme persistée en localStorage).
+        excludeQuestionIds: readRecentIds(),
       });
       if (res.status === "error") {
         setError(res.message);
@@ -542,6 +620,7 @@ function MarathonLibreMode() {
           "Aucune question à réponse libre disponible. Vérifie que des questions de type `face_a_face` existent en base.",
         );
       } else {
+        pushRecentIds(res.questions.map((q) => q.questionId));
         setQuestions(res.questions);
       }
     });
@@ -628,12 +707,18 @@ function ConfigAndPlay({
         difficulties: selectedDiffs,
         types: selectedTypes,
         count,
+        // J1.5 — Anti-répétition courte terme : on exclut les IDs vus
+        // dans les 5 dernières sessions Marathon/Apprendre. Si après
+        // exclusion le pool est trop petit, le serveur retombe sur le
+        // pool complet (cf. fetchQuestionsForRevision).
+        excludeQuestionIds: readRecentIds(),
       });
       if (res.status === "error") {
         setError(res.message);
       } else if (res.questions.length === 0) {
         setError("Aucune question ne correspond à ces filtres.");
       } else {
+        pushRecentIds(res.questions.map((q) => q.questionId));
         setQuestions(res.questions);
       }
     });

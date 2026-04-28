@@ -46,6 +46,12 @@ export function QuizzClient({ elements }: Props) {
   const [restrictTo, setRestrictTo] = useState<Set<number> | null>(null);
   const [revealed, setRevealed] = useState<Set<number>>(new Set());
   const [abandoned, setAbandoned] = useState<Set<number>>(new Set());
+  // J2.3 — Éléments déjà trouvés à la session PRÉCÉDENTE (mode
+  // "Recommencer ce qui m'a manqué"). Affichés colorés dans la grille
+  // mais hors `targetElements` (donc pas comptabilisés). Si l'user les
+  // retape, on toast "déjà trouvé" en jaune au lieu de "n'existe pas"
+  // en rouge.
+  const [previouslyFound, setPreviouslyFound] = useState<Set<number>>(new Set());
   const [input, setInput] = useState("");
   const [justFound, setJustFound] = useState<number | null>(null);
   // G3.2 + H2.4 — Toast fugace (1.5 s) avec 2 niveaux :
@@ -119,6 +125,15 @@ export function QuizzClient({ elements }: Props) {
     if (!value) return;
     const match = matchElementByName(value, targetElements);
     if (!match) {
+      // J2.3 — Avant le toast rouge "n'existe pas", on vérifie si
+      // c'est un élément déjà trouvé à la session précédente. Si oui,
+      // toast jaune cohérent avec H2.4.
+      const matchInAll = matchElementByName(value, elements);
+      if (matchInAll && previouslyFound.has(matchInAll.numero_atomique)) {
+        showToast("warning", `Tu as déjà trouvé ${matchInAll.nom} !`);
+        setInput("");
+        return;
+      }
       showToast("error", `Aucun élément ne correspond à "${value}"`);
       playSound("buzz");
       return;
@@ -168,6 +183,7 @@ export function QuizzClient({ elements }: Props) {
     setRevealed(new Set());
     setAbandoned(new Set());
     setRestrictTo(null);
+    setPreviouslyFound(new Set());
     setInput("");
     setMode("playing");
     inputRef.current?.focus();
@@ -179,6 +195,10 @@ export function QuizzClient({ elements }: Props) {
       handleRestartAll();
       return;
     }
+    // J2.3 — On capture ce que l'user avait trouvé avant l'abandon
+    // pour le pré-afficher coloré dans la grille de la nouvelle
+    // session ("déjà acquis"). Le quizz ne demande que les manqués.
+    setPreviouslyFound(new Set(revealed));
     setRestrictTo(new Set(missed));
     setRevealed(new Set());
     setAbandoned(new Set());
@@ -243,7 +263,15 @@ export function QuizzClient({ elements }: Props) {
       <PeriodicGrid
         elements={elements}
         mode="quizz"
-        revealed={revealed}
+        revealed={
+          // J2.3 — En mode "Recommencer ce qui m'a manqué", on affiche
+          // les éléments précédemment trouvés comme acquis (colorés)
+          // sans qu'ils comptent dans la session courante. Union :
+          // revealed (cette session) ∪ previouslyFound (héritage).
+          previouslyFound.size > 0
+            ? new Set([...revealed, ...previouslyFound])
+            : revealed
+        }
         abandoned={abandoned}
         justFound={justFound}
       />

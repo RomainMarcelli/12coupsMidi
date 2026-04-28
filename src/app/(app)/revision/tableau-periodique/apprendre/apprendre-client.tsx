@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, BookOpen, List } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { PeriodicGrid } from "../_components/PeriodicGrid";
 import { FamilyLegend } from "../_components/FamilyLegend";
@@ -16,18 +16,11 @@ interface Props {
 export function ApprendreClient({ elements }: Props) {
   const [filterFamily, setFilterFamily] = useState<PeriodicFamily | null>(null);
   const [selected, setSelected] = useState<PeriodicElement | null>(null);
-  // I2.2 — Panel latéral droit (liste filtrée). S'ouvre auto au clic
-  // sur une famille de la légende ; peut aussi être ouvert manuellement
-  // via le bouton "Liste" pour voir tous les éléments triés.
+  // J2.1 — Panel latéral : ouverture/fermeture pilotée UNIQUEMENT par
+  // la languette latérale (cliquer sur une famille filtre les couleurs
+  // du tableau, mais ne touche pas à l'état du panel — c'est l'user
+  // qui décide quand le panel apparaît). Default fermé.
   const [panelOpen, setPanelOpen] = useState(false);
-
-  function handlePickFamily(f: PeriodicFamily | null) {
-    setFilterFamily(f);
-    // Ouverture auto quand on choisit une famille (même si re-clic
-    // pour réactiver une famille déjà active). Si on désélectionne
-    // (`null`), on ferme — sauf si l'user l'a ouvert manuellement.
-    setPanelOpen(f !== null);
-  }
 
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-4 p-3 sm:p-6 lg:p-8">
@@ -39,14 +32,6 @@ export function ApprendreClient({ elements }: Props) {
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Retour
         </Link>
-        <button
-          type="button"
-          onClick={() => setPanelOpen((v) => !v)}
-          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-sky/40 bg-sky/5 px-3 text-sm font-bold text-sky transition-colors hover:border-sky hover:bg-sky/10"
-        >
-          <List className="h-4 w-4" aria-hidden="true" />
-          {panelOpen ? "Masquer la liste" : "Afficher la liste"}
-        </button>
       </div>
 
       <header className="flex flex-col gap-2">
@@ -59,12 +44,12 @@ export function ApprendreClient({ elements }: Props) {
         </h1>
         <p className="text-sm text-foreground/65">
           Clique sur une case pour voir les détails. Filtre par famille
-          en cliquant sur la légende — la liste latérale s&apos;ouvrira
-          automatiquement.
+          en cliquant sur la légende. Le panneau de droite (languette)
+          ouvre la liste détaillée des éléments.
         </p>
       </header>
 
-      <FamilyLegend activeFamily={filterFamily} onPick={handlePickFamily} />
+      <FamilyLegend activeFamily={filterFamily} onPick={setFilterFamily} />
 
       <PeriodicGrid
         elements={elements}
@@ -84,6 +69,7 @@ export function ApprendreClient({ elements }: Props) {
         elements={elements}
         activeFamily={filterFamily}
         open={panelOpen}
+        onToggle={() => setPanelOpen((v) => !v)}
         onClose={() => setPanelOpen(false)}
         onPickElement={(el) => setSelected(el)}
       />

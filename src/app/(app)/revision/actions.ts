@@ -194,6 +194,17 @@ interface FetchInput {
   difficulties: number[];
   types: QuestionType[];
   count: number;
+  /**
+   * J1.5 — IDs de questions à exclure du tirage (mémoire courte
+   * terme côté client : les questions des N dernières sessions
+   * Marathon, persistées en localStorage, ne sont pas retirées
+   * pendant un moment).
+   *
+   * Si après exclusion le pool est plus petit que `count`, on
+   * complète avec des exclues pour garantir que l'utilisateur a
+   * toujours `count` questions à jouer (mieux qu'une session vide).
+   */
+  excludeQuestionIds?: string[];
 }
 
 export async function fetchQuestionsForRevision(
@@ -216,8 +227,10 @@ export async function fetchQuestionsForRevision(
     query = query.in("difficulte", input.difficulties);
   if (input.types.length > 0) query = query.in("type", input.types);
 
-  // On limite côté SQL à un sur-échantillon pour pouvoir mélanger après.
-  const oversample = Math.max(input.count * 4, 50);
+  // J1.5 — On élargit volontairement l'oversample (×6 au lieu de ×4)
+  // pour avoir plus de marge après exclusion des récents et garder un
+  // bon spread par catégorie.
+  const oversample = Math.max(input.count * 6, 80);
   query = query.limit(oversample);
 
   const [{ data: qs, error }, { data: cats }] = await Promise.all([
@@ -229,7 +242,14 @@ export async function fetchQuestionsForRevision(
   const catsById = new Map((cats ?? []).map((c) => [c.id, c] as const));
 
   const all = (qs ?? []).map((q) => normalizeQuestion(q, catsById));
-  const shuffled = shuffleArray(all).slice(0, Math.max(1, input.count));
+  // J1.5 — Filtre les IDs récemment vus si le pool reste assez grand
+  // après exclusion. Si trop d'exclusions vidaient le pool, on
+  // retombe sur le pool complet.
+  const excludeSet = new Set(input.excludeQuestionIds ?? []);
+  const filtered = all.filter((q) => !excludeSet.has(q.questionId));
+  const eligible =
+    filtered.length >= Math.max(input.count, 1) ? filtered : all;
+  const shuffled = shuffleArray(eligible).slice(0, Math.max(1, input.count));
   // F1.3 — Anti-répétition de catégories (3 questions d'écart minimum).
   // Skip auto si pool < 2 catégories distinctes (cas du mode mono-cat).
   const spread = spreadByCategoryWithGetter(

@@ -7,7 +7,6 @@ import {
   Camera,
   Check,
   Crown,
-  Loader2,
   Lock,
   Minus,
   Play,
@@ -22,7 +21,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
-import { uploadAvatarClient } from "@/lib/avatar-upload";
+import { AvatarPicker } from "@/components/avatars/AvatarPicker";
+import { PhotoChoiceDialog } from "@/components/avatars/PhotoChoiceDialog";
 import { BOT_PROFILES, type BotDifficulty } from "@/lib/game-logic/faceAFace";
 import { DC_MAX_PLAYERS, DC_MIN_PLAYERS } from "@/lib/game-logic/douze-coups";
 import type { SavedPlayer } from "@/lib/saved-players/actions";
@@ -724,31 +724,15 @@ function PlayerAvatarSlot({
   onChange: (url: string | null) => void;
   disabled?: boolean;
 }) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [hover, setHover] = useState(false);
+  // J4.3 — Au lieu d'ouvrir directement l'input file, on présente
+  // le dialog 3-options (caméra / galerie / avatar pré-défini).
+  const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
 
   function openPicker() {
-    if (disabled || uploading) return;
-    inputRef.current?.click();
-  }
-
-  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setError(null);
-    setUploading(true);
-    const res = await uploadAvatarClient(
-      file,
-      "saved-players-avatars",
-      "player",
-    );
-    setUploading(false);
-    // Réinitialise l'input pour pouvoir re-sélectionner le même fichier
-    if (inputRef.current) inputRef.current.value = "";
-    if (res.status === "ok") onChange(res.url);
-    else setError(res.message);
+    if (disabled) return;
+    setPhotoDialogOpen(true);
   }
 
   return (
@@ -760,7 +744,7 @@ function PlayerAvatarSlot({
       <button
         type="button"
         onClick={openPicker}
-        disabled={disabled || uploading}
+        disabled={disabled}
         aria-label={
           avatarUrl
             ? `Changer la photo de ${pseudo || "ce joueur"}`
@@ -794,16 +778,7 @@ function PlayerAvatarSlot({
             <Camera className="h-2.5 w-2.5" aria-hidden="true" />
           </span>
         )}
-        {uploading && (
-          <span className="absolute inset-0 flex items-center justify-center bg-navy/40">
-            <Loader2 className="h-4 w-4 animate-spin text-white" aria-hidden="true" />
-          </span>
-        )}
       </button>
-      {/* Croix retirer photo : visible AU HOVER uniquement, et bien
-          décalée en haut-droite avec un cercle blanc d'isolement
-          (Vague D.9.a). Sur tactile, le hover persiste après le tap
-          → utilisable au doigt aussi. */}
       {avatarUrl && !disabled && hover && (
         <button
           type="button"
@@ -817,18 +792,31 @@ function PlayerAvatarSlot({
           <X className="h-2.5 w-2.5" aria-hidden="true" />
         </button>
       )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleFile}
-        className="hidden"
+
+      <PhotoChoiceDialog
+        open={photoDialogOpen}
+        onClose={() => setPhotoDialogOpen(false)}
+        onPhotoChosen={(url) => {
+          onChange(url);
+          setPhotoDialogOpen(false);
+        }}
+        onPickAvatar={() => {
+          setPhotoDialogOpen(false);
+          setAvatarPickerOpen(true);
+        }}
+        uploadBucket="saved-players-avatars"
+        uploadPath="player"
       />
-      {error && (
-        <p className="absolute left-0 top-full mt-0.5 whitespace-nowrap text-[10px] text-buzz">
-          {error}
-        </p>
-      )}
+
+      <AvatarPicker
+        open={avatarPickerOpen}
+        currentUrl={avatarUrl ?? null}
+        onClose={() => setAvatarPickerOpen(false)}
+        onPick={(url) => {
+          onChange(url);
+          setAvatarPickerOpen(false);
+        }}
+      />
     </div>
   );
 }

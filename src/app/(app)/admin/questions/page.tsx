@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Download, FileUp, Plus } from "lucide-react";
+import { Download, FileUp, Plus, ShieldCheck } from "lucide-react";
 import { requireAdmin } from "@/lib/auth/admin-guard";
 import { createClient } from "@/lib/supabase/server";
 import { QUESTION_TYPES, type QuestionType } from "@/lib/schemas/question";
@@ -109,6 +109,13 @@ export default async function AdminQuestionsPage({
           >
             <FileUp className="h-4 w-4" aria-hidden="true" />
             Importer JSON
+          </Link>
+          <Link
+            href="/admin/questions/audit"
+            className="flex items-center gap-1.5 rounded-md border border-buzz/50 px-3 py-2 text-sm font-semibold text-buzz transition-colors hover:bg-buzz/10"
+          >
+            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+            Audit doublons
           </Link>
           <a
             href="/api/questions/export"

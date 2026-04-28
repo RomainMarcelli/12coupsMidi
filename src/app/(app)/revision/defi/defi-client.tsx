@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  AlertTriangle,
   ArrowLeft,
   Calendar,
   CheckCircle2,
@@ -12,6 +13,7 @@ import {
   Play,
   Sparkles,
   Trophy,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -58,7 +60,14 @@ interface DefiClientProps {
 type View =
   | { kind: "hub" }
   | { kind: "playing"; date: string; questions: RevQuestion[]; isPast: boolean }
-  | { kind: "viewing-result"; date: string; questions: RevQuestion[]; result: ChallengeResult }
+  | {
+      kind: "viewing-result";
+      date: string;
+      questions: RevQuestion[];
+      result: ChallengeResult;
+      /** L1.2 — `true` si on vient juste de finir le défi (hero festif). */
+      justFinished?: boolean;
+    }
   | { kind: "loading" };
 
 /**
@@ -104,6 +113,11 @@ export function DefiClient({
 
   // Cache local du défi du jour pour pouvoir le relancer après submit.
   const [todayState, setTodayState] = useState<TodayResponse>(todayChallenge);
+
+  // J3.1 — Compteur incrémenté après chaque submit pour forcer un
+  // remount du DefiCalendar (sa data fetcher est en useEffect
+  // [year, month], donc ne se rafraîchit pas tout seul après submit).
+  const [calendarRefreshKey, setCalendarRefreshKey] = useState(0);
 
   // Auto-clear du flash de succès après 5s.
   useEffect(() => {
@@ -212,37 +226,86 @@ export function DefiClient({
       isCorrect: i < stats.correct,
     }));
 
-    const res = await submitDailyChallengeResult({
-      date: playedDate,
+    // K1 — Logs client pour diagnostiquer le bug "résultat non
+    // enregistré silencieusement". Visibles dans la console browser
+    // pour que l'utilisateur puisse les transmettre.
+    console.log("[defi:client] handleQuizDone called", {
+      playedDate,
+      total,
+      correct: stats.correct,
+      wrong: stats.wrong,
+    });
+
+    let res: Awaited<ReturnType<typeof submitDailyChallengeResult>>;
+    try {
+      res = await submitDailyChallengeResult({
+        date: playedDate,
+        correctCount: stats.correct,
+        totalCount: total,
+        answers,
+      });
+    } catch (e) {
+      // K1 — Une server action peut throw (réseau, runtime). Ne pas
+      // laisser passer en silence : afficher une erreur visible et
+      // RESTER sur DoneScreen pour que l'utilisateur voie qu'il y a
+      // un problème (au lieu de retourner au hub comme si tout
+      // s'était bien passé).
+      const message =
+        e instanceof Error ? e.message : "Erreur réseau inattendue";
+      console.error("[defi:client] submit threw:", e);
+      setError(`Échec de l'enregistrement : ${message}`);
+      setView({ kind: "hub" });
+      return;
+    }
+
+    console.log("[defi:client] submit result:", res);
+
+    if (res.status === "error") {
+      // K1 — Avant : l'erreur était set dans setError mais l'utilisateur
+      // était RAMENÉ au hub où l'alerte rouge se mêlait au reste —
+      // d'où le ressenti "ça revient comme si tout s'était bien passé".
+      // Maintenant : on garde le préfixe « Échec » + bannière visible,
+      // et on affiche aussi un alert() de secours si possible (il
+      // ne faut PAS que le user manque l'info).
+      setError(`Échec de l'enregistrement : ${res.message}`);
+      setView({ kind: "hub" });
+      return;
+    }
+
+    setSuccessFlash({ correct: stats.correct, total });
+    // Si c'était le défi du jour, met à jour le state local pour
+    // que la card du hub passe en mode "déjà joué".
+    const newResult: ChallengeResult = {
       correctCount: stats.correct,
       totalCount: total,
       answers,
-    });
-
-    if (res.status === "error") {
-      // L'INSERT peut échouer si l'utilisateur avait déjà soumis (PK).
-      // On affiche l'erreur mais on ne bloque pas l'utilisateur.
-      setError(res.message);
-    } else {
-      setSuccessFlash({ correct: stats.correct, total });
-      // Si c'était le défi du jour, met à jour le state local pour
-      // que la card du hub passe en mode "déjà joué".
-      if (
-        todayState.status === "ok" &&
-        playedDate === todayState.date
-      ) {
-        setTodayState({
-          ...todayState,
-          existingResult: {
-            correctCount: stats.correct,
-            totalCount: total,
-            answers,
-            completedAt: new Date().toISOString(),
-          },
-        });
-      }
+      completedAt: new Date().toISOString(),
+    };
+    if (
+      todayState.status === "ok" &&
+      playedDate === todayState.date
+    ) {
+      setTodayState({
+        ...todayState,
+        existingResult: newResult,
+      });
     }
-    setView({ kind: "hub" });
+    // J3.1 — Force le calendrier à re-fetch pour faire passer la
+    // case du jour (ou du jour rattrapé) en vert.
+    setCalendarRefreshKey((k) => k + 1);
+
+    // L1.2 — Au lieu de retourner direct au hub (où l'utilisateur
+    // n'avait pas le temps de lire son score), on bascule sur la
+    // vue "viewing-result" qui affiche le hero "Défi terminé !" + le
+    // détail des 10 questions. L'utilisateur clique "Retour au
+    // calendrier" quand il a fini — pas de redirect auto.
+    setView({
+      kind: "viewing-result",
+      date: playedDate,
+      questions: playedQuestions,
+      result: newResult,
+      justFinished: true,
+    });
   }
 
   // -------------------------------------------------------------------------
@@ -267,6 +330,7 @@ export function DefiClient({
         result={view.result}
         questions={view.questions}
         date={view.date}
+        justFinished={view.justFinished === true}
         onClose={() => setView({ kind: "hub" })}
       />
     );
@@ -287,6 +351,47 @@ export function DefiClient({
   // ---- Vue HUB ----
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
+      {/* K1 — Bandeau d'erreur global persistant. Apparaît en TÊTE de
+          page (avant le bouton retour) avec icône + bouton fermer.
+          Avant K1 l'erreur n'était affichée qu'en sous-bandeau du Hero
+          et passait inaperçue. */}
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 rounded-xl border-2 border-buzz/60 bg-buzz/10 p-4 shadow-[0_0_24px_rgba(230,57,70,0.15)]"
+        >
+          <AlertTriangle
+            className="mt-0.5 h-5 w-5 shrink-0 text-buzz"
+            aria-hidden="true"
+          />
+          <div className="flex-1">
+            <p className="font-display text-sm font-extrabold uppercase tracking-wider text-buzz">
+              Problème détecté
+            </p>
+            <p className="mt-1 text-sm text-foreground">{error}</p>
+            <p className="mt-2 text-xs text-foreground/60">
+              Ouvre la console (F12) pour voir les détails — préfixes
+              <code className="mx-1 rounded bg-buzz/10 px-1 py-0.5 font-mono text-[11px]">
+                [defi:client]
+              </code>
+              et
+              <code className="mx-1 rounded bg-buzz/10 px-1 py-0.5 font-mono text-[11px]">
+                [defi:server]
+              </code>
+              .
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setError(null)}
+            aria-label="Fermer l'alerte"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-buzz/70 hover:bg-buzz/10 hover:text-buzz"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      )}
+
       {/* Bouton retour vers le hub révision */}
       <div>
         <Link
@@ -302,7 +407,6 @@ export function DefiClient({
       <DefiHero
         todayState={todayState}
         successFlash={successFlash}
-        error={error}
         isPending={isPending}
         onStart={startToday}
         onViewResult={() => {
@@ -322,6 +426,7 @@ export function DefiClient({
       {/* GRID Calendar / Stats */}
       <div className="grid gap-4 lg:grid-cols-2">
         <DefiCalendar
+          key={calendarRefreshKey}
           onPickDate={handlePickDate}
           accountCreatedAtIso={accountCreatedAtIso}
         />
@@ -338,14 +443,12 @@ export function DefiClient({
 function DefiHero({
   todayState,
   successFlash,
-  error,
   isPending,
   onStart,
   onViewResult,
 }: {
   todayState: TodayResponse;
   successFlash: { correct: number; total: number } | null;
-  error: string | null;
   isPending: boolean;
   onStart: () => void;
   onViewResult: () => void;
@@ -434,14 +537,9 @@ function DefiHero({
         )}
       </AnimatePresence>
 
-      {error && (
-        <p
-          role="alert"
-          className="relative mt-5 rounded-xl border border-buzz/40 bg-buzz/10 px-4 py-3 text-sm text-buzz"
-        >
-          {error}
-        </p>
-      )}
+      {/* K1 — L'erreur est désormais affichée en bandeau global tout
+          en haut de la page (cf parent), pas dans le Hero — ça évitait
+          que l'utilisateur la rate quand le hero scrollait sous lui. */}
 
       {/* CTA principal */}
       <div className="relative mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">

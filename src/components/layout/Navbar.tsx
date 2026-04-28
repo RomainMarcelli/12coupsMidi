@@ -13,12 +13,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/(app)/actions";
+import type { AppBranding } from "@/lib/branding";
+import { BUILD_VERSION } from "@/lib/build-info";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
   pseudo: string;
   role: "user" | "admin";
   avatarUrl?: string | null;
+  /** K4 — Branding résolu côté serveur via `is_owner`. */
+  branding: AppBranding;
 }
 
 const LINKS = [
@@ -30,25 +34,35 @@ const LINKS = [
   { href: "/stats", label: "Stats", icon: BarChart3 },
 ] as const;
 
-export function Navbar({ pseudo, role, avatarUrl }: NavbarProps) {
+export function Navbar({ pseudo, role, avatarUrl, branding }: NavbarProps) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/85 px-4 py-3 text-foreground shadow-sm backdrop-blur-md sm:px-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/85 px-4 py-3 text-foreground shadow-sm backdrop-blur-md sm:px-6 relative">
       <Link
         href="/"
         className="flex items-center gap-2 transition-opacity hover:opacity-80"
       >
         <Image
-          src="/logo.png"
+          src={branding.logoUrl}
           alt=""
-          width={64}
-          height={64}
-          className="h-8 w-8 rounded-md object-cover"
+          width={120}
+          height={120}
+          className={cn(
+            "rounded-md object-cover",
+            // L2.2 — Logo plus grand + halo doré pour le owner.
+            branding.isOwner
+              ? "h-12 w-12 shadow-[0_0_16px_rgba(245,183,0,0.5)] sm:h-14 sm:w-14"
+              : "h-8 w-8",
+          )}
           priority
         />
         <span className="font-display text-lg font-extrabold tracking-tight text-foreground">
-          Les <span className="text-gold-warm">12&nbsp;coups</span> de Mahylan
+          {branding.prefixWord}{" "}
+          <span className="text-gold-warm">
+            {branding.accentWord.replace(/ /g, " ")}
+          </span>{" "}
+          {branding.suffixWord}
         </span>
       </Link>
 
@@ -123,6 +137,16 @@ export function Navbar({ pseudo, role, avatarUrl }: NavbarProps) {
           </button>
         </form>
       </div>
+      {/* L1.1 — Build version (très discret, sur la droite). Utile
+          pour vérifier après refresh que le bundle est bien à jour
+          (cas SW Serwist récalcitrant en prod). */}
+      <span
+        className="pointer-events-none absolute right-2 bottom-0 font-mono text-[9px] text-foreground/30"
+        aria-hidden="true"
+        title={`Build ${BUILD_VERSION}`}
+      >
+        v.{BUILD_VERSION}
+      </span>
     </header>
   );
 }

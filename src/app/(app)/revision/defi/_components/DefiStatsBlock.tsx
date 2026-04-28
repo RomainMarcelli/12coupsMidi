@@ -88,7 +88,8 @@ export function DefiStatsBlock({ stats }: DefiStatsBlockProps) {
         </div>
       )}
 
-      {/* I3.2 — PieChart Parfaits / Réussis / Ratés (remplace la heatmap). */}
+      {/* J3.2 — PieChart 5 buckets : Parfaits / Excellents / Bons /
+          Moyens / Ratés (granularité augmentée vs I3.2). */}
       <div className="flex flex-col gap-2">
         <h4 className="font-display text-xs font-bold uppercase tracking-widest text-foreground/60">
           Répartition des défis
@@ -96,7 +97,9 @@ export function DefiStatsBlock({ stats }: DefiStatsBlockProps) {
         <RepartitionPieChart
           data={{
             perfectCount: stats.perfectCount,
-            passedCount: stats.passedCount,
+            excellentCount: stats.excellentCount,
+            goodCount: stats.goodCount,
+            averageCount: stats.averageCount,
             failedCount: stats.failedCount,
           }}
         />

@@ -5,11 +5,12 @@ import {
   Grid3x3,
   Star,
   Sword,
-  Trophy,
   Tv,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
+import { getCurrentBranding } from "@/lib/branding";
 import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Jouer" };
@@ -23,6 +24,18 @@ interface GameItem {
   available: boolean;
   bonus?: boolean;
 }
+
+// J4.2 — Coup de Maître retiré de l'UI (mode pas implémenté
+// pour V1). Les fichiers du repo sont conservés (route et
+// composants), juste plus exposés dans la liste.
+// const COUP_DE_MAITRE_DISABLED: GameItem = {
+//   href: "/jouer/coup-de-maitre",
+//   title: "Coup de Maître",
+//   subtitle: "4 célébrités, 45 s. Le finale légendaire.",
+//   icon: Trophy,
+//   accent: "gold",
+//   available: false,
+// };
 
 const MAIN_GAMES: GameItem[] = [
   {
@@ -49,14 +62,6 @@ const MAIN_GAMES: GameItem[] = [
     accent: "buzz",
     available: true,
   },
-  {
-    href: "/jouer/coup-de-maitre",
-    title: "Coup de Maître",
-    subtitle: "4 célébrités, 45 s. Le finale légendaire.",
-    icon: Trophy,
-    accent: "gold",
-    available: false,
-  },
 ];
 
 const BONUS_GAMES: GameItem[] = [
@@ -71,7 +76,10 @@ const BONUS_GAMES: GameItem[] = [
   },
 ];
 
-export default function JouerPage() {
+export default async function JouerPage() {
+  // K4 + K5.2 — Logo principal conditionnel utilisé dans le hero
+  // "Les 12 Coups de Midi". Owner = logo Mahylan, sinon générique.
+  const branding = await getCurrentBranding();
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-2">
@@ -79,12 +87,50 @@ export default function JouerPage() {
           Choisis ton jeu
         </h1>
         <p className="text-foreground/70">
-          Les 4 épreuves de l'émission. Pour l'enchaînement complet, lance le
-          parcours depuis l'accueil.
+          Le parcours complet ou les épreuves prises individuellement.
         </p>
       </header>
 
+      {/* J4.2 — Hero "12 Coups de Midi" en tête de page : parcours
+          multijoueur complet, mis en avant avec un liseré doré. Style
+          aligné sur la HeroTile de l'accueil.
+          K5.2 — Logo PNG (branding-aware) au lieu de l'icône Crown. */}
+      <Link
+        href="/jouer/douze-coups"
+        className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-card p-4 glow-card transition-all hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,183,0,0.18)] sm:p-5"
+      >
+        <div
+          className="absolute inset-y-0 left-0 w-1 bg-gold"
+          aria-hidden="true"
+        />
+        <Image
+          src={branding.logoUrl}
+          alt=""
+          width={120}
+          height={120}
+          className="h-14 w-14 shrink-0 rounded-xl object-contain"
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-gold-warm">
+            Parcours complet
+          </p>
+          <h2 className="mt-0.5 font-display text-xl font-extrabold text-foreground sm:text-2xl">
+            Les 12 Coups de Midi
+          </h2>
+          <p className="mt-0.5 text-sm text-foreground/65">
+            Le parcours complet, contre des bots ou des humains.
+          </p>
+        </div>
+        <ChevronRight
+          className="h-5 w-5 shrink-0 text-foreground/30 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+          aria-hidden="true"
+        />
+      </Link>
+
       <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-foreground/50">
+          Épreuves individuelles
+        </h2>
         {MAIN_GAMES.map((g) => (
           <GameRow key={g.href} game={g} />
         ))}

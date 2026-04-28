@@ -1,18 +1,24 @@
 import Image from "next/image";
+import { getBranding } from "@/lib/branding";
 import { LoginForm } from "./login-form";
 
 export const metadata = {
   title: "Connexion",
 };
 
+/**
+ * K4 — Page publique pré-auth : on ne sait pas encore si l'utilisateur
+ * est owner. Affichage du branding générique.
+ */
 export default function LoginPage() {
+  const branding = getBranding(false);
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-8 p-6">
       <div className="flex flex-col items-center gap-3 text-center">
         <div className="relative">
           <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
           <Image
-            src="/logo.png"
+            src={branding.logoUrl}
             alt=""
             width={160}
             height={160}
@@ -21,7 +27,9 @@ export default function LoginPage() {
           />
         </div>
         <h1 className="font-display text-3xl font-extrabold text-foreground">
-          Les <span className="text-gold-warm">12 coups</span> de Mahylan
+          {branding.prefixWord}{" "}
+          <span className="text-gold-warm">{branding.accentWord}</span>{" "}
+          {branding.suffixWord}
         </h1>
         <p className="text-sm text-foreground/70">
           Entraîne-toi aux 12 Coups de Midi.

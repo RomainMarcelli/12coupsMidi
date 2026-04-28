@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
-import { AlertTriangle, FileUp, Upload } from "lucide-react";
+import { AlertTriangle, FileUp, Info, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   questionsBulkSchema,
@@ -271,6 +272,13 @@ export function ImportForm() {
           {result.skipped > 0 && (
             <p className="mt-1">{result.skipped} ignorée(s).</p>
           )}
+          {result.duplicates.length > 0 && (
+            <p className="mt-1">
+              {result.duplicates.length} doublon
+              {result.duplicates.length > 1 ? "s" : ""} ignoré
+              {result.duplicates.length > 1 ? "s" : ""} (déjà en BDD).
+            </p>
+          )}
           {result.warnings.length > 0 && (
             <ul className="mt-2 list-disc pl-5 text-xs text-foreground/70">
               {result.warnings.slice(0, 5).map((w, i) => (
@@ -278,6 +286,50 @@ export function ImportForm() {
               ))}
             </ul>
           )}
+        </div>
+      )}
+
+      {/* K2.1 — Encart bleu informatif : doublons détectés au submit
+          (côté serveur, sur la base existante). N'a PAS bloqué l'import,
+          les autres questions ont été insérées. */}
+      {result && result.status === "ok" && result.duplicates.length > 0 && (
+        <div
+          role="status"
+          className="rounded-md border border-sky/40 bg-sky/10 p-4 text-sm text-foreground"
+        >
+          <p className="inline-flex items-center gap-2 font-bold text-sky">
+            <Info className="h-4 w-4" aria-hidden="true" />
+            {result.duplicates.length} doublon
+            {result.duplicates.length > 1 ? "s" : ""} ignoré
+            {result.duplicates.length > 1 ? "s" : ""} — existaient déjà en BDD
+          </p>
+          <p className="mt-1 text-xs text-foreground/70">
+            Comparaison sur énoncé + catégorie (et bonne_reponse pour
+            face_a_face / etoile / coup_maitre), normalisée sans accents
+            ni ponctuation.
+          </p>
+          <ul className="mt-2 max-h-40 list-disc overflow-y-auto pl-5 text-xs text-foreground/80">
+            {result.duplicates.slice(0, 10).map((d) => (
+              <li key={d.index}>
+                <strong>#{d.index + 1}</strong> [{d.type}/{d.category_slug}]{" "}
+                <span className="italic">
+                  {d.enonce.length > 60
+                    ? `${d.enonce.slice(0, 60)}…`
+                    : d.enonce}
+                </span>{" "}
+                →{" "}
+                <Link
+                  href={`/admin/questions/${d.existingId}`}
+                  className="font-mono text-sky underline hover:text-sky/80"
+                >
+                  voir l&apos;originale
+                </Link>
+              </li>
+            ))}
+            {result.duplicates.length > 10 && (
+              <li>… et {result.duplicates.length - 10} autre(s).</li>
+            )}
+          </ul>
         </div>
       )}
       {result && result.status === "error" && (

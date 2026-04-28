@@ -1,6 +1,7 @@
 import { Home } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getBranding } from "@/lib/branding";
 
 export const metadata = {
   title: "Page introuvable",
@@ -10,15 +11,18 @@ export const metadata = {
  * 404 globale — affichée pour toute route qui n'a pas de page.tsx.
  * Pas de navbar ici (elle dépend du layout (app)) : on reconstruit un layout
  * minimal sur fond cream.
+ *
+ * K4 — Branding générique (404 peut s'afficher avant l'auth).
  */
 export default function NotFound() {
+  const branding = getBranding(false);
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
       <div className="relative">
         <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
         <Image
-          src="/logo.png"
-          alt="Les 12 coups de Mahylan"
+          src={branding.logoUrl}
+          alt={branding.appName}
           width={224}
           height={224}
           className="h-28 w-28 rounded-3xl object-cover shadow-[0_8px_32px_rgba(245,183,0,0.45)]"

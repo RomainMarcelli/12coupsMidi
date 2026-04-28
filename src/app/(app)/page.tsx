@@ -11,9 +11,11 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
+import { getCurrentBranding } from "@/lib/branding";
 import { cn } from "@/lib/utils";
 
-export default function Home() {
+export default async function Home() {
+  const branding = await getCurrentBranding();
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
       {/* Hero — parcours complet (mode 12 Coups multijoueur) */}
@@ -22,6 +24,7 @@ export default function Home() {
         title="Les 12 Coups de Midi"
         subtitle="Parcours multijoueur : Coup d'Envoi → Duel → Coup par Coup → Face-à-Face"
         icon={Crown}
+        logoUrl={branding.logoUrl}
       />
 
       {/* 4 tuiles des jeux principaux */}
@@ -116,39 +119,42 @@ interface HeroTileProps {
   title: string;
   subtitle: string;
   icon: LucideIcon;
+  logoUrl: string;
 }
 
-function HeroTile({ href, title, subtitle }: HeroTileProps) {
+function HeroTile({ href, title, subtitle, logoUrl }: HeroTileProps) {
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-3xl border border-gold/40 bg-gradient-to-br from-gold-pale via-cream to-sky-pale p-8 transition-all hover:scale-[1.01] hover:border-gold glow-sun sm:p-10"
+      className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-card p-4 glow-card transition-all hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,183,0,0.18)] sm:p-5"
     >
-      <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full bg-gold/35 blur-3xl animate-sun-pulse" />
-      <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-sky/15 blur-3xl" />
-      <div className="relative flex items-start gap-6">
-        <Image
-          src="/logo.png"
-          alt=""
-          width={160}
-          height={160}
-          className="h-20 w-20 shrink-0 rounded-2xl object-contain shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
-          priority
-        />
-        <div className="flex-1">
-          <p className="text-xs font-bold uppercase tracking-widest text-gold-warm">
-            Parcours complet
-          </p>
-          <h1 className="mt-1 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
-            {title}
-          </h1>
-          <p className="mt-2 text-foreground/75 sm:text-lg">{subtitle}</p>
-        </div>
-        <ChevronRight
-          className="h-8 w-8 text-gold-warm transition-transform group-hover:translate-x-2"
-          aria-hidden="true"
-        />
+      {/* Liseré doré gauche : signal "parcours principal" sans gradient
+          tape-à-l'œil. */}
+      <div
+        className="absolute inset-y-0 left-0 w-1 bg-gold"
+        aria-hidden="true"
+      />
+      <Image
+        src={logoUrl}
+        alt=""
+        width={120}
+        height={120}
+        className="h-14 w-14 shrink-0 rounded-xl object-contain"
+        priority
+      />
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-gold-warm">
+          Parcours complet
+        </p>
+        <h1 className="mt-0.5 truncate font-display text-xl font-extrabold text-foreground sm:text-2xl">
+          {title}
+        </h1>
+        <p className="mt-0.5 text-sm text-foreground/65">{subtitle}</p>
       </div>
+      <ChevronRight
+        className="h-5 w-5 shrink-0 text-foreground/30 transition-transform group-hover:translate-x-1 group-hover:text-gold"
+        aria-hidden="true"
+      />
     </Link>
   );
 }

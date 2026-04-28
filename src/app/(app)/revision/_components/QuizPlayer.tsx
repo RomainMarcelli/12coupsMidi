@@ -30,11 +30,9 @@ import { buildTTSFeedbackText, useAutoPlayTTS } from "@/lib/tts-helpers";
 import { playSound } from "@/lib/sounds";
 import { cn } from "@/lib/utils";
 import type { RevQuestion } from "@/lib/revision/types";
-import {
-  markErrorsAsReviewed,
-  markRevisionResult,
-} from "../actions";
+import { markRevisionResult } from "../actions";
 import { FavoriteIdsContext } from "./favorite-ids-context";
+import { useReviewBatcher } from "./review-batcher-context";
 
 interface QuizPlayerProps {
   questions: RevQuestion[];
@@ -77,6 +75,12 @@ export function QuizPlayer({
   // sans devoir prop-driller le Set à chaque appel.
   const ctxFavoriteIds = useContext(FavoriteIdsContext);
   const effectiveFavoriteIds = favoriteIds ?? ctxFavoriteIds;
+  // J1.2 — File des "à marquer révisé" remontée au niveau de
+  // RevisionClient (via contexte). Permet au bouton "Retour aux modes"
+  // de flusher avant navigation, et centralise les listeners
+  // beforeunload/pagehide pour qu'ils survivent au démontage de
+  // QuizPlayer.
+  const reviewBatcher = useReviewBatcher();
   const [phase, setPhase] = useState<Phase>({
     kind: "playing",
     idx: 0,
@@ -88,64 +92,6 @@ export function QuizPlayer({
   // moyenne par question dans le DoneScreen. Set à chaque (re)démarrage.
   const sessionStartedAtRef = useRef<number>(Date.now());
   const sessionEndedAtRef = useRef<number | null>(null);
-
-  // I1.3 — Set des questions correctement répondues en attente de DELETE
-  // (mode Refaire mes erreurs uniquement). On accumule ici tant que
-  // l'utilisateur n'a pas cliqué "Suivant" (ou quitté la page) — au
-  // moment voulu, on flush en batch via `markErrorsAsReviewed`.
-  // Ref (et pas state) car ça ne doit pas re-render.
-  const pendingReviewedRef = useRef<Set<string>>(new Set());
-
-  function flushPendingReviewed() {
-    if (!removeOnCorrect) return;
-    if (pendingReviewedRef.current.size === 0) return;
-    const ids = Array.from(pendingReviewedRef.current);
-    pendingReviewedRef.current = new Set();
-    // Fire-and-forget : la page peut se démonter avant la fin de
-    // l'appel, c'est OK (la BDD finalisera côté serveur).
-    void markErrorsAsReviewed(ids);
-  }
-
-  // I1.3 — sendBeacon best-effort si l'utilisateur ferme l'onglet ou
-  // navigue hors de l'app sans cliquer "Suivant" sur la dernière
-  // question correctement répondue.
-  // Limites connues : sur mobile (iOS Safari notamment), le navigateur
-  // peut interrompre la requête quand l'app passe en background — d'où
-  // l'écoute combinée beforeunload + pagehide + visibilitychange.
-  useEffect(() => {
-    if (!removeOnCorrect) return;
-    function flushViaBeacon() {
-      const ids = Array.from(pendingReviewedRef.current);
-      if (ids.length === 0) return;
-      pendingReviewedRef.current = new Set();
-      const blob = new Blob([JSON.stringify({ questionIds: ids })], {
-        type: "application/json",
-      });
-      if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-        navigator.sendBeacon("/api/revision/mark-reviewed", blob);
-      } else {
-        // Fallback : fetch keepalive (perd la garantie sendBeacon mais
-        // tente quand même). La page peut se démonter avant la fin.
-        void fetch("/api/revision/mark-reviewed", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ questionIds: ids }),
-          keepalive: true,
-        }).catch(() => undefined);
-      }
-    }
-    function onVisibilityChange() {
-      if (document.visibilityState === "hidden") flushViaBeacon();
-    }
-    window.addEventListener("beforeunload", flushViaBeacon);
-    window.addEventListener("pagehide", flushViaBeacon);
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    return () => {
-      window.removeEventListener("beforeunload", flushViaBeacon);
-      window.removeEventListener("pagehide", flushViaBeacon);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-  }, [removeOnCorrect]);
 
   if (phase.kind === "done") {
     const totalMs =
@@ -183,19 +129,20 @@ export function QuizPlayer({
       removeOnCorrect={removeOnCorrect}
       isFavorite={effectiveFavoriteIds.has(q.questionId)}
       onCorrectForReview={(questionId) => {
-        // I1.3 — Bonne réponse en mode Refaire : on stocke en attente
-        // du clic "Suivant" (ou de la fin du quizz / beforeunload).
-        // Pas de DELETE BDD ici.
-        pendingReviewedRef.current.add(questionId);
+        // I1.3 + J1.2 — Bonne réponse en mode Refaire : on stocke dans
+        // la file partagée (au niveau RevisionClient). Pas de DELETE
+        // BDD ici. Le flush arrive au clic Suivant (onDone) ou au
+        // bouton "Retour aux modes" (parent).
+        if (removeOnCorrect) reviewBatcher.addPending(questionId);
       }}
       onDone={(isCorrect) => {
         const next = phase.idx + 1;
         const correct = phase.correct + (isCorrect ? 1 : 0);
         const wrong = phase.wrong + (isCorrect ? 0 : 1);
-        // I1.3 — Au clic "Suivant", flush les bonnes réponses en
-        // attente. En pratique = la question qu'on vient de quitter
+        // I1.3 + J1.2 — Au clic "Suivant", flush les bonnes réponses
+        // en attente. En pratique = la question qu'on vient de quitter
         // si elle a été correctement répondue.
-        flushPendingReviewed();
+        if (removeOnCorrect) reviewBatcher.flush();
         if (next >= questions.length) {
           sessionEndedAtRef.current = Date.now();
           onDone?.({ correct, wrong });

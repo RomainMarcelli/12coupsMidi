@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "gen-icons": "node src/scripts/gen-icons.mjs",
+    "reorg-public": "node src/scripts/reorg-public.mjs",
     "seed": "tsx src/scripts/seed.ts",
     "test": "vitest run",
     "test:watch": "vitest"

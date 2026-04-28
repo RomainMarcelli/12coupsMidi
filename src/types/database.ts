@@ -59,6 +59,8 @@ export interface Database {
           avatar_url: string | null;
           theme: "light" | "dark" | "system";
           settings: Json;
+          /** K4 — Branding conditionnel Mahylan vs générique. */
+          is_owner: boolean;
         };
         Insert: {
           id: string;
@@ -70,6 +72,7 @@ export interface Database {
           avatar_url?: string | null;
           theme?: "light" | "dark" | "system";
           settings?: Json;
+          is_owner?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
         Relationships: [];

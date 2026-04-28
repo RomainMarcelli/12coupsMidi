@@ -98,28 +98,28 @@ export function EvolutionLineChart({ data }: { data: EvolutionPoint[] }) {
 
 interface RepartitionData {
   perfectCount: number;
-  passedCount: number;
+  excellentCount: number;
+  goodCount: number;
+  averageCount: number;
   failedCount: number;
 }
 
 export function RepartitionPieChart({ data }: { data: RepartitionData }) {
-  const total = data.perfectCount + data.passedCount + data.failedCount;
+  const total =
+    data.perfectCount +
+    data.excellentCount +
+    data.goodCount +
+    data.averageCount +
+    data.failedCount;
+  // J3.2 — 5 buckets pour mieux distinguer les performances. Les
+  // tranches à 0 sont filtrées avant rendu pour ne pas polluer la
+  // légende.
   const slices = [
-    {
-      name: "Parfaits (100 %)",
-      value: data.perfectCount,
-      color: "#10b981",
-    },
-    {
-      name: "Réussis (50-99 %)",
-      value: data.passedCount,
-      color: "#f59e0b",
-    },
-    {
-      name: "Ratés (< 50 %)",
-      value: data.failedCount,
-      color: "#ef4444",
-    },
+    { name: "Parfaits (100 %)", value: data.perfectCount, color: "#10b981" },
+    { name: "Excellents (80-99 %)", value: data.excellentCount, color: "#84cc16" },
+    { name: "Bons (60-79 %)", value: data.goodCount, color: "#f59e0b" },
+    { name: "Moyens (40-59 %)", value: data.averageCount, color: "#f97316" },
+    { name: "Ratés (< 40 %)", value: data.failedCount, color: "#ef4444" },
   ].filter((s) => s.value > 0);
 
   return (
