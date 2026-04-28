@@ -30,6 +30,7 @@ export default async function RevisionPage() {
     { data: wrongs },
     { data: categories },
     { count: totalQuestionsCount },
+    { data: favorites },
   ] = await Promise.all([
     supabase
       .from("wrong_answers")
@@ -38,6 +39,12 @@ export default async function RevisionPage() {
       .order("last_seen_at", { ascending: false }),
     supabase.from("categories").select("id, nom, couleur, slug"),
     supabase.from("questions").select("id", { count: "exact", head: true }),
+    // I1.5 — IDs des questions favorites pour afficher l'étoile remplie
+    // partout où elle apparaît (Marathon, Retravailler, Catégories…).
+    supabase
+      .from("user_favorites")
+      .select("question_id")
+      .eq("user_id", user.id),
   ]);
 
   // Fetch les questions ratées (jointe en deux étapes pour éviter le typage Postgres)
@@ -66,11 +73,14 @@ export default async function RevisionPage() {
       .map((q) => normalize(q, catsById));
   }
 
+  const favoriteIds = (favorites ?? []).map((f) => f.question_id);
+
   return (
     <RevisionClient
       categories={(categories ?? []) as CategoryRow[]}
       wrongQuestions={wrongQuestions}
       totalQuestionsAvailable={totalQuestionsCount ?? 0}
+      favoriteIds={favoriteIds}
     />
   );
 }

@@ -10,6 +10,11 @@ interface SaveSettingsInput {
   volume?: number;
   muted?: boolean;
   dailyNotif?: boolean;
+  ttsVoiceUri?: string | null;
+  ttsRate?: number;
+  ttsPitch?: number;
+  /** I3.1 — Toggle "afficher les jours manqués en rouge" sur calendrier défi. */
+  defiShowMissedDays?: boolean;
 }
 
 interface SaveProfileInput {

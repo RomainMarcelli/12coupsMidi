@@ -2,11 +2,22 @@
 
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Check, Loader2, Star, Trophy } from "lucide-react";
+import {
+  BookOpen,
+  Check,
+  Loader2,
+  Play,
+  Star,
+  Trash2,
+  Trophy,
+} from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import type { RevQuestion } from "@/lib/revision/types";
-import { markErrorAsReviewed } from "../actions";
+import { shuffle } from "@/lib/utils/array";
+import { markErrorAsReviewed, resetAllWrongAnswers } from "../actions";
 
 interface ErrorsReaderProps {
   questions: RevQuestion[];
@@ -31,12 +42,16 @@ interface ErrorsReaderProps {
  * erreurs !" avec un retour vers le hub.
  */
 export function ErrorsReader({ questions }: ErrorsReaderProps) {
-  // Liste locale qu'on retire optimistement quand l'utilisateur valide.
-  const [items, setItems] = useState<RevQuestion[]>(questions);
-  // ID en cours de suppression (pour disabled / spinner) — on ne fait
-  // qu'une seule suppression à la fois pour rester simple.
+  const router = useRouter();
+  // I1.4 — Ordre aléatoire à chaque montage (cohérent avec
+  // "Refaire mes erreurs"). Lazy initializer pour ne mélanger qu'au
+  // premier render — un re-render n'inverse pas l'ordre.
+  const [items, setItems] = useState<RevQuestion[]>(() => shuffle(questions));
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // H1.5 — État du modal de confirmation pour le reset complet.
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const [, startTransition] = useTransition();
 
   function handleReviewed(questionId: string) {
@@ -50,6 +65,21 @@ export function ErrorsReader({ questions }: ErrorsReaderProps) {
         return;
       }
       setItems((prev) => prev.filter((q) => q.questionId !== questionId));
+    });
+  }
+
+  function handleResetAll() {
+    setError(null);
+    setResetting(true);
+    startTransition(async () => {
+      const res = await resetAllWrongAnswers();
+      setResetting(false);
+      setShowResetConfirm(false);
+      if (res.status === "error") {
+        setError(res.message);
+        return;
+      }
+      setItems([]);
     });
   }
 
@@ -81,7 +111,7 @@ export function ErrorsReader({ questions }: ErrorsReaderProps) {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 p-4 sm:p-6">
-      <header className="flex items-center justify-between gap-3">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-buzz">
             Mes erreurs
@@ -95,7 +125,42 @@ export function ErrorsReader({ questions }: ErrorsReaderProps) {
             rejouer les questions.
           </p>
         </div>
+        {/* H4.2 + H1.5 — Boutons de navigation et reset. */}
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          {/* Timestamp généré au clic (pas au render) → évite
+              l'hydration mismatch lié au mock SSR vs client. */}
+          <button
+            type="button"
+            onClick={() =>
+              router.push(`/revision?mode=retravailler&t=${Date.now()}`)
+            }
+            className="inline-flex h-10 items-center gap-1.5 rounded-md border border-buzz/40 bg-buzz/5 px-3 text-sm font-bold text-buzz transition-colors hover:border-buzz hover:bg-buzz/10"
+          >
+            <Play className="h-4 w-4" aria-hidden="true" fill="currentColor" />
+            Refaire mes erreurs
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowResetConfirm(true)}
+            disabled={items.length === 0}
+            className="inline-flex h-10 items-center gap-1.5 rounded-md border border-border bg-card px-3 text-xs font-bold text-foreground/60 transition-colors hover:border-buzz/50 hover:text-buzz disabled:opacity-50"
+          >
+            <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+            Tout réinitialiser
+          </button>
+        </div>
       </header>
+
+      <ConfirmDialog
+        open={showResetConfirm}
+        onClose={() => !resetting && setShowResetConfirm(false)}
+        onConfirm={handleResetAll}
+        isPending={resetting}
+        title="Réinitialiser tes erreurs à retravailler ?"
+        description={`Toutes les questions que tu as ratées seront retirées de ta liste (${items.length} au total). Tu repartiras de zéro. Cette action est irréversible.`}
+        confirmLabel={resetting ? "Réinitialisation…" : "Réinitialiser"}
+        confirmVariant="danger"
+      />
 
       {error && (
         <p

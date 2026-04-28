@@ -12,21 +12,18 @@ import {
   TrendingUp,
   Trophy,
 } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  Cell,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+// I1.1 (revisé) — Le dynamic import était plus lent en dev-mode webpack
+// (2 passes de compile au lieu d'une) sans gain en prod : /stats est le
+// seul consommateur de Recharts → la lib est de toute façon dans son
+// route bundle. Donc on garde l'extraction en fichier séparé pour la
+// lisibilité mais on passe en static import.
+import {
+  EvolutionChart,
+  PerCategoryChart,
+  PerModeChart,
+} from "./_components/StatsCharts";
 
 const MODE_LABEL: Record<string, string> = {
   jeu1: "Coup d'Envoi",
@@ -38,8 +35,6 @@ const MODE_LABEL: Record<string, string> = {
   revision: "Révision",
   douze_coups: "12 Coups",
 };
-
-const MODE_COLORS = ["#F5C518", "#4DA3F0", "#51CF66", "#FF6B6B", "#A8B2D1", "#E89E00"];
 
 export interface StatsData {
   pseudo: string;
@@ -175,51 +170,7 @@ export function StatsClient({ data }: { data: StatsData }) {
 
       {/* Évolution sur 30 jours */}
       <Section title="Évolution du score" desc="Score moyen par jour sur 30 jours.">
-        <div className="h-56 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={data.evolution.map((d) => ({
-                date: d.date.slice(5),
-                score: d.score ?? 0,
-                hasData: d.score !== null,
-              }))}
-              margin={{ top: 10, right: 16, left: -16, bottom: 0 }}
-            >
-              <XAxis
-                dataKey="date"
-                tick={{ fill: "currentColor", fontSize: 11, opacity: 0.6 }}
-                stroke="currentColor"
-                strokeOpacity={0.2}
-              />
-              <YAxis
-                tick={{ fill: "currentColor", fontSize: 11, opacity: 0.6 }}
-                stroke="currentColor"
-                strokeOpacity={0.2}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: "var(--popover)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  color: "var(--popover-foreground)",
-                  fontSize: 12,
-                }}
-                formatter={(value) => [
-                  `${Math.round(Number(value) || 0)} pts`,
-                  "Score",
-                ]}
-              />
-              <Line
-                type="monotone"
-                dataKey="score"
-                stroke="#F5C518"
-                strokeWidth={2}
-                dot={{ r: 3, fill: "#F5C518" }}
-                connectNulls={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <EvolutionChart data={data.evolution} />
       </Section>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -231,60 +182,7 @@ export function StatsClient({ data }: { data: StatsData }) {
           {data.perCategory.length === 0 ? (
             <EmptyChart>Joue quelques questions pour voir tes catégories.</EmptyChart>
           ) : (
-            <div className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  layout="vertical"
-                  data={data.perCategory.map((c) => ({
-                    nom: c.nom,
-                    pct: Math.round(c.ratio * 100),
-                    couleur: c.couleur ?? "#F5C518",
-                    total: c.total,
-                  }))}
-                  margin={{ top: 4, right: 24, left: 12, bottom: 0 }}
-                >
-                  <XAxis
-                    type="number"
-                    domain={[0, 100]}
-                    tick={{ fill: "currentColor", fontSize: 11, opacity: 0.6 }}
-                    stroke="currentColor"
-                    strokeOpacity={0.2}
-                  />
-                  <YAxis
-                    type="category"
-                    dataKey="nom"
-                    width={90}
-                    tick={{ fill: "currentColor", fontSize: 11 }}
-                    stroke="currentColor"
-                    strokeOpacity={0.2}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: "var(--popover)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 8,
-                      color: "var(--popover-foreground)",
-                      fontSize: 12,
-                    }}
-                    formatter={(_v, _n, p) => {
-                      const payload = (p as { payload?: { pct: number; total: number } }).payload;
-                      return [
-                        `${payload?.pct ?? 0} % (${payload?.total ?? 0} questions)`,
-                        "Réussite",
-                      ];
-                    }}
-                  />
-                  <Bar dataKey="pct" radius={[0, 6, 6, 0]}>
-                    {data.perCategory.map((c) => (
-                      <Cell
-                        key={c.nom}
-                        fill={c.couleur ?? "#F5C518"}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <PerCategoryChart data={data.perCategory} />
           )}
         </Section>
 
@@ -293,39 +191,12 @@ export function StatsClient({ data }: { data: StatsData }) {
           {data.perMode.length === 0 ? (
             <EmptyChart>Aucune partie pour l&apos;instant.</EmptyChart>
           ) : (
-            <div className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data.perMode.map((m) => ({
-                      name: MODE_LABEL[m.mode] ?? m.mode,
-                      value: m.count,
-                    }))}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={50}
-                    outerRadius={90}
-                    paddingAngle={2}
-                  >
-                    {data.perMode.map((_, idx) => (
-                      <Cell
-                        key={idx}
-                        fill={MODE_COLORS[idx % MODE_COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      background: "var(--popover)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 8,
-                      color: "var(--popover-foreground)",
-                      fontSize: 12,
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            <PerModeChart
+              data={data.perMode.map((m) => ({
+                name: MODE_LABEL[m.mode] ?? m.mode,
+                count: m.count,
+              }))}
+            />
           )}
         </Section>
       </div>

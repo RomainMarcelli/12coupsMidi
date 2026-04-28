@@ -147,9 +147,11 @@ describe("resolveDuel", () => {
       adversaryId: "adv",
       adversaryAnsweredCorrectly: true,
       questionId: "q",
+      chosenCategoryId: 42,
     });
     expect(r.winnerId).toBe("adv");
     expect(r.eliminatedId).toBe("rouge");
+    expect(r.chosenCategoryId).toBe(42);
   });
 
   it("mauvaise réponse : l'adversaire est éliminé", () => {
@@ -158,9 +160,11 @@ describe("resolveDuel", () => {
       adversaryId: "adv",
       adversaryAnsweredCorrectly: false,
       questionId: "q",
+      chosenCategoryId: 7,
     });
     expect(r.winnerId).toBe("rouge");
     expect(r.eliminatedId).toBe("adv");
+    expect(r.chosenCategoryId).toBe(7);
   });
 });
 
@@ -170,6 +174,7 @@ describe("computeDuelXp", () => {
     eliminatedId: "other",
     adversaryAnsweredCorrectly: true,
     questionId: "q",
+    chosenCategoryId: 1,
   };
 
   it("XP_WIN si le user gagne", () => {

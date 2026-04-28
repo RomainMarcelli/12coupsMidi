@@ -2,7 +2,8 @@
 
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { deleteQuestion } from "./actions";
 import type { Database } from "@/types/database";
 
@@ -32,6 +33,8 @@ const TYPE_LABELS: Record<string, string> = {
 export function QuestionsTable({ questions, categories }: QuestionsTableProps) {
   const catById = new Map(categories.map((c) => [c.id, c]));
   const [isPending, startTransition] = useTransition();
+  // H4.3 — Modal de confirmation pour suppression (remplace confirm()).
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   if (questions.length === 0) {
     return (
@@ -94,12 +97,7 @@ export function QuestionsTable({ questions, categories }: QuestionsTableProps) {
                     <button
                       type="button"
                       disabled={isPending}
-                      onClick={() => {
-                        if (!confirm("Supprimer cette question ?")) return;
-                        startTransition(async () => {
-                          await deleteQuestion(q.id);
-                        });
-                      }}
+                      onClick={() => setPendingDelete(q.id)}
                       className="rounded-md border border-border p-1.5 text-foreground/70 transition-colors hover:border-buzz hover:text-buzz disabled:opacity-50"
                       title="Supprimer"
                     >
@@ -113,6 +111,23 @@ export function QuestionsTable({ questions, categories }: QuestionsTableProps) {
           })}
         </tbody>
       </table>
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onClose={() => !isPending && setPendingDelete(null)}
+        onConfirm={() => {
+          const id = pendingDelete;
+          if (!id) return;
+          startTransition(async () => {
+            await deleteQuestion(id);
+            setPendingDelete(null);
+          });
+        }}
+        isPending={isPending}
+        title="Supprimer cette question ?"
+        description="Cette action est irréversible. La question sera retirée de la base et toutes les sessions futures."
+        confirmLabel={isPending ? "Suppression…" : "Supprimer"}
+        confirmVariant="danger"
+      />
     </div>
   );
 }

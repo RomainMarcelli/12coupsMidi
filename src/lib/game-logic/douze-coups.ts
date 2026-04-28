@@ -159,25 +159,62 @@ export function pickDuelCategories(
 }
 
 /**
+ * Premier mot normalisé d'un nom de catégorie. Sert à éviter de tirer
+ * deux catégories trop proches en duel (ex. "Histoire" + "Histoire
+ * antique" → on rejette la 2ᵉ et on retente).
+ */
+function categoryRootKey(nom: string): string {
+  return nom
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .split(/[\s\-/]+/)[0]!
+    .replace(/[^a-z0-9]/g, "");
+}
+
+/**
  * Construit l'objet initial des 2 thèmes de duel d'une partie.
  * Retourne `null` si pas assez de catégories avec des quizz_4.
+ *
+ * I4.2 — Garantit la diversité : on évite de tirer 2 catégories
+ * partageant le même 1ᵉʳ mot (heuristique simple qui matche
+ * "Histoire / Histoire antique", "Cinéma / Cinéma français", etc.).
+ * Si la contrainte n'est pas satisfiable (ex. pool entier partage le
+ * même préfixe), on retombe sur 2 catégories quelconques pour ne pas
+ * empêcher la partie de démarrer.
  */
 export function makeInitialDuelThemes(
   categories: CategoryRow[],
   quizz4CountByCategory: Map<number, number>,
   rng: () => number = Math.random,
 ): DcDuelThemes | null {
+  // On tire suffisamment large pour avoir des chances de trouver une
+  // paire diverse — au pire on prend les 2 premières.
+  const eligible = categories.filter(
+    (c) => (quizz4CountByCategory.get(c.id) ?? 0) >= 1,
+  );
+  if (eligible.length < 2) return null;
+
   const picks = pickDuelCategories(
-    categories,
+    eligible,
     quizz4CountByCategory,
-    2,
+    eligible.length,
     1,
     rng,
   );
-  if (picks.length < 2) return null;
+  // picks est une permutation complète de eligible.
+  const first = picks[0]!;
+  const firstRoot = categoryRootKey(first.nom);
+  // Cherche le 1ᵉʳ candidat suivant qui ne partage PAS le préfixe.
+  let second = picks.slice(1).find((c) => categoryRootKey(c.nom) !== firstRoot);
+  if (!second) {
+    // Tout le pool partage le même 1ᵉʳ mot → fallback sur picks[1].
+    second = picks[1];
+  }
+  if (!second) return null;
   return {
-    theme1: picks[0]!,
-    theme2: picks[1]!,
+    theme1: first,
+    theme2: second,
     theme1Used: false,
     theme2Used: false,
   };

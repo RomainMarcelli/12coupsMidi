@@ -1,10 +1,12 @@
 import {
   ChevronRight,
   Dices,
+  Gamepad2,
   Grid3x3,
   Star,
   Sword,
   Trophy,
+  Tv,
 } from "lucide-react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
@@ -95,6 +97,50 @@ export default function JouerPage() {
         {BONUS_GAMES.map((g) => (
           <GameRow key={g.href} game={g} />
         ))}
+      </section>
+
+      {/* H4.4 — Mode TV : 2 boutons côte à côte (style Kahoot). Le
+          bouton "Rejoindre" pointe vers /play (publique, sans auth)
+          pour que des invités puissent s'y connecter. */}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-foreground/50">
+          Mode TV Soirée
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/tv/host"
+            className="group flex flex-col items-start gap-2 rounded-2xl border-2 border-gold/40 bg-card p-5 transition-all hover:scale-[1.02] hover:border-gold hover:shadow-[0_0_24px_rgba(245,183,0,0.25)]"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/15 text-gold-warm transition-transform group-hover:scale-110">
+              <Tv className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 className="font-display text-lg font-bold text-foreground">
+                Créer une partie TV
+              </h3>
+              <p className="text-sm text-foreground/70">
+                Affiche un code à 4 chiffres et un QR code. Tes invités
+                rejoignent depuis leur téléphone.
+              </p>
+            </div>
+          </Link>
+          <Link
+            href="/play"
+            className="group flex flex-col items-start gap-2 rounded-2xl border-2 border-sky/40 bg-card p-5 transition-all hover:scale-[1.02] hover:border-sky hover:shadow-[0_0_24px_rgba(43,142,230,0.25)]"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky/15 text-sky transition-transform group-hover:scale-110">
+              <Gamepad2 className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 className="font-display text-lg font-bold text-foreground">
+                Rejoindre une partie
+              </h3>
+              <p className="text-sm text-foreground/70">
+                Entre le code à 4 chiffres affiché sur la TV de l&apos;hôte.
+              </p>
+            </div>
+          </Link>
+        </div>
       </section>
     </main>
   );

@@ -78,3 +78,78 @@ export function extractSuspiciousFromRaw(raw: unknown): SuspiciousEntry[] {
   });
   return out;
 }
+
+/**
+ * I2.3 — Détecte un format incohérent dans les propositions d'une
+ * question Coup par Coup.
+ *
+ * Cas typique observé : "Films ayant remporté au moins 9 Oscars" avec
+ * "Titanic (1997, 11 Oscars)", "Ben-Hur (1959, 11 Oscars)" et un
+ * intrus "Le Parrain" sans parenthèses → l'intrus se reconnaît à
+ * l'œil nu. On veut alerter l'admin pour qu'il harmonise (soit toutes
+ * avec parenthèses, soit aucune).
+ *
+ * Retourne :
+ *   • `null` si la question n'est pas concernée OU si le format est
+ *     cohérent.
+ *   • Un objet `{ withParens, withoutParens }` listant les textes
+ *     concernés sinon.
+ */
+export interface InconsistentFormatReason {
+  /** Propositions qui contiennent au moins un `(...)`. */
+  withParens: string[];
+  /** Propositions sans aucune parenthèse. */
+  withoutParens: string[];
+}
+
+export function detectInconsistentFormat(
+  raw: unknown,
+): InconsistentFormatReason | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Record<string, unknown>;
+  if (obj.type !== "coup_par_coup") return null;
+  const props = obj.propositions;
+  if (!Array.isArray(props) || props.length < 2) return null;
+
+  const withParens: string[] = [];
+  const withoutParens: string[] = [];
+  for (const p of props) {
+    if (!p || typeof p !== "object") continue;
+    const text = (p as Record<string, unknown>).text;
+    if (typeof text !== "string") continue;
+    if (/\([^)]+\)/.test(text)) withParens.push(text);
+    else withoutParens.push(text);
+  }
+  // Format incohérent : un mix des deux.
+  if (withParens.length > 0 && withoutParens.length > 0) {
+    return { withParens, withoutParens };
+  }
+  return null;
+}
+
+export interface InconsistentFormatEntry {
+  idx: number;
+  enonce: string;
+  withParens: string[];
+  withoutParens: string[];
+}
+
+/** Extrait les questions à format incohérent depuis un tableau brut. */
+export function extractInconsistentFormatFromRaw(
+  raw: unknown,
+): InconsistentFormatEntry[] {
+  if (!Array.isArray(raw)) return [];
+  const out: InconsistentFormatEntry[] = [];
+  raw.forEach((item, idx) => {
+    const reason = detectInconsistentFormat(item);
+    if (!reason) return;
+    const obj = item as Record<string, unknown>;
+    out.push({
+      idx,
+      enonce: typeof obj.enonce === "string" ? obj.enonce : "",
+      withParens: reason.withParens,
+      withoutParens: reason.withoutParens,
+    });
+  });
+  return out;
+}

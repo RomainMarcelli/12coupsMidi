@@ -193,6 +193,7 @@ function ElementCell({
         gridRow: element.grid_row,
         gridColumn: element.grid_col,
       }}
+      data-element-num={element.numero_atomique}
       title={revealed ? `${element.nom} (${element.symbole})` : ""}
     >
       <div className="flex h-full flex-col p-0.5 text-on-color">

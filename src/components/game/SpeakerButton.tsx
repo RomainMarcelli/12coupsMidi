@@ -86,6 +86,10 @@ export function SpeakerButton({
 }: SpeakerButtonProps) {
   const ttsAutoSetting = useSetting("ttsAutoPlay");
   const [state, setState] = useState(ttsGetState());
+  // Hydration guard : `isTtsSupported()` dépend de `window` donc renvoie
+  // `false` côté SSR et `true` côté client, ce qui causerait un mismatch.
+  // On attend le 1er effet pour déterminer le support.
+  const [mounted, setMounted] = useState(false);
 
   const effectiveEnabled = enabled ?? true;
   const effectiveAutoPlay = autoPlay ?? ttsAutoSetting;
@@ -99,6 +103,7 @@ export function SpeakerButton({
   const lastAutoPlayedRef = useRef<string | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     return ttsSubscribe(setState);
   }, []);
 
@@ -116,6 +121,7 @@ export function SpeakerButton({
     };
   }, [effectiveEnabled, effectiveAutoPlay, autoplayKey, text, choices]);
 
+  if (!mounted) return null;
   if (!effectiveEnabled || !isTtsSupported()) return null;
 
   function onClick() {

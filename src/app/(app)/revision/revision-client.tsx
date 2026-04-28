@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BookOpen,
@@ -19,7 +19,16 @@ import {
   Timer,
   Trophy,
 } from "lucide-react";
-import { FlagoraEmbedModal } from "@/components/revision/FlagoraEmbedModal";
+import dynamic from "next/dynamic";
+// I1.1 — Lazy-load : ne charge l'iframe + Framer Motion du modal que
+// quand l'utilisateur clique réellement sur "Drapeaux & Capitales".
+const FlagoraEmbedModal = dynamic(
+  () =>
+    import("@/components/revision/FlagoraEmbedModal").then(
+      (m) => m.FlagoraEmbedModal,
+    ),
+  { ssr: false },
+);
 import { fetchFavorites } from "@/app/(app)/favoris/actions";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -35,6 +44,8 @@ import {
 import { QuizPlayer } from "./_components/QuizPlayer";
 import { FlashcardPlayer } from "./_components/FlashcardPlayer";
 import { ErrorsReader } from "./_components/ErrorsReader";
+import { FavoriteIdsContext } from "./_components/favorite-ids-context";
+import { shuffle } from "@/lib/utils/array";
 
 export interface CategoryRow {
   id: number;
@@ -47,6 +58,8 @@ export interface RevisionClientProps {
   categories: CategoryRow[];
   wrongQuestions: RevQuestion[];
   totalQuestionsAvailable: number;
+  /** I1.5 — IDs des questions favorites (étoile remplie partout). */
+  favoriteIds: string[];
 }
 
 type Mode =
@@ -88,6 +101,10 @@ export function RevisionClient(props: RevisionClientProps) {
   // directe vers "Retravailler" (depuis le bouton "Voir mes erreurs"
   // de la fin de session) ou n'importe quel sous-mode.
   const searchParams = useSearchParams();
+  const router = useRouter();
+  // I1.5 — Set figé des IDs favoris, partagé à tous les QuizPlayer enfants
+  // via FavoriteIdsContext.
+  const favoriteIdSet = new Set(props.favoriteIds);
   const initialMode: Mode = (() => {
     const m = searchParams.get("mode");
     if (m && (VALID_MODES as ReadonlyArray<string>).includes(m)) return m as Mode;
@@ -103,8 +120,24 @@ export function RevisionClient(props: RevisionClientProps) {
     }
   }, [searchParams]);
 
+  // I1.2 — Quand l'utilisateur entre dans un mode qui dépend des
+  // wrong_answers (lecture ou refaire), on force un refresh RSC pour
+  // re-fetcher les données serveur. Sinon, après un Marathon où il
+  // vient de générer de nouvelles erreurs, la liste reste vide tant
+  // qu'il n'a pas reload manuellement la page (les props sont figées
+  // au mount).
+  useEffect(() => {
+    if (mode === "erreurs-lecture" || mode === "retravailler") {
+      router.refresh();
+    }
+  }, [mode, router]);
+
   if (mode === "hub") {
-    return <Hub onPick={setMode} props={props} />;
+    return (
+      <FavoriteIdsContext.Provider value={favoriteIdSet}>
+        <Hub onPick={setMode} props={props} />
+      </FavoriteIdsContext.Provider>
+    );
   }
 
   // G1.2 — Le `key` basé sur l'URL force un remount à chaque navigation
@@ -114,34 +147,36 @@ export function RevisionClient(props: RevisionClientProps) {
   const remountKey = searchParams.toString();
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="mx-auto w-full max-w-4xl px-4 pt-4">
-        <button
-          type="button"
-          onClick={() => setMode("hub")}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:border-gold/50 hover:bg-gold/10"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Retour aux modes
-        </button>
-      </div>
+    <FavoriteIdsContext.Provider value={favoriteIdSet}>
+      <div className="flex flex-1 flex-col">
+        <div className="mx-auto w-full max-w-4xl px-4 pt-4">
+          <button
+            type="button"
+            onClick={() => setMode("hub")}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground/80 hover:border-gold/50 hover:bg-gold/10"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Retour aux modes
+          </button>
+        </div>
 
-      {mode === "retravailler" && (
-        <RetravaillerMode key={remountKey} questions={props.wrongQuestions} />
-      )}
-      {mode === "erreurs-lecture" && (
-        <ErrorsReader key={remountKey} questions={props.wrongQuestions} />
-      )}
-      {mode === "apprendre" && <ApprendreMode categories={props.categories} />}
-      {mode === "flashcards" && (
-        <FlashcardsMode categories={props.categories} />
-      )}
-      {mode === "marathon" && <MarathonMode categories={props.categories} />}
-      {mode === "marathon-libre" && <MarathonLibreMode />}
-      {mode === "defi" && <DefiMode />}
-      {mode === "fiche" && <FicheMode categories={props.categories} />}
-      {mode === "favoris" && <FavorisMode />}
-    </div>
+        {mode === "retravailler" && (
+          <RetravaillerMode key={remountKey} questions={props.wrongQuestions} />
+        )}
+        {mode === "erreurs-lecture" && (
+          <ErrorsReader key={remountKey} questions={props.wrongQuestions} />
+        )}
+        {mode === "apprendre" && <ApprendreMode categories={props.categories} />}
+        {mode === "flashcards" && (
+          <FlashcardsMode categories={props.categories} />
+        )}
+        {mode === "marathon" && <MarathonMode categories={props.categories} />}
+        {mode === "marathon-libre" && <MarathonLibreMode />}
+        {mode === "defi" && <DefiMode />}
+        {mode === "fiche" && <FicheMode categories={props.categories} />}
+        {mode === "favoris" && <FavorisMode />}
+      </div>
+    </FavoriteIdsContext.Provider>
   );
 }
 
@@ -234,10 +269,10 @@ function Hub({
         />
         <ModeCard
           title="Défi du jour"
-          desc="5 questions identiques pour tous, chaque jour"
+          desc="10 questions identiques pour tous, chaque jour"
           icon={Calendar}
           accent="gold"
-          onClick={() => onPick("defi")}
+          href="/revision/defi"
         />
         <ModeCard
           title="Fiches de révision"
@@ -394,7 +429,39 @@ function RetravaillerMode({ questions }: { questions: RevQuestion[] }) {
       </main>
     );
   }
-  return <QuizPlayer questions={questions} trackWrong />;
+  return <RetravaillerInner questions={questions} />;
+}
+
+/**
+ * Wrapper extrait pour pouvoir utiliser `useRouter` (hook → composant
+ * client). Le bouton "Voir mes erreurs (lecture)" génère le timestamp
+ * AU CLIC, pas au render — sinon hydration mismatch (le timestamp
+ * serveur ≠ client).
+ */
+function RetravaillerInner({ questions }: { questions: RevQuestion[] }) {
+  const router = useRouter();
+  // I1.4 — Ordre aléatoire à chaque montage. Le `key` du parent
+  // (basé sur l'URL ?t=…) garantit un remount à chaque navigation
+  // → un nouveau shuffle est calculé. useState(initialiser) évite
+  // de re-mélanger à chaque re-render dans la même session.
+  const [shuffled] = useState(() => shuffle(questions));
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="mx-auto flex w-full max-w-2xl items-center justify-end px-4 pt-2">
+        <button
+          type="button"
+          onClick={() =>
+            router.push(`/revision?mode=erreurs-lecture&t=${Date.now()}`)
+          }
+          className="inline-flex h-9 items-center gap-1.5 rounded-md border border-buzz/40 bg-buzz/5 px-3 text-xs font-bold text-buzz transition-colors hover:border-buzz hover:bg-buzz/10"
+        >
+          <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+          Voir mes erreurs (lecture)
+        </button>
+      </div>
+      <QuizPlayer questions={shuffled} trackWrong removeOnCorrect />
+    </div>
+  );
 }
 
 // ===========================================================================
@@ -991,7 +1058,12 @@ function FavorisMode() {
   }
 
   if (started && questions) {
-    return <QuizPlayer questions={questions} trackWrong />;
+    // I1.5 — Toutes les questions chargées via fetchFavorites() sont par
+    // définition favorites → toutes les étoiles s'affichent remplies.
+    const favoriteIds = new Set(questions.map((q) => q.questionId));
+    return (
+      <QuizPlayer questions={questions} trackWrong favoriteIds={favoriteIds} />
+    );
   }
 
   return (

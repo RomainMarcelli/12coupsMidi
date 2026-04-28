@@ -9,7 +9,9 @@
 
 import { describe, expect, it } from "vitest";
 import {
+  detectInconsistentFormat,
   detectSuspiciousRawQuestion,
+  extractInconsistentFormatFromRaw,
   extractSuspiciousFromRaw,
 } from "./detect-suspicious";
 
@@ -139,5 +141,120 @@ describe("extractSuspiciousFromRaw", () => {
     const out = extractSuspiciousFromRaw(arr);
     expect(out).toHaveLength(1);
     expect(out[0]?.idx).toBe(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// I2.3 — Format incohérent CPC
+// ---------------------------------------------------------------------------
+
+describe("detectInconsistentFormat", () => {
+  it("détecte le cas Oscars (Le Parrain sans parenthèses)", () => {
+    const q = {
+      type: "coup_par_coup",
+      enonce: "Films ayant remporté au moins 9 Oscars",
+      propositions: [
+        { text: "Titanic (1997, 11 Oscars)", isIntrus: false },
+        { text: "Ben-Hur (1959, 11 Oscars)", isIntrus: false },
+        { text: "Le Parrain", isIntrus: true },
+        { text: "West Side Story (1961, 10 Oscars)", isIntrus: false },
+      ],
+    };
+    const reason = detectInconsistentFormat(q);
+    expect(reason).not.toBeNull();
+    expect(reason?.withParens).toHaveLength(3);
+    expect(reason?.withoutParens).toEqual(["Le Parrain"]);
+  });
+
+  it("ne flag pas si TOUTES les propositions ont des parenthèses", () => {
+    const q = {
+      type: "coup_par_coup",
+      enonce: "Test",
+      propositions: [
+        { text: "A (1)", isIntrus: false },
+        { text: "B (2)", isIntrus: false },
+      ],
+    };
+    expect(detectInconsistentFormat(q)).toBeNull();
+  });
+
+  it("ne flag pas si AUCUNE proposition n'a de parenthèses", () => {
+    const q = {
+      type: "coup_par_coup",
+      enonce: "Test",
+      propositions: [
+        { text: "A", isIntrus: false },
+        { text: "B", isIntrus: false },
+      ],
+    };
+    expect(detectInconsistentFormat(q)).toBeNull();
+  });
+
+  it("ignore les types non coup_par_coup", () => {
+    const q = {
+      type: "quizz_2",
+      enonce: "Test",
+      propositions: [
+        { text: "Oui (sûr)", isIntrus: false },
+        { text: "Non", isIntrus: false },
+      ],
+    };
+    expect(detectInconsistentFormat(q)).toBeNull();
+  });
+
+  it("ignore quand moins de 2 propositions", () => {
+    const q = {
+      type: "coup_par_coup",
+      enonce: "Test",
+      propositions: [{ text: "Solo (sans match)", isIntrus: false }],
+    };
+    expect(detectInconsistentFormat(q)).toBeNull();
+  });
+
+  it("retourne null sur un objet vide ou invalide", () => {
+    expect(detectInconsistentFormat({})).toBeNull();
+    expect(detectInconsistentFormat(null)).toBeNull();
+    expect(detectInconsistentFormat(undefined)).toBeNull();
+    expect(detectInconsistentFormat({ type: "coup_par_coup" })).toBeNull();
+  });
+});
+
+describe("extractInconsistentFormatFromRaw", () => {
+  it("retourne uniquement les CPC à format incohérent", () => {
+    const arr = [
+      // OK : tous avec parens.
+      {
+        type: "coup_par_coup",
+        enonce: "OK",
+        propositions: [
+          { text: "A (1)" },
+          { text: "B (2)" },
+        ],
+      },
+      // KO : mix.
+      {
+        type: "coup_par_coup",
+        enonce: "Mix",
+        propositions: [
+          { text: "C (3)" },
+          { text: "D" },
+        ],
+      },
+      // Pas concerné : quizz.
+      {
+        type: "quizz_2",
+        enonce: "Quizz",
+        propositions: [{ text: "E (5)" }, { text: "F" }],
+      },
+    ];
+    const out = extractInconsistentFormatFromRaw(arr);
+    expect(out).toHaveLength(1);
+    expect(out[0]?.idx).toBe(1);
+    expect(out[0]?.enonce).toBe("Mix");
+  });
+
+  it("retourne [] sur un input qui n'est pas un tableau", () => {
+    expect(extractInconsistentFormatFromRaw({})).toEqual([]);
+    expect(extractInconsistentFormatFromRaw(null)).toEqual([]);
   });
 });

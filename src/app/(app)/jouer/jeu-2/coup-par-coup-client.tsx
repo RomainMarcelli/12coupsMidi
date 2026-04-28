@@ -43,6 +43,7 @@ import {
 } from "@/lib/game-logic/faceAFace";
 import type { MultiConfig, PlayerConfig } from "@/lib/game-logic/players";
 import { playSound } from "@/lib/sounds";
+import { stripDatesFromText } from "@/lib/text-helpers/strip-dates";
 import { cn } from "@/lib/utils";
 import {
   saveCoupParCoupSession,
@@ -523,7 +524,11 @@ export function CoupParCoupClient({
             return (
               <PropButton
                 key={prop.text}
-                text={prop.text}
+                // H1.3 — On retire les années entre parenthèses des
+                // libellés affichés pour ne pas trahir l'intrus (qui
+                // peut ne pas avoir de date alors que les autres en ont).
+                // Le `key` reste sur le texte original (unique côté data).
+                text={stripDatesFromText(prop.text)}
                 state={state}
                 shaking={shakeText === prop.text}
                 disabled={

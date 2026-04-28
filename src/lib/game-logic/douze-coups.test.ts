@@ -106,6 +106,62 @@ describe("makeInitialDuelThemes", () => {
       makeInitialDuelThemes([cats[0]!], new Map([[1, 5]])),
     ).toBeNull();
   });
+
+  it("I4.2 — évite 2 catégories partageant le même 1ᵉʳ mot", () => {
+    // Pool : Histoire / Histoire antique / Géographie. On veut que la
+    // paire évite (Histoire, Histoire antique) si une 3ᵉ catégorie
+    // existe avec un préfixe différent.
+    const pool = [
+      category(1, "Histoire"),
+      category(2, "Histoire antique"),
+      category(3, "Géographie"),
+    ];
+    const counts = new Map(pool.map((c) => [c.id, 5] as [number, number]));
+    // On boucle 50 fois sur des seeds différents pour s'assurer qu'on
+    // ne tombe JAMAIS sur la paire interdite (Histoire, Histoire antique).
+    for (let s = 1; s <= 50; s++) {
+      const themes = makeInitialDuelThemes(pool, counts, makeSeededRng(s));
+      expect(themes).not.toBeNull();
+      const noms = [themes!.theme1.nom, themes!.theme2.nom].sort();
+      expect(noms).not.toEqual(["Histoire", "Histoire antique"]);
+    }
+  });
+
+  it("I4.2 — fallback : si tout le pool partage le préfixe, on renvoie quand même 2 thèmes", () => {
+    // Cas dégénéré : impossible de respecter la diversité → on doit
+    // quand même retourner 2 thèmes pour ne pas bloquer la partie.
+    const pool = [
+      category(1, "Histoire"),
+      category(2, "Histoire antique"),
+      category(3, "Histoire moderne"),
+    ];
+    const counts = new Map(pool.map((c) => [c.id, 5] as [number, number]));
+    const themes = makeInitialDuelThemes(pool, counts, makeSeededRng(1));
+    expect(themes).not.toBeNull();
+    expect(themes!.theme1.id).not.toBe(themes!.theme2.id);
+  });
+
+  it("I4.2 — sur 5 appels Math.random, produit ≥ 2 paires distinctes (sanity)", () => {
+    // 5 catégories sans préfixe partagé → la diversité ne contraint
+    // pas, et le shuffle Math.random doit donner au moins 2 paires
+    // différentes sur 10 tirages (proba d'échec ~ négligeable).
+    const pool = [
+      category(1, "Sport"),
+      category(2, "Cuisine"),
+      category(3, "Cinéma"),
+      category(4, "Musique"),
+      category(5, "Voyage"),
+    ];
+    const counts = new Map(pool.map((c) => [c.id, 5] as [number, number]));
+    const seen = new Set<string>();
+    for (let i = 0; i < 10; i++) {
+      const themes = makeInitialDuelThemes(pool, counts);
+      seen.add(
+        [themes!.theme1.id, themes!.theme2.id].sort((a, b) => a - b).join("-"),
+      );
+    }
+    expect(seen.size).toBeGreaterThan(1);
+  });
 });
 
 describe("availableDuelThemes + consumeDuelTheme", () => {

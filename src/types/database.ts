@@ -88,6 +88,58 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["user_favorites"]["Insert"]>;
         Relationships: [];
       };
+      custom_avatars: {
+        Row: {
+          id: string;
+          url: string;
+          tags: string[];
+          uploaded_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          url: string;
+          tags?: string[];
+          uploaded_by?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["custom_avatars"]["Insert"]>;
+        Relationships: [];
+      };
+      daily_challenges: {
+        Row: {
+          date: string;
+          question_ids: string[];
+          created_at: string;
+        };
+        Insert: {
+          date: string;
+          question_ids: string[];
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["daily_challenges"]["Insert"]>;
+        Relationships: [];
+      };
+      daily_challenge_results: {
+        Row: {
+          user_id: string;
+          date: string;
+          correct_count: number;
+          total_count: number;
+          answers: Json;
+          completed_at: string;
+        };
+        Insert: {
+          user_id: string;
+          date: string;
+          correct_count: number;
+          total_count: number;
+          answers?: Json;
+          completed_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["daily_challenge_results"]["Insert"]>;
+        Relationships: [];
+      };
       saved_players: {
         Row: {
           id: string;

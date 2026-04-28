@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { spreadByCategoryWithGetter } from "@/lib/game-logic/spread-by-category";
@@ -58,6 +59,10 @@ export async function markRevisionResult(
       success_streak: 0,
     });
     if (error) return { status: "error", message: error.message };
+    // I1.2 — Refresh immédiat du compteur "X erreurs à revoir" sur le
+    // hub révision. Sans ça, l'utilisateur quittant Marathon devait
+    // recharger la page pour voir ses nouvelles erreurs apparaître.
+    revalidatePath("/revision");
     return { status: "added" };
   }
 
@@ -69,6 +74,7 @@ export async function markRevisionResult(
         .delete()
         .eq("id", existing.id);
       if (error) return { status: "error", message: error.message };
+      revalidatePath("/revision");
       return { status: "mastered" };
     }
     const { error } = await supabase
@@ -91,6 +97,9 @@ export async function markRevisionResult(
     })
     .eq("id", existing.id);
   if (error) return { status: "error", message: error.message };
+  // I1.2 — Refresh même sur update (ex. fail_count incrémenté
+  // → la liste des erreurs s'est rafraîchie pour cette question).
+  revalidatePath("/revision");
   return { status: "kept" };
 }
 
@@ -120,7 +129,60 @@ export async function markErrorAsReviewed(
     .eq("question_id", questionId);
 
   if (error) return { status: "error", message: error.message };
+  // H1.4 — Refresh le compteur "X erreurs à revoir" du hub révision.
+  revalidatePath("/revision");
   return { status: "ok" };
+}
+
+/**
+ * I1.3 — Batch markErrorAsReviewed : supprime plusieurs lignes
+ * `wrong_answers` en un seul appel. Utilisé en fin de quizz "Refaire
+ * mes erreurs" pour flusher toutes les questions correctement
+ * répondues qui n'ont pas encore été supprimées.
+ */
+export async function markErrorsAsReviewed(
+  questionIds: string[],
+): Promise<{ status: "ok"; deleted: number } | { status: "error"; message: string }> {
+  if (questionIds.length === 0) return { status: "ok", deleted: 0 };
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { count, error } = await supabase
+    .from("wrong_answers")
+    .delete({ count: "exact" })
+    .eq("user_id", user.id)
+    .in("question_id", questionIds);
+
+  if (error) return { status: "error", message: error.message };
+  revalidatePath("/revision");
+  return { status: "ok", deleted: count ?? 0 };
+}
+
+/**
+ * H1.5 — Vide complètement la liste `wrong_answers` de l'utilisateur
+ * connecté. Action irréversible (à protéger par une modal de
+ * confirmation côté UI).
+ */
+export async function resetAllWrongAnswers(): Promise<
+  { status: "ok"; deleted: number } | { status: "error"; message: string }
+> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { count, error } = await supabase
+    .from("wrong_answers")
+    .delete({ count: "exact" })
+    .eq("user_id", user.id);
+
+  if (error) return { status: "error", message: error.message };
+  revalidatePath("/revision");
+  return { status: "ok", deleted: count ?? 0 };
 }
 
 // ===========================================================================

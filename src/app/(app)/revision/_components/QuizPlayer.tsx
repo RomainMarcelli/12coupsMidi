@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useContext, useEffect, useRef, useState, useTransition } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnswerButton } from "@/components/game/AnswerButton";
 import { FavoriteStar } from "@/components/game/FavoriteStar";
 import { SpeakerButton } from "@/components/game/SpeakerButton";
@@ -29,7 +30,11 @@ import { buildTTSFeedbackText, useAutoPlayTTS } from "@/lib/tts-helpers";
 import { playSound } from "@/lib/sounds";
 import { cn } from "@/lib/utils";
 import type { RevQuestion } from "@/lib/revision/types";
-import { markRevisionResult } from "../actions";
+import {
+  markErrorsAsReviewed,
+  markRevisionResult,
+} from "../actions";
+import { FavoriteIdsContext } from "./favorite-ids-context";
 
 interface QuizPlayerProps {
   questions: RevQuestion[];
@@ -37,6 +42,23 @@ interface QuizPlayerProps {
   onDone?: (stats: { correct: number; wrong: number }) => void;
   /** Si true (défaut), une mauvaise réponse réécrit dans wrong_answers via markRevisionResult. */
   trackWrong?: boolean;
+  /**
+   * H1.4 — Si true, une bonne réponse retire IMMÉDIATEMENT la ligne
+   * de wrong_answers (au lieu d'incrémenter success_streak avec un
+   * seuil à 3). Réservé au mode "Refaire mes erreurs" pour que le
+   * compteur d'erreurs décroisse en temps réel et que l'utilisateur
+   * puisse quitter avant la fin sans perdre le crédit.
+   */
+  removeOnCorrect?: boolean;
+  /**
+   * I1.5 — IDs des questions déjà favorites pour le user. L'étoile
+   * s'affiche remplie pour ces questions. Si non fourni, toutes les
+   * étoiles partent vides (état initial).
+   *
+   * Sur la page Favoris, on passe l'ensemble complet des IDs (puisque
+   * toutes les questions sont favorites par définition).
+   */
+  favoriteIds?: ReadonlySet<string>;
 }
 
 type Phase =
@@ -47,7 +69,14 @@ export function QuizPlayer({
   questions,
   onDone,
   trackWrong = true,
+  removeOnCorrect = false,
+  favoriteIds,
 }: QuizPlayerProps) {
+  // I1.5 — Fallback sur le contexte si la prop n'est pas passée. Permet
+  // aux modes (Marathon, Apprendre…) de bénéficier des étoiles remplies
+  // sans devoir prop-driller le Set à chaque appel.
+  const ctxFavoriteIds = useContext(FavoriteIdsContext);
+  const effectiveFavoriteIds = favoriteIds ?? ctxFavoriteIds;
   const [phase, setPhase] = useState<Phase>({
     kind: "playing",
     idx: 0,
@@ -59,6 +88,64 @@ export function QuizPlayer({
   // moyenne par question dans le DoneScreen. Set à chaque (re)démarrage.
   const sessionStartedAtRef = useRef<number>(Date.now());
   const sessionEndedAtRef = useRef<number | null>(null);
+
+  // I1.3 — Set des questions correctement répondues en attente de DELETE
+  // (mode Refaire mes erreurs uniquement). On accumule ici tant que
+  // l'utilisateur n'a pas cliqué "Suivant" (ou quitté la page) — au
+  // moment voulu, on flush en batch via `markErrorsAsReviewed`.
+  // Ref (et pas state) car ça ne doit pas re-render.
+  const pendingReviewedRef = useRef<Set<string>>(new Set());
+
+  function flushPendingReviewed() {
+    if (!removeOnCorrect) return;
+    if (pendingReviewedRef.current.size === 0) return;
+    const ids = Array.from(pendingReviewedRef.current);
+    pendingReviewedRef.current = new Set();
+    // Fire-and-forget : la page peut se démonter avant la fin de
+    // l'appel, c'est OK (la BDD finalisera côté serveur).
+    void markErrorsAsReviewed(ids);
+  }
+
+  // I1.3 — sendBeacon best-effort si l'utilisateur ferme l'onglet ou
+  // navigue hors de l'app sans cliquer "Suivant" sur la dernière
+  // question correctement répondue.
+  // Limites connues : sur mobile (iOS Safari notamment), le navigateur
+  // peut interrompre la requête quand l'app passe en background — d'où
+  // l'écoute combinée beforeunload + pagehide + visibilitychange.
+  useEffect(() => {
+    if (!removeOnCorrect) return;
+    function flushViaBeacon() {
+      const ids = Array.from(pendingReviewedRef.current);
+      if (ids.length === 0) return;
+      pendingReviewedRef.current = new Set();
+      const blob = new Blob([JSON.stringify({ questionIds: ids })], {
+        type: "application/json",
+      });
+      if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+        navigator.sendBeacon("/api/revision/mark-reviewed", blob);
+      } else {
+        // Fallback : fetch keepalive (perd la garantie sendBeacon mais
+        // tente quand même). La page peut se démonter avant la fin.
+        void fetch("/api/revision/mark-reviewed", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ questionIds: ids }),
+          keepalive: true,
+        }).catch(() => undefined);
+      }
+    }
+    function onVisibilityChange() {
+      if (document.visibilityState === "hidden") flushViaBeacon();
+    }
+    window.addEventListener("beforeunload", flushViaBeacon);
+    window.addEventListener("pagehide", flushViaBeacon);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("beforeunload", flushViaBeacon);
+      window.removeEventListener("pagehide", flushViaBeacon);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [removeOnCorrect]);
 
   if (phase.kind === "done") {
     const totalMs =
@@ -93,10 +180,22 @@ export function QuizPlayer({
       index={phase.idx}
       total={questions.length}
       trackWrong={trackWrong}
+      removeOnCorrect={removeOnCorrect}
+      isFavorite={effectiveFavoriteIds.has(q.questionId)}
+      onCorrectForReview={(questionId) => {
+        // I1.3 — Bonne réponse en mode Refaire : on stocke en attente
+        // du clic "Suivant" (ou de la fin du quizz / beforeunload).
+        // Pas de DELETE BDD ici.
+        pendingReviewedRef.current.add(questionId);
+      }}
       onDone={(isCorrect) => {
         const next = phase.idx + 1;
         const correct = phase.correct + (isCorrect ? 1 : 0);
         const wrong = phase.wrong + (isCorrect ? 0 : 1);
+        // I1.3 — Au clic "Suivant", flush les bonnes réponses en
+        // attente. En pratique = la question qu'on vient de quitter
+        // si elle a été correctement répondue.
+        flushPendingReviewed();
         if (next >= questions.length) {
           sessionEndedAtRef.current = Date.now();
           onDone?.({ correct, wrong });
@@ -116,12 +215,24 @@ function PlayCard({
   index,
   total,
   trackWrong,
+  removeOnCorrect,
+  isFavorite,
+  onCorrectForReview,
   onDone,
 }: {
   question: RevQuestion;
   index: number;
   total: number;
   trackWrong: boolean;
+  removeOnCorrect: boolean;
+  isFavorite: boolean;
+  /**
+   * I1.3 — Appelé quand la question est correctement répondue ET que
+   * `removeOnCorrect` est actif. Le parent stocke l'ID dans son set
+   * "pending reviewed" sans toucher à la BDD ; le DELETE est différé
+   * au clic "Suivant" / fin de quizz / beforeunload.
+   */
+  onCorrectForReview: (questionId: string) => void;
   onDone: (isCorrect: boolean) => void;
 }) {
   const [feedback, setFeedback] = useState<
@@ -169,9 +280,19 @@ function PlayCard({
     feedbackSetAtRef.current = Date.now();
     setFeedback({ kind: isCorrect ? "correct" : "wrong", correctText });
     if (trackWrong) {
-      startTransition(async () => {
-        await markRevisionResult(question.questionId, isCorrect);
-      });
+      // I1.3 — En mode "Refaire mes erreurs", la bonne réponse n'est
+      // PLUS supprimée immédiatement : on prévient le parent qu'elle
+      // peut être marquée révisée, mais le DELETE BDD est différé
+      // jusqu'au clic "Suivant" (ou fin de quizz / beforeunload).
+      // Une mauvaise réponse passe toujours par markRevisionResult
+      // (qui réincrémente fail_count).
+      if (removeOnCorrect && isCorrect) {
+        onCorrectForReview(question.questionId);
+      } else {
+        startTransition(async () => {
+          await markRevisionResult(question.questionId, isCorrect);
+        });
+      }
     }
   }
 
@@ -233,7 +354,7 @@ function PlayCard({
             Difficulté {question.difficulte}
           </span>
         </div>
-        <FavoriteStar questionId={question.questionId} />
+        <FavoriteStar questionId={question.questionId} initial={isFavorite} />
       </div>
 
       {/* Énoncé */}
@@ -477,6 +598,7 @@ function DoneScreen({
   totalMs: number;
   onRestart: () => void;
 }) {
+  const router = useRouter();
   const ratio = total > 0 ? Math.round((correct / total) * 100) : 0;
   const totalSec = Math.max(1, Math.round(totalMs / 1000));
   const avgSec = total > 0 ? Math.round(totalSec / total) : 0;
@@ -558,20 +680,28 @@ function DoneScreen({
           <RotateCcw className="h-4 w-4" aria-hidden="true" />
           Recommencer
         </Button>
-        <Link
-          href={`/revision?mode=erreurs-lecture&t=${Date.now()}`}
+        {/* Timestamp généré au clic (pas au render) → évite
+            l'hydration mismatch entre SSR et client. */}
+        <button
+          type="button"
+          onClick={() =>
+            router.push(`/revision?mode=erreurs-lecture&t=${Date.now()}`)
+          }
           className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-buzz/40 bg-buzz/5 px-5 text-sm font-bold text-buzz transition-all hover:scale-[1.02] hover:border-buzz hover:bg-buzz/10 hover:shadow-[0_0_20px_rgba(230,57,70,0.25)]"
         >
           <BookOpen className="h-4 w-4" aria-hidden="true" />
           Voir mes erreurs
-        </Link>
-        <Link
-          href={`/revision?mode=retravailler&t=${Date.now()}`}
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            router.push(`/revision?mode=retravailler&t=${Date.now()}`)
+          }
           className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-buzz/40 bg-buzz/5 px-5 text-sm font-bold text-buzz transition-all hover:scale-[1.02] hover:border-buzz hover:bg-buzz/10 hover:shadow-[0_0_20px_rgba(230,57,70,0.25)]"
         >
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           Refaire mes erreurs
-        </Link>
+        </button>
         <Link
           href="/"
           className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-gold/50 bg-card px-5 text-sm font-bold text-foreground transition-all hover:scale-[1.02] hover:border-gold hover:bg-gold/10 hover:shadow-[0_0_20px_rgba(245,183,0,0.25)]"

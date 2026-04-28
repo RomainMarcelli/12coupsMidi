@@ -52,10 +52,9 @@ export default async function AdminHubPage() {
       href: "/admin/avatars",
       title: "Gérer les avatars",
       desc: "Importer des avatars custom pour les utilisateurs.",
-      stats: "Bientôt disponible",
+      stats: "Pack pré-défini + uploads admin",
       icon: ImagePlus,
       accent: "buzz",
-      disabled: true,
     },
   ];
 

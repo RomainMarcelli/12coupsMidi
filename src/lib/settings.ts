@@ -35,6 +35,13 @@ export interface UserSettings {
   ttsRate: number;
   /** Hauteur (pitch) TTS (0.5 → 2). 1 = normal. */
   ttsPitch: number;
+  /**
+   * I3.1 — Calendrier du Défi du jour : afficher les jours manqués
+   * (passés non joués, depuis l'inscription) en rouge clair.
+   * `false` = couleur neutre (gris). Utile pour les utilisateurs qui
+   * trouvent ça trop punitif.
+   */
+  defiShowMissedDays: boolean;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
@@ -46,6 +53,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   ttsVoiceUri: null,
   ttsRate: 1.0,
   ttsPitch: 1.0,
+  defiShowMissedDays: true,
 };
 
 const LS_KEY = "mm-settings-v1";
@@ -121,6 +129,9 @@ function sanitize(s: Partial<UserSettings>): Partial<UserSettings> {
   }
   if (typeof s.ttsPitch === "number" && Number.isFinite(s.ttsPitch)) {
     out.ttsPitch = Math.max(0.5, Math.min(2, s.ttsPitch));
+  }
+  if (typeof s.defiShowMissedDays === "boolean") {
+    out.defiShowMissedDays = s.defiShowMissedDays;
   }
   return out;
 }

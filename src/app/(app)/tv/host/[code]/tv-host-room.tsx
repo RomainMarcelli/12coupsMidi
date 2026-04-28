@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { createClient } from "@/lib/supabase/client";
 import { endTvRoom, updateTvRoomState } from "@/lib/realtime/room-actions";
 import { prepareTvGame, saveTvGameState } from "@/lib/realtime/tv-game-actions";
@@ -49,6 +50,9 @@ export function TvHostRoom({
   const [status, setStatus] = useState(initialStatus);
   const [starting, setStarting] = useState(false);
   const [joinUrl, setJoinUrl] = useState<string | null>(null);
+  // H4.3 — État du modal "Mettre fin à la partie".
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const [ending, setEnding] = useState(false);
 
   // Calculé côté client uniquement (origin n'est pas dispo en SSR).
   useEffect(() => {
@@ -161,10 +165,16 @@ export function TvHostRoom({
     setStarting(false);
   }
 
+  /**
+   * H4.3 — Lance l'arrêt de partie après confirmation via modal stylée
+   * (au lieu du window.confirm natif "localhost:3000 indique : …").
+   */
   async function handleEnd() {
-    if (!window.confirm("Mettre fin à la partie ?")) return;
+    setEnding(true);
     if (hostChannel) await hostChannel.unsubscribe();
     await endTvRoom(roomId);
+    setEnding(false);
+    setShowEndConfirm(false);
     router.push("/tv/host");
   }
 
@@ -299,7 +309,7 @@ export function TvHostRoom({
         game={game}
         players={players}
         tokenCache={tokenPseudoCache.current}
-        onEnd={handleEnd}
+        onEnd={() => setShowEndConfirm(true)}
       />
     );
   }
@@ -309,7 +319,7 @@ export function TvHostRoom({
         game={game}
         players={players}
         tokenCache={tokenPseudoCache.current}
-        onClose={handleEnd}
+        onClose={() => setShowEndConfirm(true)}
       />
     );
   }
@@ -332,7 +342,7 @@ export function TvHostRoom({
         </div>
         <button
           type="button"
-          onClick={handleEnd}
+          onClick={() => setShowEndConfirm(true)}
           aria-label="Mettre fin à la partie"
           className="inline-flex items-center gap-1.5 rounded-md border border-buzz/30 bg-card px-3 py-2 text-sm font-semibold text-buzz hover:border-buzz hover:bg-buzz/10"
         >
@@ -453,6 +463,18 @@ export function TvHostRoom({
           )}
         </section>
       </div>
+      {/* H4.3 — Modal "Mettre fin à la partie" en remplacement du
+          window.confirm natif. */}
+      <ConfirmDialog
+        open={showEndConfirm}
+        onClose={() => !ending && setShowEndConfirm(false)}
+        onConfirm={handleEnd}
+        isPending={ending}
+        title="Mettre fin à la partie ?"
+        description="Tous les joueurs vont être déconnectés. Cette action est irréversible."
+        confirmLabel={ending ? "Fermeture…" : "Mettre fin"}
+        confirmVariant="danger"
+      />
     </main>
   );
 }

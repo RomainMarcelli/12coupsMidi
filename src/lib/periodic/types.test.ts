@@ -17,7 +17,7 @@ import {
 } from "./types";
 
 describe("FAMILY_STYLES", () => {
-  it("a exactement 10 familles", () => {
+  it("a exactement 10 familles (I2.1 — revert split non-metaux)", () => {
     expect(Object.keys(FAMILY_STYLES)).toHaveLength(10);
     expect(ALL_FAMILIES).toHaveLength(10);
   });
@@ -45,6 +45,12 @@ describe("FAMILY_STYLES", () => {
   it("getFamilyStyle retourne le bon style pour une famille connue", () => {
     expect(getFamilyStyle("metaux-alcalins").label).toBe("Métaux alcalins");
     expect(getFamilyStyle("gaz-nobles").label).toBe("Gaz nobles");
+  });
+
+  it("metaux-pauvres et non-metaux (anciens slugs H) → fallback Inconnu", () => {
+    // Ces slugs ont été retirés en I2.1.
+    expect(getFamilyStyle("metaux-pauvres").label).toBe("Inconnu");
+    expect(getFamilyStyle("non-metaux").label).toBe("Inconnu");
   });
 });
 

@@ -78,6 +78,7 @@ import {
 } from "@/lib/game-logic/faceAFace";
 import { isMatch } from "@/lib/matching/fuzzy-match";
 import { playSound } from "@/lib/sounds";
+import { stripDatesFromText } from "@/lib/text-helpers/strip-dates";
 import { cn } from "@/lib/utils";
 import type { Database } from "@/types/database";
 import { useDouzeCoupsStore } from "@/stores/douzeCoupsStore";
@@ -625,15 +626,27 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
     [currentQuestion, currentPlayer, recordCorrect, recordWrong, advanceToNext],
   );
 
-  // Bot auto-answer (gelé pendant le sas transition_duel)
+  // Bot auto-answer (gelé pendant le sas transition_duel).
+  // H1.2 — Capture player+question au moment du schedule. Si le tour
+  // ou la question change pendant le délai, le timer est cleanup ; mais
+  // par sécurité on re-vérifie au firing time qu'on opère bien sur le
+  // même couple (currentPlayer, currentQuestion) — évite les races
+  // résiduelles où un setTimeout obsolète appellerait processAnswer
+  // sur une question déjà passée.
   useEffect(() => {
     if (!currentPlayer?.isBot) return;
     if (!currentQuestion) return;
     if (isTransitioningRef.current) return;
     if (inTransitionDuel) return;
+    const scheduledPlayerId = currentPlayer.id;
+    const scheduledQuestionId = currentQuestion.id;
     const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen");
     const t = window.setTimeout(() => {
       if (isTransitioningRef.current) return;
+      // Garde stricte : si le tour ou la question a glissé entre-temps,
+      // on annule. Évite les questions qui "changent toutes seules".
+      if (currentPlayer.id !== scheduledPlayerId) return;
+      if (currentQuestion.id !== scheduledQuestionId) return;
       const correct = botAnswersCorrectly(currentPlayer.botLevel ?? "moyen");
       const correctIdx = currentQuestion.reponses.findIndex((r) => r.correct);
       const wrongIdx = correctIdx === 0 ? 1 : 0;
@@ -956,35 +969,21 @@ function DcDuelStage({ duelThemes }: { duelThemes: DuelTheme[] }) {
       isSecondDuel={consumedCategoryIds.length > 0}
       botDifficulty={challengerPlayer.botLevel ?? "moyen"}
       onComplete={(result: DuelResult) => {
-        // Le thème choisi = on doit le retrouver via le questionId
-        // Simplification : on sait que result.eliminatedId et result.winnerId.
-        // Pour `consumeDuelTheme`, il faut la category. DuelPanel ne le retourne
-        // pas directement, mais on peut retrouver via la question.
-        // On transmet `undefined` pour la catégorie : le store décide de
-        // consommer le premier thème dispo correspondant à la question.
-        // Pour simplifier ici, on passe -1 et le store fera son choix.
-        designateAdversary(result.eliminatedId === challengerPlayer.id
-          ? result.winnerId
-          : result.eliminatedId);
+        // H1.1 — Le DuelPanel retourne maintenant `chosenCategoryId`
+        // directement (au lieu d'avoir à le re-deviner via la question).
+        // Garantit que `consumeDuelTheme` est appelé avec un id valide.
+        designateAdversary(
+          result.eliminatedId === challengerPlayer.id
+            ? result.winnerId
+            : result.eliminatedId,
+        );
         resolveDuel(
           result.adversaryAnsweredCorrectly,
-          findCategoryForQuestion(duelThemes, result.questionId) ?? -1,
+          result.chosenCategoryId,
         );
       }}
     />
   );
-}
-
-function findCategoryForQuestion(
-  themes: DuelTheme[],
-  questionId: string,
-): number | undefined {
-  for (const t of themes) {
-    if (t.questions.some((q) => q.id === questionId)) {
-      return t.categoryId;
-    }
-  }
-  return undefined;
 }
 
 function RougeAnnounce({ player }: { player: DcPlayer | null }) {
@@ -1262,7 +1261,8 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
           return (
             <CpcPropButton
               key={prop.text}
-              text={prop.text}
+              // H1.3 — Strip dates pour ne pas trahir l'intrus.
+              text={stripDatesFromText(prop.text)}
               state={state}
               shaking={shakeText === prop.text}
               disabled={

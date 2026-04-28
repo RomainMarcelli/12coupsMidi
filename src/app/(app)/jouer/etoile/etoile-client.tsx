@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { VoiceInput } from "@/components/game/VoiceInput";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import {
   JEU2_AUTO_REVEAL_INTERVAL_SECONDS,
   JEU2_DURATION_SECONDS,
@@ -143,11 +144,16 @@ export function EtoileClient({ question }: EtoileClientProps) {
     }
   }
 
+  // H4.3 — Modal d'abandon (remplace le confirm() natif).
+  const [showAbandonConfirm, setShowAbandonConfirm] = useState(false);
+
   function abandon() {
     if (phase !== "playing") return;
-    if (!confirm("Abandonner la partie ? La bonne réponse sera affichée.")) {
-      return;
-    }
+    setShowAbandonConfirm(true);
+  }
+
+  function confirmAbandon() {
+    setShowAbandonConfirm(false);
     playSound("lose");
     setPhase("results");
   }
@@ -307,6 +313,15 @@ export function EtoileClient({ question }: EtoileClientProps) {
           Essais : {attempts.join(" · ")}
         </p>
       )}
+      <ConfirmDialog
+        open={showAbandonConfirm}
+        onClose={() => setShowAbandonConfirm(false)}
+        onConfirm={confirmAbandon}
+        title="Abandonner la partie ?"
+        description="La bonne réponse sera affichée et la partie se terminera."
+        confirmLabel="Abandonner"
+        confirmVariant="danger"
+      />
     </main>
   );
 }

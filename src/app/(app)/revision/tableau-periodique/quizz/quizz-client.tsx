@@ -48,9 +48,12 @@ export function QuizzClient({ elements }: Props) {
   const [abandoned, setAbandoned] = useState<Set<number>>(new Set());
   const [input, setInput] = useState("");
   const [justFound, setJustFound] = useState<number | null>(null);
-  // G3.2 — Toast d'erreur fugace (1.5 s) si la saisie ne matche aucun
-  // élément. Affiché à la soumission (Entrée / clic Valider).
-  const [errorToast, setErrorToast] = useState<string | null>(null);
+  // G3.2 + H2.4 — Toast fugace (1.5 s) avec 2 niveaux :
+  //   - "error"   : rouge, "Aucun élément ne correspond"
+  //   - "warning" : jaune, "Tu as déjà trouvé X"
+  const [toast, setToast] = useState<
+    { type: "error" | "warning"; message: string } | null
+  >(null);
   const inputRef = useRef<HTMLInputElement>(null);
   // G3.3 — Ref vers le bloc résultats pour scroll auto après abandon.
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -91,6 +94,24 @@ export function QuizzClient({ elements }: Props) {
    * - Si pas de match → toast rouge fugace 1.5 s, l'input est CONSERVÉ
    *   pour que l'utilisateur puisse corriger sa typo.
    */
+  function showToast(type: "error" | "warning", message: string) {
+    setToast({ type, message });
+    window.setTimeout(() => setToast(null), 1500);
+  }
+
+  /**
+   * H2.4 — Scroll auto vers la case nouvellement remplie si elle est
+   * hors écran. Cherche le DOM via data-element-num (attribut posé
+   * sur chaque ElementCell).
+   */
+  function scrollToCell(numAtomique: number) {
+    if (typeof document === "undefined") return;
+    const el = document.querySelector(
+      `[data-element-num="${numAtomique}"]`,
+    ) as HTMLElement | null;
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
   function handleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
     if (mode === "done") return;
@@ -98,12 +119,13 @@ export function QuizzClient({ elements }: Props) {
     if (!value) return;
     const match = matchElementByName(value, targetElements);
     if (!match) {
-      setErrorToast(`Aucun élément ne correspond à "${value}"`);
+      showToast("error", `Aucun élément ne correspond à "${value}"`);
       playSound("buzz");
-      window.setTimeout(() => setErrorToast(null), 1500);
       return;
     }
     if (revealed.has(match.numero_atomique)) {
+      // H2.4 — Toast jaune "déjà trouvé" + on vide l'input.
+      showToast("warning", `Tu as déjà trouvé ${match.nom} !`);
       setInput("");
       return;
     }
@@ -113,6 +135,8 @@ export function QuizzClient({ elements }: Props) {
     setJustFound(match.numero_atomique);
     playSound("ding");
     setInput("");
+    // H2.4 — Scroll vers la case nouvellement révélée.
+    window.setTimeout(() => scrollToCell(match.numero_atomique), 50);
     window.setTimeout(() => setJustFound(null), 800);
     if (next.size >= total) {
       setMode("done");
@@ -226,19 +250,24 @@ export function QuizzClient({ elements }: Props) {
 
       {mode === "playing" && (
         <div className="sticky bottom-2 z-10 mx-auto flex w-full max-w-xl flex-col gap-1.5">
-          {/* G3.2 — Toast d'erreur fugace si match KO. */}
+          {/* G3.2 + H2.4 — Toast fugace 2 niveaux : rouge (pas trouvé)
+              ou jaune (déjà trouvé). */}
           <AnimatePresence>
-            {errorToast && (
+            {toast && (
               <motion.p
-                key="err"
+                key={toast.message}
                 role="alert"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
-                className="inline-flex items-center gap-1.5 self-center rounded-full border border-buzz/40 bg-buzz/15 px-3 py-1 text-xs font-bold text-buzz shadow"
+                className={
+                  toast.type === "error"
+                    ? "inline-flex items-center gap-1.5 self-center rounded-full border border-buzz/40 bg-buzz/15 px-3 py-1 text-xs font-bold text-buzz shadow"
+                    : "inline-flex items-center gap-1.5 self-center rounded-full border border-gold/50 bg-gold/15 px-3 py-1 text-xs font-bold text-gold-warm shadow"
+                }
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
-                {errorToast}
+                {toast.message}
               </motion.p>
             )}
           </AnimatePresence>

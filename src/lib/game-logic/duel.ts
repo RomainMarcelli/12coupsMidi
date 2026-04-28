@@ -50,6 +50,13 @@ export interface DuelResult {
   /** true si l'adversaire (non-rouge) a répondu correctement. */
   adversaryAnsweredCorrectly: boolean;
   questionId: string;
+  /**
+   * H1.1 — categoryId du thème choisi pour ce duel. Permet à l'appelant
+   * de consommer le thème côté store sans avoir à re-deviner via
+   * `findCategoryForQuestion` (qui peut retourner -1 si la question
+   * n'est pas dans le pool local).
+   */
+  chosenCategoryId: number;
 }
 
 /**
@@ -155,13 +162,21 @@ export function resolveDuel(params: {
   adversaryId: string;
   adversaryAnsweredCorrectly: boolean;
   questionId: string;
+  chosenCategoryId: number;
 }): DuelResult {
-  const { rougeId, adversaryId, adversaryAnsweredCorrectly, questionId } = params;
+  const {
+    rougeId,
+    adversaryId,
+    adversaryAnsweredCorrectly,
+    questionId,
+    chosenCategoryId,
+  } = params;
   return {
     winnerId: adversaryAnsweredCorrectly ? adversaryId : rougeId,
     eliminatedId: adversaryAnsweredCorrectly ? rougeId : adversaryId,
     adversaryAnsweredCorrectly,
     questionId,
+    chosenCategoryId,
   };
 }
 

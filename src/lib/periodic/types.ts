@@ -24,18 +24,17 @@ export interface PeriodicElement {
 }
 
 /**
- * G2.1 — 10 familles officielles (slugs FR sans accents).
- * Mapping anglais → FR :
- *   alkali metal → metaux-alcalins
- *   alkaline earth metal → metaux-alcalino-terreux
- *   transition metal → metaux-transition
- *   post-transition metal → metaux-post-transition
- *   metalloid → metalloides
- *   diatomic + polyatomic nonmetal → non-metaux-reactifs
- *   noble gas → gaz-nobles
- *   lanthanide → lanthanides
- *   actinide → actinides
- *   unknown, … → proprietes-inconnues
+ * I2.1 — 10 familles officielles standards FR.
+ * Slugs sans accents (compatibles SQL/URL).
+ *
+ * Diff vs H2.1 (revert) :
+ *   • metaux-pauvres → metaux-post-transition (terminologie officielle FR)
+ *   • Suppression de la distinction non-metaux / non-metaux-reactifs :
+ *     une seule famille `non-metaux-reactifs` pour TOUS les non-métaux
+ *     (validé par utilisateur, mapping ÉLÉMENT → FAMILLE refait à zéro
+ *     dans la migration 0014).
+ *   • Astate (85) classé dans les métaux de post-transition.
+ *   • Hydrogène (1) classé dans les non-métaux réactifs.
  */
 export type PeriodicFamily =
   | "metaux-alcalins"
@@ -52,6 +51,7 @@ export type PeriodicFamily =
 /**
  * Palette pastel par famille. `bg` = fond de la cellule (toujours clair
  * pour rester lisible avec `text-on-color` qui force le texte navy).
+ * Libellés au pluriel (cohérents avec la légende et la barre de progrès).
  */
 export const FAMILY_STYLES: Record<
   PeriodicFamily,

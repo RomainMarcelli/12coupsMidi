@@ -224,6 +224,7 @@ export function DuelPanel({
         adversaryId,
         adversaryAnsweredCorrectly: isCorrect,
         questionId: duelQuestion.id,
+        chosenCategoryId: chosenTheme?.categoryId ?? -1,
       });
       setResult(duelResult);
       setPhase("feedback");
@@ -236,7 +237,7 @@ export function DuelPanel({
         }
       }, FEEDBACK_DURATION_MS);
     },
-    [duelQuestion, adversaryId, rougePlayer.id],
+    [duelQuestion, adversaryId, rougePlayer.id, chosenTheme],
   );
 
   const handleHumanAnswer = useCallback(

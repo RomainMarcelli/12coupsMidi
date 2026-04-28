@@ -10,7 +10,9 @@ import {
 } from "@/lib/schemas/question";
 import { importQuestionsBulk, type ImportResult } from "../actions";
 import {
+  extractInconsistentFormatFromRaw,
   extractSuspiciousFromRaw,
+  type InconsistentFormatEntry,
   type SuspiciousEntry,
 } from "./detect-suspicious";
 
@@ -34,11 +36,13 @@ type Parsed =
       error: string;
       issues: string[];
       suspicious: SuspiciousEntry[];
+      inconsistent: InconsistentFormatEntry[];
     }
   | {
       kind: "ok";
       data: QuestionInput[];
       suspicious: SuspiciousEntry[];
+      inconsistent: InconsistentFormatEntry[];
     };
 
 function parseRaw(raw: string): Parsed {
@@ -55,6 +59,10 @@ function parseRaw(raw: string): Parsed {
   // Suspectes calculées AVANT Zod, pour qu'elles s'affichent même
   // quand la validation échoue.
   const suspicious = extractSuspiciousFromRaw(json);
+  // I2.3 — Détection format incohérent (Coup par Coup avec mix de
+  // propositions à parenthèses et sans). Affiché en warning gold mais
+  // ne bloque pas l'import (informatif).
+  const inconsistent = extractInconsistentFormatFromRaw(json);
   const parsed = questionsBulkSchema.safeParse(json);
   if (!parsed.success) {
     return {
@@ -64,9 +72,10 @@ function parseRaw(raw: string): Parsed {
         .slice(0, 10)
         .map((i) => `[${i.path.join(".")}] ${i.message}`),
       suspicious,
+      inconsistent,
     };
   }
-  return { kind: "ok", data: parsed.data, suspicious };
+  return { kind: "ok", data: parsed.data, suspicious, inconsistent };
 }
 
 export function ImportForm() {
@@ -83,6 +92,13 @@ export function ImportForm() {
   const suspicious =
     parsed.kind === "ok" || parsed.kind === "zod-error"
       ? parsed.suspicious
+      : [];
+  // I2.3 — Idem pour les questions à format incohérent (CPC avec mix
+  // parenthèses/no-parenthèses). Affichage purement informatif —
+  // on n'empêche pas l'import.
+  const inconsistent =
+    parsed.kind === "ok" || parsed.kind === "zod-error"
+      ? parsed.inconsistent
       : [];
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -185,6 +201,45 @@ export function ImportForm() {
             ))}
             {suspicious.length > 10 && (
               <li>… et {suspicious.length - 10} autre(s).</li>
+            )}
+          </ul>
+        </div>
+      )}
+      {/* I2.3 — Encart gold : format incohérent dans des questions CPC
+          (mix de propositions avec et sans parenthèses). Informatif,
+          ne bloque pas l'import. */}
+      {inconsistent.length > 0 && (
+        <div
+          role="alert"
+          className="rounded-md border border-gold/50 bg-gold/10 p-4 text-sm text-foreground"
+        >
+          <p className="inline-flex items-center gap-2 font-bold text-gold-warm">
+            <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+            {inconsistent.length} question{inconsistent.length > 1 ? "s" : ""}{" "}
+            Coup par Coup au format incohérent
+          </p>
+          <p className="mt-1 text-xs text-foreground/70">
+            Certaines propositions ont des parenthèses (ex.{" "}
+            <code>(1972, 3 Oscars)</code>) et d&apos;autres non. L&apos;intrus
+            risque d&apos;être trop visible — harmonise (toutes avec ou
+            toutes sans).
+          </p>
+          <ul className="mt-2 max-h-40 list-disc overflow-y-auto pl-5 text-xs text-foreground/80">
+            {inconsistent.slice(0, 5).map((s) => (
+              <li key={s.idx}>
+                <strong>#{s.idx + 1}</strong>{" "}
+                <span className="italic">{s.enonce}</span> —{" "}
+                {s.withParens.length} avec parenthèses,{" "}
+                {s.withoutParens.length} sans (
+                <span className="text-buzz">
+                  {s.withoutParens.slice(0, 3).join(", ")}
+                  {s.withoutParens.length > 3 ? "…" : ""}
+                </span>
+                )
+              </li>
+            ))}
+            {inconsistent.length > 5 && (
+              <li>… et {inconsistent.length - 5} autre(s).</li>
             )}
           </ul>
         </div>
