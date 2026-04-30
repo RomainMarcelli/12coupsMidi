@@ -19,7 +19,7 @@ export default async function TvHostRoomPage({
 
   const { data: room } = await supabase
     .from("tv_rooms")
-    .select("id, code, host_id, status, game_mode, created_at")
+    .select("id, code, host_id, status, game_mode, mode, created_at")
     .eq("code", code)
     .neq("status", "ended")
     .maybeSingle();
@@ -77,6 +77,7 @@ export default async function TvHostRoomPage({
             }
           : null
       }
+      roomModeKind={(room.mode as "scan" | "remote" | null) ?? "scan"}
     />
   );
 }

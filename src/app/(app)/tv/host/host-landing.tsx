@@ -7,25 +7,33 @@ import {
   Gamepad2,
   Loader2,
   MonitorPlay,
+  QrCode,
   Smartphone,
   Tv,
   Users,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { createTvRoom } from "@/lib/realtime/room-actions";
+
+type RoomMode = "scan" | "remote";
 
 /**
  * Landing visuelle "Créer une partie TV" : explique le concept en 3 lignes
  * (TV affiche, téléphones jouent), bouton de création principal.
+ *
+ * P4.1 — Choix du mode "scan" (1 téléphone par joueur) vs "remote"
+ * (1 seul téléphone régie commande pour tous).
  */
 export function TvHostLanding() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<RoomMode>("scan");
 
   function handleCreate() {
     setError(null);
     startTransition(async () => {
-      const res = await createTvRoom({ gameMode: "douze_coups" });
+      const res = await createTvRoom({ gameMode: "douze_coups", mode });
       if (!res.ok) {
         setError(res.message);
         return;
@@ -57,6 +65,29 @@ export function TvHostLanding() {
         <Step icon={MonitorPlay} title="TV affiche" desc="QR code à scanner" />
         <Step icon={Smartphone} title="Tels rejoignent" desc="Code à 4 chiffres" />
         <Step icon={Users} title="2 à 8 joueurs" desc="Tour par tour" />
+      </div>
+
+      {/* P4.1 — Choix du mode de jeu : scan (1 tel/joueur) vs remote (1 tel régie). */}
+      <div className="flex w-full flex-col gap-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-foreground/50">
+          Mode de jeu
+        </p>
+        <div className="grid w-full gap-3 sm:grid-cols-2">
+          <ModeCard
+            icon={QrCode}
+            title="Scan"
+            desc="Chaque joueur a son téléphone (recommandé)"
+            selected={mode === "scan"}
+            onClick={() => setMode("scan")}
+          />
+          <ModeCard
+            icon={Smartphone}
+            title="Télécommande"
+            desc="Un seul téléphone pour tous les joueurs"
+            selected={mode === "remote"}
+            onClick={() => setMode("remote")}
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-3">
@@ -123,5 +154,37 @@ function Step({
       <p className="font-display text-sm font-bold text-foreground">{title}</p>
       <p className="text-xs text-foreground/60">{desc}</p>
     </div>
+  );
+}
+
+function ModeCard({
+  icon: Icon,
+  title,
+  desc,
+  selected,
+  onClick,
+}: {
+  icon: typeof Tv;
+  title: string;
+  desc: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={cn(
+        "flex flex-col items-center gap-1.5 rounded-xl border-2 p-4 text-center transition-colors",
+        selected
+          ? "border-gold bg-gold/10"
+          : "border-border bg-card hover:border-gold/50",
+      )}
+    >
+      <Icon className="h-7 w-7 text-gold-warm" aria-hidden="true" />
+      <p className="font-display text-sm font-bold text-foreground">{title}</p>
+      <p className="text-xs text-foreground/60">{desc}</p>
+    </button>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Crown, Loader2, Play, Tv, Users, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Crown, Loader2, Play, Smartphone, Tv, Users, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
@@ -32,6 +33,8 @@ interface TvHostRoomProps {
   initialStatus: "waiting" | "playing" | "paused" | "ended";
   /** P3.1 — Quiz preview pour le carrousel d'attente (lobby). */
   quizPreview?: { enonce: string; format: string | null } | null;
+  /** P4.1 — Mode de la room ("scan" ou "remote"). */
+  roomModeKind?: "scan" | "remote";
 }
 
 /**
@@ -49,6 +52,7 @@ export function TvHostRoom({
   initialPlayers,
   initialStatus,
   quizPreview = null,
+  roomModeKind = "scan",
 }: TvHostRoomProps) {
   const router = useRouter();
   const [players, setPlayers] = useState(initialPlayers);
@@ -420,10 +424,23 @@ export function TvHostRoom({
               {code}
             </p>
           </div>
-          <p className="max-w-xs text-sm text-foreground/70">
-            Sur ton téléphone, ouvre l&apos;app et entre ce code, ou scanne
-            le QR code ci-dessus.
-          </p>
+          {roomModeKind === "remote" ? (
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="rounded-full bg-sky/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-sky">
+                <Smartphone className="mr-1 inline h-3 w-3" aria-hidden="true" />
+                Mode télécommande
+              </span>
+              <p className="max-w-xs text-sm text-foreground/70">
+                Un seul téléphone (la régie) suffit. Il scanne ce QR code et
+                ajoute tous les joueurs depuis sa liste.
+              </p>
+            </div>
+          ) : (
+            <p className="max-w-xs text-sm text-foreground/70">
+              Sur ton téléphone, ouvre l&apos;app et entre ce code, ou scanne
+              le QR code ci-dessus.
+            </p>
+          )}
           {/* P3.1 — Carrousel d'ambiance dans le coin bas du bloc QR.
               N'apparaît qu'en lobby (status waiting). */}
           {status === "waiting" && (
@@ -566,6 +583,7 @@ function TvPlayingView({
     id: string;
     pseudo: string;
     avatarUrl: string | null;
+    token?: string;
   }>;
   tokenCache: Map<string, string>;
   onEnd: () => void;
@@ -574,9 +592,66 @@ function TvPlayingView({
   const currentPseudo = game.currentPlayerToken
     ? tokenCache.get(game.currentPlayerToken)
     : "?";
+  const currentPlayer = useMemo(
+    () =>
+      players.find(
+        (p) =>
+          p.token === game.currentPlayerToken ||
+          tokenCache.get(game.currentPlayerToken ?? "") === p.pseudo,
+      ),
+    [players, game.currentPlayerToken, tokenCache],
+  );
+
+  // P4.1 — Animation "À toi, [Joueur]" 1.6s à chaque changement de tour.
+  const [announcing, setAnnouncing] = useState(false);
+  const lastAnnouncedRef = useRef<string | null>(null);
+  useEffect(() => {
+    const tk = game.currentPlayerToken;
+    if (!tk) return;
+    if (lastAnnouncedRef.current === tk) return;
+    lastAnnouncedRef.current = tk;
+    setAnnouncing(true);
+    const id = window.setTimeout(() => setAnnouncing(false), 1600);
+    return () => window.clearTimeout(id);
+  }, [game.currentPlayerToken]);
 
   return (
     <main className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 p-6 lg:p-10">
+      <AnimatePresence>
+        {announcing && currentPseudo && (
+          <motion.div
+            key={`ann-${game.currentPlayerToken}`}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 backdrop-blur-sm"
+          >
+            <div className="flex flex-col items-center gap-4 text-center">
+              {currentPlayer?.avatarUrl ? (
+                <Image
+                  src={currentPlayer.avatarUrl}
+                  alt=""
+                  width={160}
+                  height={160}
+                  className="h-32 w-32 rounded-3xl border-4 border-gold object-cover shadow-[0_0_64px_rgba(245,183,0,0.7)] sm:h-40 sm:w-40"
+                  unoptimized
+                />
+              ) : (
+                <div className="flex h-32 w-32 items-center justify-center rounded-3xl border-4 border-gold bg-gold/30 shadow-[0_0_64px_rgba(245,183,0,0.7)] sm:h-40 sm:w-40">
+                  <Crown className="h-16 w-16 text-gold-warm" aria-hidden="true" />
+                </div>
+              )}
+              <p className="text-xl font-bold uppercase tracking-widest text-gold">
+                À toi
+              </p>
+              <p className="font-display text-6xl font-extrabold text-background sm:text-7xl">
+                {currentPseudo}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <header className="flex items-center justify-between text-foreground">
         <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
           Partie {code} · Tour {game.currentRound + 1} / {game.totalRounds}

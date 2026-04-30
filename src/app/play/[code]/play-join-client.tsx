@@ -26,6 +26,8 @@ interface PlayJoinClientProps {
   code: string;
   roomFound: boolean;
   initialStatus: "waiting" | "playing" | "paused" | null;
+  /** P4.1 — Mode de la room : "scan" (défaut) ou "remote" (régie unique). */
+  roomMode: "scan" | "remote";
 }
 
 type Mode = "light" | "full";
@@ -43,6 +45,7 @@ export function PlayJoinClient({
   code,
   roomFound,
   initialStatus,
+  roomMode,
 }: PlayJoinClientProps) {
   const router = useRouter();
   const [pseudo, setPseudo] = useState("");
@@ -53,9 +56,20 @@ export function PlayJoinClient({
   const [reconnecting, setReconnecting] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
 
+  // P4.1 — Si la room est en mode "remote", on redirige vers le client régie.
+  // Pas de jonction par pseudo : le téléphone régie crée les joueurs depuis
+  // son écran.
+  useEffect(() => {
+    if (!roomFound) return;
+    if (roomMode === "remote") {
+      router.replace(`/play/${code}/remote`);
+    }
+  }, [roomFound, roomMode, router, code]);
+
   // Tentative de reconnexion automatique si on a un token en localStorage.
   useEffect(() => {
     if (!roomFound) return;
+    if (roomMode === "remote") return; // pas de reconnexion auto en mode régie
     const token = readStoredToken(code);
     if (!token) return;
     setReconnecting(true);
@@ -72,7 +86,7 @@ export function PlayJoinClient({
         }
       })
       .catch(() => setReconnecting(false));
-  }, [code, roomFound, router]);
+  }, [code, roomFound, roomMode, router]);
 
   async function handleJoin() {
     if (!pseudo.trim() || submitting) return;

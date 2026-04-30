@@ -25,7 +25,7 @@ export default async function PlayCodePage({
   const supabase = await createClient();
   const { data: room } = await supabase
     .from("tv_rooms")
-    .select("id, code, status")
+    .select("id, code, status, mode")
     .eq("code", code)
     .neq("status", "ended")
     .maybeSingle();
@@ -37,6 +37,7 @@ export default async function PlayCodePage({
       initialStatus={
         (room?.status as "waiting" | "playing" | "paused" | undefined) ?? null
       }
+      roomMode={(room?.mode as "scan" | "remote" | undefined) ?? "scan"}
     />
   );
 }
