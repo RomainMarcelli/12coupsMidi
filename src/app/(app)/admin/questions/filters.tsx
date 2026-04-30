@@ -61,9 +61,9 @@ export function Filters({ categories, current }: FiltersProps) {
     current.difficulte;
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-white/10 bg-card/50 p-4 sm:flex-row sm:flex-wrap sm:items-end">
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-4 sm:flex-row sm:flex-wrap sm:items-end">
       <label className="flex flex-1 min-w-[200px] flex-col gap-1">
-        <span className="text-xs font-semibold uppercase tracking-wider text-cream/60">
+        <span className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
           Recherche
         </span>
         <div className="relative">
@@ -120,7 +120,7 @@ export function Filters({ categories, current }: FiltersProps) {
             setQ("");
             startTransition(() => router.push("/admin/questions"));
           }}
-          className="flex items-center gap-1 self-end rounded-md border border-white/20 px-3 py-2 text-sm text-cream/80 transition-colors hover:border-buzz hover:text-buzz"
+          className="flex items-center gap-1 self-end rounded-md border border-border px-3 py-2 text-sm text-foreground/80 transition-colors hover:border-buzz hover:text-buzz"
         >
           <X className="h-3.5 w-3.5" aria-hidden="true" />
           Réinitialiser
@@ -128,7 +128,7 @@ export function Filters({ categories, current }: FiltersProps) {
       )}
 
       {isPending && (
-        <span className="self-end text-xs text-cream/50">Mise à jour…</span>
+        <span className="self-end text-xs text-foreground/50">Mise à jour…</span>
       )}
     </div>
   );
@@ -147,16 +147,16 @@ function Select({
 }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-xs font-semibold uppercase tracking-wider text-cream/60">
+      <span className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
         {label}
       </span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-9 rounded-md border border-white/15 bg-card px-3 text-sm text-cream focus:border-gold focus:outline-none"
+        className="h-9 rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-midnight-deep">
+          <option key={o.value} value={o.value} className="bg-muted">
             {o.label}
           </option>
         ))}

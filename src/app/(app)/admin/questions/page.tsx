@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Download, FileUp, Plus } from "lucide-react";
+import { Download, FileUp, Plus, ShieldCheck } from "lucide-react";
 import { requireAdmin } from "@/lib/auth/admin-guard";
 import { createClient } from "@/lib/supabase/server";
 import { QUESTION_TYPES, type QuestionType } from "@/lib/schemas/question";
@@ -87,10 +87,10 @@ export default async function AdminQuestionsPage({
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-extrabold text-gold">
+          <h1 className="font-display text-3xl font-extrabold text-foreground">
             Questions
           </h1>
-          <p className="text-sm text-cream/70">
+          <p className="text-sm text-foreground/70">
             {total} question{total > 1 ? "s" : ""} en base · page {page} / {totalPages}
           </p>
         </div>
@@ -110,9 +110,16 @@ export default async function AdminQuestionsPage({
             <FileUp className="h-4 w-4" aria-hidden="true" />
             Importer JSON
           </Link>
+          <Link
+            href="/admin/questions/audit"
+            className="flex items-center gap-1.5 rounded-md border border-buzz/50 px-3 py-2 text-sm font-semibold text-buzz transition-colors hover:bg-buzz/10"
+          >
+            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+            Audit doublons
+          </Link>
           <a
             href="/api/questions/export"
-            className="flex items-center gap-1.5 rounded-md border border-white/20 px-3 py-2 text-sm font-semibold text-cream/80 transition-colors hover:border-cream hover:text-cream"
+            className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             Exporter

@@ -1,0 +1,1940 @@
+[
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 4,
+    "enonce": "Pièces de théâtre de Molière",
+    "reponses": [
+      {
+        "text": "Le Malade imaginaire",
+        "correct": true
+      },
+      {
+        "text": "Tartuffe",
+        "correct": true
+      },
+      {
+        "text": "L'Avare",
+        "correct": true
+      },
+      {
+        "text": "Le Misanthrope",
+        "correct": true
+      },
+      {
+        "text": "Les Fourberies de Scapin",
+        "correct": true
+      },
+      {
+        "text": "Dom Juan",
+        "correct": true
+      },
+      {
+        "text": "Le Cid",
+        "correct": false
+      }
+    ],
+    "explication": "Le Cid (1637) est une tragi-comédie de Pierre Corneille, pas de Molière."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 4,
+    "enonce": "Romans ayant pour auteur un écrivain russe du XIXe siècle",
+    "reponses": [
+      {
+        "text": "Guerre et Paix (Tolstoï)",
+        "correct": true
+      },
+      {
+        "text": "Crime et Châtiment (Dostoïevski)",
+        "correct": true
+      },
+      {
+        "text": "Les Âmes mortes (Gogol)",
+        "correct": true
+      },
+      {
+        "text": "Pères et Fils (Tourgueniev)",
+        "correct": true
+      },
+      {
+        "text": "Oblomov (Gontcharov)",
+        "correct": true
+      },
+      {
+        "text": "Eugène Onéguine (Pouchkine)",
+        "correct": true
+      },
+      {
+        "text": "Le Docteur Jivago (Pasternak)",
+        "correct": false
+      }
+    ],
+    "explication": "Le Docteur Jivago (1957) est un roman de Boris Pasternak, soviétique du XXe siècle — pas du XIXe."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "prix-litteraires",
+    "difficulte": 5,
+    "enonce": "Lauréats du prix Goncourt",
+    "reponses": [
+      {
+        "text": "Marcel Proust (1919)",
+        "correct": true
+      },
+      {
+        "text": "André Malraux (1933)",
+        "correct": true
+      },
+      {
+        "text": "Simone de Beauvoir (1954)",
+        "correct": true
+      },
+      {
+        "text": "Marguerite Duras (1984)",
+        "correct": true
+      },
+      {
+        "text": "Michel Houellebecq (2010)",
+        "correct": true
+      },
+      {
+        "text": "Pierre Lemaitre (2013)",
+        "correct": true
+      },
+      {
+        "text": "Jean-Paul Sartre",
+        "correct": false
+      }
+    ],
+    "explication": "Jean-Paul Sartre n'a jamais reçu le Goncourt. Il a eu le Nobel de littérature en 1964, qu'il a refusé."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 4,
+    "enonce": "Fables écrites par Jean de La Fontaine",
+    "reponses": [
+      {
+        "text": "Le Corbeau et le Renard",
+        "correct": true
+      },
+      {
+        "text": "Le Lièvre et la Tortue",
+        "correct": true
+      },
+      {
+        "text": "La Cigale et la Fourmi",
+        "correct": true
+      },
+      {
+        "text": "Le Loup et l'Agneau",
+        "correct": true
+      },
+      {
+        "text": "Le Lion et le Rat",
+        "correct": true
+      },
+      {
+        "text": "La Laitière et le Pot au lait",
+        "correct": true
+      },
+      {
+        "text": "Le Petit Chaperon rouge",
+        "correct": false
+      }
+    ],
+    "explication": "Le Petit Chaperon rouge est un conte de Charles Perrault (1697), pas une fable de La Fontaine."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "politique-contemporaine",
+    "difficulte": 4,
+    "enonce": "Présidents des États-Unis depuis la Seconde Guerre mondiale",
+    "reponses": [
+      {
+        "text": "Harry Truman",
+        "correct": true
+      },
+      {
+        "text": "Dwight Eisenhower",
+        "correct": true
+      },
+      {
+        "text": "John F. Kennedy",
+        "correct": true
+      },
+      {
+        "text": "Richard Nixon",
+        "correct": true
+      },
+      {
+        "text": "Barack Obama",
+        "correct": true
+      },
+      {
+        "text": "Joe Biden",
+        "correct": true
+      },
+      {
+        "text": "Winston Churchill",
+        "correct": false
+      }
+    ],
+    "explication": "Winston Churchill était Premier ministre du Royaume-Uni (1940-1945 puis 1951-1955), pas président des États-Unis."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "entrepreneurs-tech",
+    "difficulte": 4,
+    "enonce": "Fondateurs (ou co-fondateurs) de grandes entreprises tech",
+    "reponses": [
+      {
+        "text": "Steve Jobs (Apple)",
+        "correct": true
+      },
+      {
+        "text": "Bill Gates (Microsoft)",
+        "correct": true
+      },
+      {
+        "text": "Mark Zuckerberg (Facebook / Meta)",
+        "correct": true
+      },
+      {
+        "text": "Jeff Bezos (Amazon)",
+        "correct": true
+      },
+      {
+        "text": "Larry Page (Google)",
+        "correct": true
+      },
+      {
+        "text": "Elon Musk (PayPal, SpaceX, Tesla)",
+        "correct": true
+      },
+      {
+        "text": "Tim Cook (Apple)",
+        "correct": false
+      }
+    ],
+    "explication": "Tim Cook est l'actuel PDG d'Apple depuis 2011 mais il n'en est pas le fondateur — il a succédé à Steve Jobs."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "celebrites",
+    "difficulte": 5,
+    "enonce": "Personnalités ayant reçu le prix Nobel de la paix au XXIe siècle",
+    "reponses": [
+      {
+        "text": "Barack Obama (2009)",
+        "correct": true
+      },
+      {
+        "text": "Malala Yousafzai (2014)",
+        "correct": true
+      },
+      {
+        "text": "Denis Mukwege (2018)",
+        "correct": true
+      },
+      {
+        "text": "Nadia Murad (2018)",
+        "correct": true
+      },
+      {
+        "text": "Abiy Ahmed (2019)",
+        "correct": true
+      },
+      {
+        "text": "Maria Ressa (2021)",
+        "correct": true
+      },
+      {
+        "text": "Nelson Mandela",
+        "correct": false
+      }
+    ],
+    "explication": "Nelson Mandela a reçu le Nobel de la paix en 1993 (XXe siècle), conjointement avec Frederik de Klerk."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "politique-contemporaine",
+    "difficulte": 4,
+    "enonce": "Présidents de la République française",
+    "reponses": [
+      {
+        "text": "Charles de Gaulle",
+        "correct": true
+      },
+      {
+        "text": "Georges Pompidou",
+        "correct": true
+      },
+      {
+        "text": "Valéry Giscard d'Estaing",
+        "correct": true
+      },
+      {
+        "text": "Jacques Chirac",
+        "correct": true
+      },
+      {
+        "text": "Nicolas Sarkozy",
+        "correct": true
+      },
+      {
+        "text": "Emmanuel Macron",
+        "correct": true
+      },
+      {
+        "text": "Lionel Jospin",
+        "correct": false
+      }
+    ],
+    "explication": "Lionel Jospin a été Premier ministre (1997-2002) sous Jacques Chirac, mais jamais Président. Il a été candidat en 2002 (éliminé au 1er tour)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 5,
+    "enonce": "Batailles de l'époque antique (avant J.-C. ou Ier siècle ap. J.-C.)",
+    "reponses": [
+      {
+        "text": "Marathon (490 av. J.-C.)",
+        "correct": true
+      },
+      {
+        "text": "Salamine (480 av. J.-C.)",
+        "correct": true
+      },
+      {
+        "text": "Gaugamèles (331 av. J.-C.)",
+        "correct": true
+      },
+      {
+        "text": "Cannes (216 av. J.-C.)",
+        "correct": true
+      },
+      {
+        "text": "Alésia (52 av. J.-C.)",
+        "correct": true
+      },
+      {
+        "text": "Actium (31 av. J.-C.)",
+        "correct": true
+      },
+      {
+        "text": "Poitiers (732)",
+        "correct": false
+      }
+    ],
+    "explication": "La bataille de Poitiers où Charles Martel arrête les Sarrasins a eu lieu en 732, donc au Moyen-Âge, pas dans l'Antiquité."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 5,
+    "enonce": "Pharaons de l'Égypte ancienne",
+    "reponses": [
+      {
+        "text": "Khéops",
+        "correct": true
+      },
+      {
+        "text": "Toutânkhamon",
+        "correct": true
+      },
+      {
+        "text": "Ramsès II",
+        "correct": true
+      },
+      {
+        "text": "Akhenaton",
+        "correct": true
+      },
+      {
+        "text": "Hatchepsout",
+        "correct": true
+      },
+      {
+        "text": "Cléopâtre VII",
+        "correct": true
+      },
+      {
+        "text": "Nabuchodonosor II",
+        "correct": false
+      }
+    ],
+    "explication": "Nabuchodonosor II était roi de Babylone (605-562 av. J.-C.), pas pharaon d'Égypte. Il est connu pour la destruction du Temple de Jérusalem et les jardins suspendus."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 5,
+    "enonce": "Philosophes de la Grèce antique",
+    "reponses": [
+      {
+        "text": "Socrate",
+        "correct": true
+      },
+      {
+        "text": "Platon",
+        "correct": true
+      },
+      {
+        "text": "Aristote",
+        "correct": true
+      },
+      {
+        "text": "Épicure",
+        "correct": true
+      },
+      {
+        "text": "Diogène",
+        "correct": true
+      },
+      {
+        "text": "Pythagore",
+        "correct": true
+      },
+      {
+        "text": "Sénèque",
+        "correct": false
+      }
+    ],
+    "explication": "Sénèque (env. 4 av. J.-C. – 65 ap. J.-C.) était un philosophe stoïcien romain, pas grec. Il fut précepteur puis conseiller de Néron."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 5,
+    "enonce": "Dieux du panthéon romain",
+    "reponses": [
+      {
+        "text": "Jupiter",
+        "correct": true
+      },
+      {
+        "text": "Mars",
+        "correct": true
+      },
+      {
+        "text": "Neptune",
+        "correct": true
+      },
+      {
+        "text": "Vénus",
+        "correct": true
+      },
+      {
+        "text": "Mercure",
+        "correct": true
+      },
+      {
+        "text": "Minerve",
+        "correct": true
+      },
+      {
+        "text": "Poséidon",
+        "correct": false
+      }
+    ],
+    "explication": "Poséidon est le nom grec ; son équivalent romain est Neptune. Les Romains ont largement adapté le panthéon grec en le renommant."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 4,
+    "enonce": "Planètes du système solaire",
+    "reponses": [
+      {
+        "text": "Mercure",
+        "correct": true
+      },
+      {
+        "text": "Vénus",
+        "correct": true
+      },
+      {
+        "text": "Terre",
+        "correct": true
+      },
+      {
+        "text": "Mars",
+        "correct": true
+      },
+      {
+        "text": "Jupiter",
+        "correct": true
+      },
+      {
+        "text": "Uranus",
+        "correct": true
+      },
+      {
+        "text": "Pluton",
+        "correct": false
+      }
+    ],
+    "explication": "Pluton a été rétrogradé en planète naine en 2006 par l'Union astronomique internationale. Le système solaire compte désormais 8 planètes."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 5,
+    "enonce": "Constellations du zodiaque",
+    "reponses": [
+      {
+        "text": "Bélier",
+        "correct": true
+      },
+      {
+        "text": "Taureau",
+        "correct": true
+      },
+      {
+        "text": "Gémeaux",
+        "correct": true
+      },
+      {
+        "text": "Cancer",
+        "correct": true
+      },
+      {
+        "text": "Lion",
+        "correct": true
+      },
+      {
+        "text": "Scorpion",
+        "correct": true
+      },
+      {
+        "text": "Grande Ourse",
+        "correct": false
+      }
+    ],
+    "explication": "La Grande Ourse est une constellation de l'hémisphère nord mais elle n'appartient pas au zodiaque (12 constellations traversées par l'écliptique)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 5,
+    "enonce": "Astronautes ayant marché sur la Lune (missions Apollo)",
+    "reponses": [
+      {
+        "text": "Neil Armstrong (Apollo 11)",
+        "correct": true
+      },
+      {
+        "text": "Buzz Aldrin (Apollo 11)",
+        "correct": true
+      },
+      {
+        "text": "Pete Conrad (Apollo 12)",
+        "correct": true
+      },
+      {
+        "text": "Alan Shepard (Apollo 14)",
+        "correct": true
+      },
+      {
+        "text": "David Scott (Apollo 15)",
+        "correct": true
+      },
+      {
+        "text": "Eugene Cernan (Apollo 17)",
+        "correct": true
+      },
+      {
+        "text": "Michael Collins",
+        "correct": false
+      }
+    ],
+    "explication": "Michael Collins était le pilote du module de commande d'Apollo 11 : il est resté en orbite autour de la Lune pendant qu'Armstrong et Aldrin marchaient dessus."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 5,
+    "enonce": "Unités de base du Système international (SI)",
+    "reponses": [
+      {
+        "text": "Mètre (longueur)",
+        "correct": true
+      },
+      {
+        "text": "Kilogramme (masse)",
+        "correct": true
+      },
+      {
+        "text": "Seconde (temps)",
+        "correct": true
+      },
+      {
+        "text": "Ampère (courant électrique)",
+        "correct": true
+      },
+      {
+        "text": "Kelvin (température)",
+        "correct": true
+      },
+      {
+        "text": "Mole (quantité de matière)",
+        "correct": true
+      },
+      {
+        "text": "Newton (force)",
+        "correct": false
+      }
+    ],
+    "explication": "Le newton est une unité DÉRIVÉE (kg·m·s⁻²), pas de base. Le SI compte 7 unités de base : mètre, kilogramme, seconde, ampère, kelvin, mole et candela."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 5,
+    "enonce": "Métaux précieux utilisés en bijouterie et joaillerie",
+    "reponses": [
+      {
+        "text": "Or (Au)",
+        "correct": true
+      },
+      {
+        "text": "Argent (Ag)",
+        "correct": true
+      },
+      {
+        "text": "Platine (Pt)",
+        "correct": true
+      },
+      {
+        "text": "Palladium (Pd)",
+        "correct": true
+      },
+      {
+        "text": "Rhodium (Rh)",
+        "correct": true
+      },
+      {
+        "text": "Iridium (Ir)",
+        "correct": true
+      },
+      {
+        "text": "Titane (Ti)",
+        "correct": false
+      }
+    ],
+    "explication": "Le titane est utilisé en bijouterie moderne pour ses propriétés (léger, hypoallergénique) mais ce n'est pas un métal précieux au sens strict (bourse des métaux précieux)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 4,
+    "enonce": "Composants du tableau périodique qui sont des halogènes",
+    "reponses": [
+      {
+        "text": "Fluor (F)",
+        "correct": true
+      },
+      {
+        "text": "Chlore (Cl)",
+        "correct": true
+      },
+      {
+        "text": "Brome (Br)",
+        "correct": true
+      },
+      {
+        "text": "Iode (I)",
+        "correct": true
+      },
+      {
+        "text": "Astate (At)",
+        "correct": true
+      },
+      {
+        "text": "Tennessine (Ts)",
+        "correct": true
+      },
+      {
+        "text": "Soufre (S)",
+        "correct": false
+      }
+    ],
+    "explication": "Le soufre appartient à la famille des chalcogènes (colonne 16), pas aux halogènes (colonne 17)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 5,
+    "enonce": "Vitamines essentielles pour l'organisme humain",
+    "reponses": [
+      {
+        "text": "Vitamine A",
+        "correct": true
+      },
+      {
+        "text": "Vitamine B12",
+        "correct": true
+      },
+      {
+        "text": "Vitamine C",
+        "correct": true
+      },
+      {
+        "text": "Vitamine D",
+        "correct": true
+      },
+      {
+        "text": "Vitamine E",
+        "correct": true
+      },
+      {
+        "text": "Vitamine K",
+        "correct": true
+      },
+      {
+        "text": "Vitamine F",
+        "correct": false
+      }
+    ],
+    "explication": "La 'vitamine F' est une ancienne appellation pour les acides gras essentiels (oméga-3 et oméga-6). Ce ne sont pas des vitamines au sens strict — elles ne font plus partie de la nomenclature officielle."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 4,
+    "enonce": "Tableaux de Pablo Picasso",
+    "reponses": [
+      {
+        "text": "Les Demoiselles d'Avignon",
+        "correct": true
+      },
+      {
+        "text": "Guernica",
+        "correct": true
+      },
+      {
+        "text": "La Femme qui pleure",
+        "correct": true
+      },
+      {
+        "text": "Portrait de Dora Maar",
+        "correct": true
+      },
+      {
+        "text": "La Vie",
+        "correct": true
+      },
+      {
+        "text": "Trois musiciens",
+        "correct": true
+      },
+      {
+        "text": "La Persistance de la mémoire",
+        "correct": false
+      }
+    ],
+    "explication": "La Persistance de la mémoire (montres molles) est une œuvre de Salvador Dalí (1931), pas de Picasso."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "Œuvres exposées au musée du Louvre",
+    "reponses": [
+      {
+        "text": "La Joconde (Vinci)",
+        "correct": true
+      },
+      {
+        "text": "La Liberté guidant le peuple (Delacroix)",
+        "correct": true
+      },
+      {
+        "text": "Le Radeau de la Méduse (Géricault)",
+        "correct": true
+      },
+      {
+        "text": "Le Sacre de Napoléon (David)",
+        "correct": true
+      },
+      {
+        "text": "La Vénus de Milo",
+        "correct": true
+      },
+      {
+        "text": "La Victoire de Samothrace",
+        "correct": true
+      },
+      {
+        "text": "Les Nymphéas (Monet)",
+        "correct": false
+      }
+    ],
+    "explication": "Les Nymphéas de Monet sont exposés au musée de l'Orangerie à Paris (deux salles ovales dédiées), pas au Louvre."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "Peintres espagnols célèbres",
+    "reponses": [
+      {
+        "text": "Diego Velázquez",
+        "correct": true
+      },
+      {
+        "text": "Francisco de Goya",
+        "correct": true
+      },
+      {
+        "text": "El Greco (actif en Espagne)",
+        "correct": true
+      },
+      {
+        "text": "Pablo Picasso",
+        "correct": true
+      },
+      {
+        "text": "Salvador Dalí",
+        "correct": true
+      },
+      {
+        "text": "Joan Miró",
+        "correct": true
+      },
+      {
+        "text": "Amedeo Modigliani",
+        "correct": false
+      }
+    ],
+    "explication": "Amedeo Modigliani (1884-1920) est un peintre italien, né à Livourne, qui a fait carrière à Paris (École de Paris)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 4,
+    "enonce": "Films de la saga Star Wars (trilogies principales)",
+    "reponses": [
+      {
+        "text": "Un nouvel espoir (IV)",
+        "correct": true
+      },
+      {
+        "text": "L'Empire contre-attaque (V)",
+        "correct": true
+      },
+      {
+        "text": "Le Retour du Jedi (VI)",
+        "correct": true
+      },
+      {
+        "text": "La Menace fantôme (I)",
+        "correct": true
+      },
+      {
+        "text": "Le Réveil de la Force (VII)",
+        "correct": true
+      },
+      {
+        "text": "L'Ascension de Skywalker (IX)",
+        "correct": true
+      },
+      {
+        "text": "Rogue One",
+        "correct": false
+      }
+    ],
+    "explication": "Rogue One (2016) est un spin-off de Star Wars, pas un épisode de la saga principale numérotée."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "realisateurs",
+    "difficulte": 5,
+    "enonce": "Films réalisés par Stanley Kubrick",
+    "reponses": [
+      {
+        "text": "2001, l'Odyssée de l'espace",
+        "correct": true
+      },
+      {
+        "text": "Orange mécanique",
+        "correct": true
+      },
+      {
+        "text": "Shining",
+        "correct": true
+      },
+      {
+        "text": "Full Metal Jacket",
+        "correct": true
+      },
+      {
+        "text": "Barry Lyndon",
+        "correct": true
+      },
+      {
+        "text": "Eyes Wide Shut",
+        "correct": true
+      },
+      {
+        "text": "Apocalypse Now",
+        "correct": false
+      }
+    ],
+    "explication": "Apocalypse Now (1979) est un film de Francis Ford Coppola, pas de Kubrick."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 4,
+    "enonce": "Films français cultes des années 1960-80",
+    "reponses": [
+      {
+        "text": "La Grande Vadrouille",
+        "correct": true
+      },
+      {
+        "text": "Les Tontons flingueurs",
+        "correct": true
+      },
+      {
+        "text": "Le Corniaud",
+        "correct": true
+      },
+      {
+        "text": "La Cage aux folles",
+        "correct": true
+      },
+      {
+        "text": "Le Père Noël est une ordure",
+        "correct": true
+      },
+      {
+        "text": "Les Bronzés",
+        "correct": true
+      },
+      {
+        "text": "Le Dîner de cons",
+        "correct": false
+      }
+    ],
+    "explication": "Le Dîner de cons (1998) est un film de Francis Veber sorti à la fin des années 90, pas dans les années 60-80."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "realisateurs",
+    "difficulte": 5,
+    "enonce": "Palmes d'or du Festival de Cannes décernées à des films français",
+    "reponses": [
+      {
+        "text": "Un homme et une femme (Lelouch, 1966)",
+        "correct": true
+      },
+      {
+        "text": "Sous le soleil de Satan (Pialat, 1987)",
+        "correct": true
+      },
+      {
+        "text": "La Vie d'Adèle (Kechiche, 2013)",
+        "correct": true
+      },
+      {
+        "text": "Dheepan (Audiard, 2015)",
+        "correct": true
+      },
+      {
+        "text": "Titane (Ducournau, 2021)",
+        "correct": true
+      },
+      {
+        "text": "Anatomie d'une chute (Triet, 2023)",
+        "correct": true
+      },
+      {
+        "text": "Parasite (Bong Joon-ho, 2019)",
+        "correct": false
+      }
+    ],
+    "explication": "Parasite (2019) est un film sud-coréen réalisé par Bong Joon-ho, pas français. Il a toutefois remporté la Palme d'or cette année-là."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 4,
+    "enonce": "Chansons de Jacques Brel",
+    "reponses": [
+      {
+        "text": "Ne me quitte pas",
+        "correct": true
+      },
+      {
+        "text": "Amsterdam",
+        "correct": true
+      },
+      {
+        "text": "Quand on n'a que l'amour",
+        "correct": true
+      },
+      {
+        "text": "Le Plat pays",
+        "correct": true
+      },
+      {
+        "text": "Les vieux",
+        "correct": true
+      },
+      {
+        "text": "Mathilde",
+        "correct": true
+      },
+      {
+        "text": "La Bohème",
+        "correct": false
+      }
+    ],
+    "explication": "La Bohème (1965) est une chanson de Charles Aznavour, pas de Jacques Brel."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 4,
+    "enonce": "Albums des Beatles",
+    "reponses": [
+      {
+        "text": "Sgt. Pepper's Lonely Hearts Club Band",
+        "correct": true
+      },
+      {
+        "text": "Abbey Road",
+        "correct": true
+      },
+      {
+        "text": "Revolver",
+        "correct": true
+      },
+      {
+        "text": "The White Album",
+        "correct": true
+      },
+      {
+        "text": "Let It Be",
+        "correct": true
+      },
+      {
+        "text": "Rubber Soul",
+        "correct": true
+      },
+      {
+        "text": "The Dark Side of the Moon",
+        "correct": false
+      }
+    ],
+    "explication": "The Dark Side of the Moon (1973) est un album de Pink Floyd, pas des Beatles (séparés en 1970)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 5,
+    "enonce": "Compositeurs de la période classique (v. 1750-1820)",
+    "reponses": [
+      {
+        "text": "Wolfgang Amadeus Mozart",
+        "correct": true
+      },
+      {
+        "text": "Joseph Haydn",
+        "correct": true
+      },
+      {
+        "text": "Ludwig van Beethoven (charnière)",
+        "correct": true
+      },
+      {
+        "text": "Luigi Boccherini",
+        "correct": true
+      },
+      {
+        "text": "Christoph Willibald Gluck",
+        "correct": true
+      },
+      {
+        "text": "Carl Philipp Emanuel Bach",
+        "correct": true
+      },
+      {
+        "text": "Jean-Sébastien Bach",
+        "correct": false
+      }
+    ],
+    "explication": "Jean-Sébastien Bach (1685-1750) appartient à la période baroque (fin), pas à la période classique qui lui succède."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 5,
+    "enonce": "Personnalités françaises dont les obsèques ont été célébrées à l'église de la Madeleine (Paris)",
+    "reponses": [
+      {
+        "text": "Édith Piaf (1963)",
+        "correct": true
+      },
+      {
+        "text": "Dalida (1987)",
+        "correct": true
+      },
+      {
+        "text": "Johnny Hallyday (2017)",
+        "correct": true
+      },
+      {
+        "text": "Charles Aznavour (2018)",
+        "correct": true
+      },
+      {
+        "text": "Jean-Paul Belmondo (2021)",
+        "correct": true
+      },
+      {
+        "text": "Frédéric Chopin (1849)",
+        "correct": true
+      },
+      {
+        "text": "Coluche",
+        "correct": false
+      }
+    ],
+    "explication": "Les obsèques de Coluche (1986) ont été célébrées à Montrouge (92), pas à la Madeleine. La Madeleine est traditionnellement l'église des grandes personnalités parisiennes."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 4,
+    "enonce": "Sports olympiques d'été par équipes",
+    "reponses": [
+      {
+        "text": "Football",
+        "correct": true
+      },
+      {
+        "text": "Volley-ball",
+        "correct": true
+      },
+      {
+        "text": "Hockey sur gazon",
+        "correct": true
+      },
+      {
+        "text": "Water-polo",
+        "correct": true
+      },
+      {
+        "text": "Basket-ball",
+        "correct": true
+      },
+      {
+        "text": "Handball",
+        "correct": true
+      },
+      {
+        "text": "Hockey sur glace",
+        "correct": false
+      }
+    ],
+    "explication": "Le hockey sur glace est un sport olympique mais uniquement aux Jeux d'HIVER, pas d'été."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 5,
+    "enonce": "Joueuses ayant remporté au moins 10 tournois du Grand Chelem en simple",
+    "reponses": [
+      {
+        "text": "Margaret Court (24)",
+        "correct": true
+      },
+      {
+        "text": "Serena Williams (23)",
+        "correct": true
+      },
+      {
+        "text": "Steffi Graf (22)",
+        "correct": true
+      },
+      {
+        "text": "Chris Evert (18)",
+        "correct": true
+      },
+      {
+        "text": "Martina Navrátilová (18)",
+        "correct": true
+      },
+      {
+        "text": "Helen Wills Moody (19)",
+        "correct": true
+      },
+      {
+        "text": "Justine Henin",
+        "correct": false
+      }
+    ],
+    "explication": "Justine Henin a remporté 7 tournois du Grand Chelem en simple (4 Roland-Garros, 2 US Open, 1 Wimbledon), pas 10."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "autres-sports",
+    "difficulte": 4,
+    "enonce": "Sports de combat olympiques",
+    "reponses": [
+      {
+        "text": "Boxe",
+        "correct": true
+      },
+      {
+        "text": "Judo",
+        "correct": true
+      },
+      {
+        "text": "Taekwondo",
+        "correct": true
+      },
+      {
+        "text": "Lutte (libre et gréco-romaine)",
+        "correct": true
+      },
+      {
+        "text": "Escrime",
+        "correct": true
+      },
+      {
+        "text": "Karaté (JO 2020)",
+        "correct": true
+      },
+      {
+        "text": "MMA",
+        "correct": false
+      }
+    ],
+    "explication": "Le MMA (arts martiaux mixtes) n'est pas un sport olympique. Il n'est pas reconnu par le CIO, contrairement aux 6 disciplines citées."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "animaux",
+    "difficulte": 4,
+    "enonce": "Expressions françaises contenant un nom d'animal",
+    "reponses": [
+      {
+        "text": "Avoir un chat dans la gorge",
+        "correct": true
+      },
+      {
+        "text": "Donner sa langue au chat",
+        "correct": true
+      },
+      {
+        "text": "Être doux comme un agneau",
+        "correct": true
+      },
+      {
+        "text": "Poser un lapin",
+        "correct": true
+      },
+      {
+        "text": "Prendre le taureau par les cornes",
+        "correct": true
+      },
+      {
+        "text": "Avoir une faim de loup",
+        "correct": true
+      },
+      {
+        "text": "Prendre ses jambes à son cou",
+        "correct": false
+      }
+    ],
+    "explication": "L'expression 'Prendre ses jambes à son cou' n'évoque aucun animal, elle fait référence aux parties du corps humain (jambes et cou)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "couleurs",
+    "difficulte": 4,
+    "enonce": "Expressions françaises contenant un nom de couleur",
+    "reponses": [
+      {
+        "text": "Voir rouge",
+        "correct": true
+      },
+      {
+        "text": "Broyer du noir",
+        "correct": true
+      },
+      {
+        "text": "Rire jaune",
+        "correct": true
+      },
+      {
+        "text": "Être vert de rage",
+        "correct": true
+      },
+      {
+        "text": "En voir de toutes les couleurs",
+        "correct": true
+      },
+      {
+        "text": "Nuit blanche",
+        "correct": true
+      },
+      {
+        "text": "Tomber dans les pommes",
+        "correct": false
+      }
+    ],
+    "explication": "'Tomber dans les pommes' signifie s'évanouir, mais 'pomme' n'est pas un nom de couleur — c'est un fruit. L'expression viendrait d'une déformation de 'pâmes' (pâmoison)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "origines-historiques",
+    "difficulte": 5,
+    "enonce": "Expressions françaises issues du vocabulaire militaire ou guerrier",
+    "reponses": [
+      {
+        "text": "Battre en retraite",
+        "correct": true
+      },
+      {
+        "text": "Mettre les voiles",
+        "correct": true
+      },
+      {
+        "text": "Tirer à boulets rouges",
+        "correct": true
+      },
+      {
+        "text": "Monter au créneau",
+        "correct": true
+      },
+      {
+        "text": "Croiser le fer",
+        "correct": true
+      },
+      {
+        "text": "Déposer les armes",
+        "correct": true
+      },
+      {
+        "text": "Tomber dans les bras de Morphée",
+        "correct": false
+      }
+    ],
+    "explication": "Tomber dans les bras de Morphée (= s'endormir) vient de la mythologie grecque, Morphée étant le dieu des rêves. Aucune origine militaire."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "corps",
+    "difficulte": 4,
+    "enonce": "Expressions françaises contenant une partie du corps",
+    "reponses": [
+      {
+        "text": "Avoir le cœur sur la main",
+        "correct": true
+      },
+      {
+        "text": "Avoir la tête sur les épaules",
+        "correct": true
+      },
+      {
+        "text": "Se mettre le doigt dans l'œil",
+        "correct": true
+      },
+      {
+        "text": "Coûter les yeux de la tête",
+        "correct": true
+      },
+      {
+        "text": "Avoir l'estomac dans les talons",
+        "correct": true
+      },
+      {
+        "text": "Tourner les talons",
+        "correct": true
+      },
+      {
+        "text": "Couper la poire en deux",
+        "correct": false
+      }
+    ],
+    "explication": "'Couper la poire en deux' (= faire un compromis) fait référence à un fruit, pas à une partie du corps."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "origines-historiques",
+    "difficulte": 5,
+    "enonce": "Expressions dont l'origine remonte à l'Antiquité",
+    "reponses": [
+      {
+        "text": "Franchir le Rubicon (César)",
+        "correct": true
+      },
+      {
+        "text": "Talon d'Achille (Iliade)",
+        "correct": true
+      },
+      {
+        "text": "Boîte de Pandore (mythologie grecque)",
+        "correct": true
+      },
+      {
+        "text": "Épée de Damoclès (Grèce antique)",
+        "correct": true
+      },
+      {
+        "text": "Cheval de Troie (Odyssée)",
+        "correct": true
+      },
+      {
+        "text": "Veni, vidi, vici (César)",
+        "correct": true
+      },
+      {
+        "text": "Jeter le gant",
+        "correct": false
+      }
+    ],
+    "explication": "'Jeter le gant' (défier quelqu'un) vient du Moyen-Âge et des chevaliers, pas de l'Antiquité."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 4,
+    "enonce": "Plats traditionnels du Sud-Ouest de la France",
+    "reponses": [
+      {
+        "text": "Cassoulet",
+        "correct": true
+      },
+      {
+        "text": "Confit de canard",
+        "correct": true
+      },
+      {
+        "text": "Foie gras",
+        "correct": true
+      },
+      {
+        "text": "Magret de canard",
+        "correct": true
+      },
+      {
+        "text": "Garbure",
+        "correct": true
+      },
+      {
+        "text": "Piperade",
+        "correct": true
+      },
+      {
+        "text": "Choucroute",
+        "correct": false
+      }
+    ],
+    "explication": "La choucroute est un plat alsacien (Est de la France), pas du Sud-Ouest."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "fromages",
+    "difficulte": 4,
+    "enonce": "Fromages français AOP à pâte persillée (bleus)",
+    "reponses": [
+      {
+        "text": "Roquefort",
+        "correct": true
+      },
+      {
+        "text": "Bleu d'Auvergne",
+        "correct": true
+      },
+      {
+        "text": "Fourme d'Ambert",
+        "correct": true
+      },
+      {
+        "text": "Bleu des Causses",
+        "correct": true
+      },
+      {
+        "text": "Bleu de Gex",
+        "correct": true
+      },
+      {
+        "text": "Bleu du Vercors-Sassenage",
+        "correct": true
+      },
+      {
+        "text": "Gorgonzola",
+        "correct": false
+      }
+    ],
+    "explication": "Le Gorgonzola est un bleu italien (Lombardie/Piémont), pas un fromage français."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-monde",
+    "difficulte": 4,
+    "enonce": "Plats italiens traditionnels",
+    "reponses": [
+      {
+        "text": "Pizza Margherita",
+        "correct": true
+      },
+      {
+        "text": "Lasagnes à la bolognaise",
+        "correct": true
+      },
+      {
+        "text": "Risotto",
+        "correct": true
+      },
+      {
+        "text": "Osso buco",
+        "correct": true
+      },
+      {
+        "text": "Carbonara",
+        "correct": true
+      },
+      {
+        "text": "Tiramisu",
+        "correct": true
+      },
+      {
+        "text": "Paella",
+        "correct": false
+      }
+    ],
+    "explication": "La paella est un plat espagnol (originaire de la région de Valence), pas italien."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "patisserie",
+    "difficulte": 5,
+    "enonce": "Pâtisseries françaises classiques",
+    "reponses": [
+      {
+        "text": "Éclair",
+        "correct": true
+      },
+      {
+        "text": "Paris-Brest",
+        "correct": true
+      },
+      {
+        "text": "Millefeuille",
+        "correct": true
+      },
+      {
+        "text": "Saint-Honoré",
+        "correct": true
+      },
+      {
+        "text": "Opéra",
+        "correct": true
+      },
+      {
+        "text": "Religieuse",
+        "correct": true
+      },
+      {
+        "text": "Cannoli",
+        "correct": false
+      }
+    ],
+    "explication": "Le cannoli est une pâtisserie sicilienne (Italie), un rouleau de pâte frite garni de ricotta sucrée."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "ingredients",
+    "difficulte": 4,
+    "enonce": "Épices traditionnelles de la cuisine indienne",
+    "reponses": [
+      {
+        "text": "Curcuma",
+        "correct": true
+      },
+      {
+        "text": "Cumin",
+        "correct": true
+      },
+      {
+        "text": "Cardamome",
+        "correct": true
+      },
+      {
+        "text": "Garam masala (mélange)",
+        "correct": true
+      },
+      {
+        "text": "Coriandre",
+        "correct": true
+      },
+      {
+        "text": "Fenugrec",
+        "correct": true
+      },
+      {
+        "text": "Za'atar",
+        "correct": false
+      }
+    ],
+    "explication": "Le za'atar est un mélange d'épices typique du Moyen-Orient (Liban, Syrie, Palestine, Israël), pas de la cuisine indienne."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "grammaire",
+    "difficulte": 4,
+    "enonce": "Temps de l'indicatif en français",
+    "reponses": [
+      {
+        "text": "Présent",
+        "correct": true
+      },
+      {
+        "text": "Imparfait",
+        "correct": true
+      },
+      {
+        "text": "Passé simple",
+        "correct": true
+      },
+      {
+        "text": "Passé composé",
+        "correct": true
+      },
+      {
+        "text": "Plus-que-parfait",
+        "correct": true
+      },
+      {
+        "text": "Futur simple",
+        "correct": true
+      },
+      {
+        "text": "Subjonctif présent",
+        "correct": false
+      }
+    ],
+    "explication": "Le subjonctif est un MODE à part entière (comme l'indicatif, le conditionnel et l'impératif), pas un temps de l'indicatif."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "figures-de-style",
+    "difficulte": 5,
+    "enonce": "Figures de style basées sur une comparaison ou une substitution",
+    "reponses": [
+      {
+        "text": "Métaphore",
+        "correct": true
+      },
+      {
+        "text": "Comparaison",
+        "correct": true
+      },
+      {
+        "text": "Métonymie",
+        "correct": true
+      },
+      {
+        "text": "Synecdoque",
+        "correct": true
+      },
+      {
+        "text": "Périphrase",
+        "correct": true
+      },
+      {
+        "text": "Allégorie",
+        "correct": true
+      },
+      {
+        "text": "Anaphore",
+        "correct": false
+      }
+    ],
+    "explication": "L'anaphore est une figure de RÉPÉTITION (répétition d'un mot en début de phrases), pas de comparaison ou substitution."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "vocabulaire",
+    "difficulte": 5,
+    "enonce": "Mots français d'origine arabe",
+    "reponses": [
+      {
+        "text": "Algèbre",
+        "correct": true
+      },
+      {
+        "text": "Algorithme",
+        "correct": true
+      },
+      {
+        "text": "Azimut",
+        "correct": true
+      },
+      {
+        "text": "Sucre",
+        "correct": true
+      },
+      {
+        "text": "Zéro",
+        "correct": true
+      },
+      {
+        "text": "Alcool",
+        "correct": true
+      },
+      {
+        "text": "Carnaval",
+        "correct": false
+      }
+    ],
+    "explication": "'Carnaval' vient de l'italien 'carne levare' (enlever la viande), en référence au carême. Pas d'origine arabe."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "vocabulaire",
+    "difficulte": 5,
+    "enonce": "Pluriels irréguliers de mots en -ou (prennent -x)",
+    "reponses": [
+      {
+        "text": "Bijoux",
+        "correct": true
+      },
+      {
+        "text": "Cailloux",
+        "correct": true
+      },
+      {
+        "text": "Choux",
+        "correct": true
+      },
+      {
+        "text": "Genoux",
+        "correct": true
+      },
+      {
+        "text": "Hiboux",
+        "correct": true
+      },
+      {
+        "text": "Joujoux",
+        "correct": true
+      },
+      {
+        "text": "Clous",
+        "correct": false
+      }
+    ],
+    "explication": "'Clous' est un pluriel régulier (ajout de s). La règle des 7 mots en -ou → -x est : bijou, caillou, chou, genou, hibou, joujou, pou."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "etymologie",
+    "difficulte": 5,
+    "enonce": "Mots français d'origine grecque",
+    "reponses": [
+      {
+        "text": "Philosophie (philo + sophia)",
+        "correct": true
+      },
+      {
+        "text": "Démocratie (dêmos + kratos)",
+        "correct": true
+      },
+      {
+        "text": "Téléphone (têle + phônê)",
+        "correct": true
+      },
+      {
+        "text": "Biographie (bios + graphê)",
+        "correct": true
+      },
+      {
+        "text": "Psychologie (psukhê + logos)",
+        "correct": true
+      },
+      {
+        "text": "Hippopotame (hippos + potamos)",
+        "correct": true
+      },
+      {
+        "text": "Village",
+        "correct": false
+      }
+    ],
+    "explication": "'Village' vient du latin 'villaticum', dérivé de 'villa' (domaine rural). Origine latine, pas grecque."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 5,
+    "enonce": "Composés chimiques présents dans l'eau minérale naturelle",
+    "reponses": [
+      {
+        "text": "Calcium (Ca²⁺)",
+        "correct": true
+      },
+      {
+        "text": "Magnésium (Mg²⁺)",
+        "correct": true
+      },
+      {
+        "text": "Sodium (Na⁺)",
+        "correct": true
+      },
+      {
+        "text": "Potassium (K⁺)",
+        "correct": true
+      },
+      {
+        "text": "Bicarbonates (HCO₃⁻)",
+        "correct": true
+      },
+      {
+        "text": "Sulfates (SO₄²⁻)",
+        "correct": true
+      },
+      {
+        "text": "Ammoniaque (NH₃)",
+        "correct": false
+      }
+    ],
+    "explication": "L'ammoniaque est un contaminant potentiel (agriculture, pollution) et n'est pas un composé naturel de l'eau minérale — sa présence indique une pollution."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 5,
+    "enonce": "Clubs ayant remporté la Ligue des champions / Coupe d'Europe plusieurs fois",
+    "reponses": [
+      {
+        "text": "Real Madrid (Espagne)",
+        "correct": true
+      },
+      {
+        "text": "AC Milan (Italie)",
+        "correct": true
+      },
+      {
+        "text": "Liverpool (Angleterre)",
+        "correct": true
+      },
+      {
+        "text": "Bayern Munich (Allemagne)",
+        "correct": true
+      },
+      {
+        "text": "Barcelone (Espagne)",
+        "correct": true
+      },
+      {
+        "text": "Manchester United (Angleterre)",
+        "correct": true
+      },
+      {
+        "text": "Olympique de Marseille (France)",
+        "correct": false
+      }
+    ],
+    "explication": "L'Olympique de Marseille n'a remporté qu'une seule Ligue des champions (1993). Les 6 autres clubs listés ont chacun plusieurs titres (Real Madrid en tête)."
+  },
+  {
+    "type": "coup_par_coup",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "orthographe",
+    "difficulte": 5,
+    "enonce": "Mots français contenant un accent circonflexe",
+    "reponses": [
+      {
+        "text": "Hôpital",
+        "correct": true
+      },
+      {
+        "text": "Fenêtre",
+        "correct": true
+      },
+      {
+        "text": "Château",
+        "correct": true
+      },
+      {
+        "text": "Forêt",
+        "correct": true
+      },
+      {
+        "text": "Île",
+        "correct": true
+      },
+      {
+        "text": "Bâtir",
+        "correct": true
+      },
+      {
+        "text": "Village",
+        "correct": false
+      }
+    ],
+    "explication": "Le mot 'village' ne contient aucun accent circonflexe. L'accent circonflexe marque souvent la disparition d'un ancien 's' (hospital → hôpital, forest → forêt, isle → île)."
+  }
+]

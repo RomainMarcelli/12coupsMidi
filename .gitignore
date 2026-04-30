@@ -45,3 +45,11 @@ public/swe-worker-*.js
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+docs/CORRECTIONS_VAGUE_E.md
+docs/CORRECTIONS_VAGUE_F.md
+docs/CORRECTIONS_VAGUE_G.md
+docs/CORRECTIONS_VAGUE_H.md
+
+docs/
+Test.cs

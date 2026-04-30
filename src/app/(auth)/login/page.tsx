@@ -1,26 +1,46 @@
+import Image from "next/image";
+import { getBranding } from "@/lib/branding";
 import { LoginForm } from "./login-form";
-import { Trophy } from "lucide-react";
 
 export const metadata = {
   title: "Connexion",
 };
 
+/**
+ * K4 — Page publique pré-auth : on ne sait pas encore si l'utilisateur
+ * est owner. Affichage du branding générique.
+ */
 export default function LoginPage() {
+  const branding = getBranding(false);
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-8 bg-[#0B1F4D] p-6 text-[#F1FAEE]">
+    <main className="flex flex-1 flex-col items-center justify-center gap-8 p-6">
       <div className="flex flex-col items-center gap-3 text-center">
-        <Trophy className="h-12 w-12 text-[#F5C518]" aria-hidden="true" />
-        <h1 className="text-3xl font-bold text-[#F5C518]">Midi Master</h1>
-        <p className="text-sm opacity-70">
-          Connecte-toi avec un lien magique envoyé par email.
+        <div className="relative">
+          <div className="absolute inset-0 -z-10 animate-sun-pulse rounded-full bg-gold/30 blur-3xl" />
+          <Image
+            src={branding.logoUrl}
+            alt=""
+            width={160}
+            height={160}
+            className="h-20 w-20 object-contain drop-shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
+            priority
+          />
+        </div>
+        <h1 className="font-display text-3xl font-extrabold text-foreground">
+          {branding.prefixWord}{" "}
+          <span className="text-gold-warm">{branding.accentWord}</span>{" "}
+          {branding.suffixWord}
+        </h1>
+        <p className="text-sm text-foreground/70">
+          Entraîne-toi aux 12 Coups de Midi.
         </p>
       </div>
 
       <LoginForm />
 
-      <p className="max-w-xs text-center text-xs opacity-50">
-        Pas de mot de passe. On t&apos;envoie un lien à usage unique sur ton
-        email. Clique dessus depuis le même navigateur.
+      <p className="max-w-xs text-center text-xs text-foreground/50">
+        En t'inscrivant, tu acceptes que cette app soit purement personnelle —
+        pas de données revendues, pas de pub.
       </p>
     </main>
   );

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
+import { ConsoleFilter } from "@/components/layout/ConsoleFilter";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -15,9 +17,15 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-const APP_NAME = "Midi Master";
+// K4 — Le metadata HTML est server-side et est rendu AVANT l'auth.
+// Il est donc IMPOSSIBLE de le rendre conditionnel par utilisateur.
+// On garde donc le branding générique. Le compte owner verra
+// "Coups de Midi Quiz" dans l'icône d'install PWA et dans l'onglet —
+// limitation acceptée. Le branding personnalisé Mahylan apparaît dès
+// que la page (app)/ est rendue (Navbar, accueil, hero).
+const APP_NAME = "Coups de Midi Quiz";
 const APP_DESCRIPTION =
-  "PWA d'entraînement aux 12 Coups de Midi — deviens Maître de Midi.";
+  "Application de quiz multijoueur inspirée des 12 Coups de Midi.";
 
 export const metadata: Metadata = {
   title: { default: APP_NAME, template: `%s — ${APP_NAME}` },
@@ -30,13 +38,21 @@ export const metadata: Metadata = {
     title: APP_NAME,
   },
   icons: {
-    icon: "/icons/icon-192.png",
-    apple: "/icons/icon-512.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B1F4D",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FFF8EC" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0E27" },
+  ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -52,8 +68,12 @@ export default function RootLayout({
     <html
       lang="fr"
       className={`${inter.variable} ${montserrat.variable} h-full`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ConsoleFilter />
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

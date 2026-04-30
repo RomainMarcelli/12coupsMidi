@@ -1,0 +1,1902 @@
+[
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 2,
+    "enonce": "Vrai ou faux : les Jeux olympiques ont été créés dans la Grèce antique.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Les premiers JO antiques ont eu lieu en 776 av. J.-C. à Olympie."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : la Seconde Guerre mondiale a duré 6 ans.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "De septembre 1939 à septembre 1945, soit 6 années."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "moyen-age",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Jeanne d'Arc a été brûlée à Orléans.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Elle a été brûlée à Rouen le 30 mai 1431, pas à Orléans qu'elle avait délivrée."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "contemporain",
+    "difficulte": 2,
+    "enonce": "Vrai ou faux : le mur de Berlin est tombé en 1989.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Le 9 novembre 1989."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "xixe",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Napoléon est mort à Sainte-Hélène.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Le 5 mai 1821 sur cette île de l'Atlantique Sud, en exil."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "histoire",
+    "subcategory_slug": "renaissance",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Christophe Colomb était italien.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Né à Gênes vers 1451, même s'il a navigué sous pavillon espagnol."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 2,
+    "enonce": "Vrai ou faux : Canberra est la capitale de l'Australie.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Canberra, pas Sydney (qui est la plus grande ville)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : l'Australie est à la fois un pays et un continent.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "L'Australie est le seul pays qui occupe entièrement un continent (l'Océanie)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : la Corse est un département français.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Depuis 2018, la Corse est une collectivité unique, plus un département. Elle était auparavant divisée en Haute-Corse et Corse-du-Sud."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "geographie",
+    "subcategory_slug": "europe",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : la Suisse fait partie de l'Union européenne.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "La Suisse n'est pas membre de l'UE (elle a des accords bilatéraux)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "geographie",
+    "subcategory_slug": "drapeaux",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le drapeau du Japon représente le soleil levant.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Le disque rouge central symbolise le soleil, d'où le surnom 'Pays du Soleil levant'."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Molière est mort sur scène.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Il s'est effondré sur scène pendant 'Le Malade imaginaire' en 1673 mais est mort quelques heures plus tard à son domicile."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Le Petit Prince est le livre le plus traduit au monde après la Bible.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Traduit en plus de 500 langues et dialectes."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : J.R.R. Tolkien, auteur du Seigneur des Anneaux, était britannique.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Né en 1892 en Afrique du Sud mais élevé et ayant vécu en Angleterre, nationalité britannique."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "litterature",
+    "subcategory_slug": "poesie",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Arthur Rimbaud a arrêté d'écrire de la poésie avant ses 25 ans.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Il cesse d'écrire vers 1875 (21 ans) pour se consacrer au commerce en Afrique."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "Vrai ou faux : Zinédine Zidane a marqué 3 buts en finale de la Coupe du monde 1998.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Il en a marqué 2 (deux têtes contre le Brésil). Le 3e but a été inscrit par Emmanuel Petit."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Roger Federer a remporté plus de Roland-Garros que Rafael Nadal.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Nadal a 14 titres à Roland-Garros, Federer en a 1 (2009)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : les anneaux olympiques sont au nombre de cinq.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "5 anneaux représentant les 5 continents (bleu, jaune, noir, vert, rouge)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "sport",
+    "subcategory_slug": "cyclisme",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : le maillot à pois du Tour de France récompense le meilleur sprinteur.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Le maillot à pois est celui du meilleur grimpeur. Le sprinteur porte le maillot vert."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le film 'Titanic' a remporté 11 Oscars.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "11 Oscars en 1998, record à égalité avec Ben-Hur et Le Retour du Roi."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "acteurs",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Leonardo DiCaprio a reçu son premier Oscar pour The Revenant.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Oscar du meilleur acteur en 2016, après plusieurs nominations."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "realisateurs",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : Alfred Hitchcock a remporté l'Oscar du meilleur réalisateur.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Hitchcock n'a jamais remporté d'Oscar malgré 5 nominations. Il a reçu un Oscar d'honneur en 1968."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Freddie Mercury était le chanteur du groupe Queen.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Freddie Mercury (1946-1991) a été le chanteur de Queen de 1970 à sa mort."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : Mozart est mort à 35 ans.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Mort le 5 décembre 1791 à Vienne à l'âge de 35 ans."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "musique",
+    "subcategory_slug": "chanson-fr",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Édith Piaf s'appelait en réalité Édith Gassion.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Édith Giovanna Gassion, née en 1915. 'Piaf' signifie moineau en argot parisien."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Vincent van Gogh s'est coupé l'oreille entière.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Il s'est coupé seulement le lobe de l'oreille gauche en décembre 1888, pas l'oreille entière."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "art",
+    "subcategory_slug": "sculpture",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : la statue de la Liberté a été offerte par la France aux États-Unis.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Offerte par la France en 1886 pour le centenaire de l'indépendance US. Sculpture de Bartholdi, structure d'Eiffel."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "art",
+    "subcategory_slug": "architecture",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : la tour Eiffel devait être démontée après l'Exposition universelle de 1889.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Prévue pour 20 ans, elle fut sauvée par son intérêt scientifique (antennes de télégraphie)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : les dauphins dorment avec un œil ouvert.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Ils dorment avec un hémisphère cérébral à la fois (sommeil unihémisphérique)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le cerveau humain ne ressent pas la douleur.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Le tissu cérébral n'a pas de récepteurs de la douleur. Les maux de tête viennent des tissus environnants (vaisseaux, méninges)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "svt",
+    "subcategory_slug": "plantes",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : la tomate est botaniquement un fruit.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Botaniquement oui (issue de la fleur, contient les graines), mais considérée comme légume en cuisine."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le Soleil est une étoile.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Une étoile de type naine jaune, environ 4,6 milliards d'années."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Pluton est encore considérée comme une planète du système solaire.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Pluton a été rétrogradée en planète naine en 2006 par l'UAI."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "physique",
+    "subcategory_slug": "mecanique",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : la lumière voyage à environ 300 000 km par seconde dans le vide.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Exactement 299 792 458 m/s, soit environ 300 000 km/s."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le diamant est composé uniquement de carbone.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Du carbone pur cristallisé, comme le graphite mais avec une structure différente."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "chimie",
+    "subcategory_slug": "vie-quotidienne",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : l'eau bout à 100 °C au sommet de l'Everest.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Elle bout à environ 70 °C à 8 848 m à cause de la pression atmosphérique plus faible."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "licences",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Mario est un plombier italien.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Officiellement plombier italien de Brooklyn, créé par Shigeru Miyamoto."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "jeu-video",
+    "subcategory_slug": "retro",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : la première console PlayStation est sortie dans les années 1990.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Sortie au Japon en décembre 1994, en Europe en septembre 1995."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-fr",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le croissant est une invention française.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Inspiré du kipferl autrichien, introduit en France à la fin du XIXe siècle."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "fromages",
+    "difficulte": 4,
+    "enonce": "Vrai ou faux : la France compte plus de 1 000 variétés de fromages.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Entre 1 200 et 1 600 selon les estimations. Charles de Gaulle disait 'Comment voulez-vous gouverner un pays qui a 246 fromages ?'."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "culture-g",
+    "subcategory_slug": "inventions",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Thomas Edison a inventé l'ampoule électrique.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": false
+      },
+      {
+        "text": "Faux",
+        "correct": true
+      }
+    ],
+    "explication": "Il a amélioré et commercialisé l'ampoule, mais ne l'a pas inventée. Plusieurs inventeurs l'ont précédé, dont Joseph Swan."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : Athéna est la déesse grecque de la sagesse.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "Athéna, déesse de la sagesse, de la stratégie militaire et des arts."
+  },
+  {
+    "type": "quizz_2",
+    "format": "vrai_faux",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "vocabulaire",
+    "difficulte": 3,
+    "enonce": "Vrai ou faux : le mot 'algèbre' vient de l'arabe.",
+    "reponses": [
+      {
+        "text": "Vrai",
+        "correct": true
+      },
+      {
+        "text": "Faux",
+        "correct": false
+      }
+    ],
+    "explication": "De l'arabe 'al-jabr' (la réunion), du titre d'un livre du mathématicien Al-Khwarizmi (IXe s.)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 3,
+    "enonce": "Quelle civilisation a construit les pyramides de Gizeh ?",
+    "reponses": [
+      {
+        "text": "Les Égyptiens",
+        "correct": true
+      },
+      {
+        "text": "Les Mayas",
+        "correct": false
+      }
+    ],
+    "explication": "Les Égyptiens de l'Ancien Empire, il y a environ 4 500 ans."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 3,
+    "enonce": "Qui a été le premier président élu au suffrage universel direct en France ?",
+    "reponses": [
+      {
+        "text": "Charles de Gaulle",
+        "correct": true
+      },
+      {
+        "text": "Georges Pompidou",
+        "correct": false
+      }
+    ],
+    "explication": "De Gaulle, en 1965, après la réforme constitutionnelle de 1962."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "histoire",
+    "subcategory_slug": "revolution",
+    "difficulte": 2,
+    "enonce": "Qui a été guillotiné le 21 janvier 1793 ?",
+    "reponses": [
+      {
+        "text": "Louis XVI",
+        "correct": true
+      },
+      {
+        "text": "Louis XIV",
+        "correct": false
+      }
+    ],
+    "explication": "Louis XVI, place de la Révolution (actuelle place de la Concorde)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "geographie",
+    "subcategory_slug": "capitales",
+    "difficulte": 3,
+    "enonce": "Quelle est la capitale du Brésil ?",
+    "reponses": [
+      {
+        "text": "Brasília",
+        "correct": true
+      },
+      {
+        "text": "Rio de Janeiro",
+        "correct": false
+      }
+    ],
+    "explication": "Brasília depuis 1960. Rio était la capitale auparavant."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Quel océan borde la côte est de l'Amérique du Nord ?",
+    "reponses": [
+      {
+        "text": "Atlantique",
+        "correct": true
+      },
+      {
+        "text": "Pacifique",
+        "correct": false
+      }
+    ],
+    "explication": "L'Atlantique. Le Pacifique borde la côte ouest."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "geographie",
+    "subcategory_slug": "fleuves-montagnes",
+    "difficulte": 4,
+    "enonce": "Quel est le plus long fleuve d'Europe ?",
+    "reponses": [
+      {
+        "text": "La Volga",
+        "correct": true
+      },
+      {
+        "text": "Le Danube",
+        "correct": false
+      }
+    ],
+    "explication": "La Volga (3 690 km), en Russie. Le Danube (2 850 km) est le 2e."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 3,
+    "enonce": "Qui a écrit 'Madame Bovary' ?",
+    "reponses": [
+      {
+        "text": "Gustave Flaubert",
+        "correct": true
+      },
+      {
+        "text": "Honoré de Balzac",
+        "correct": false
+      }
+    ],
+    "explication": "Flaubert, publié en 1857, procès pour 'outrage aux bonnes mœurs' la même année."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "litterature",
+    "subcategory_slug": "romans-etrangers",
+    "difficulte": 3,
+    "enonce": "Qui a écrit '1984' ?",
+    "reponses": [
+      {
+        "text": "George Orwell",
+        "correct": true
+      },
+      {
+        "text": "Aldous Huxley",
+        "correct": false
+      }
+    ],
+    "explication": "George Orwell (1949). Huxley a écrit 'Le Meilleur des mondes' (1932)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "litterature",
+    "subcategory_slug": "theatre",
+    "difficulte": 4,
+    "enonce": "Qui a écrit 'Roméo et Juliette' ?",
+    "reponses": [
+      {
+        "text": "William Shakespeare",
+        "correct": true
+      },
+      {
+        "text": "Christopher Marlowe",
+        "correct": false
+      }
+    ],
+    "explication": "Shakespeare, vers 1597. Marlowe était son contemporain."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 2,
+    "enonce": "Quel pays a remporté la Coupe du monde 2018 ?",
+    "reponses": [
+      {
+        "text": "La France",
+        "correct": true
+      },
+      {
+        "text": "La Croatie",
+        "correct": false
+      }
+    ],
+    "explication": "La France, victoire 4-2 contre la Croatie en finale à Moscou."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "sport",
+    "subcategory_slug": "tennis",
+    "difficulte": 3,
+    "enonce": "Sur quel tournoi joue-t-on sur gazon ?",
+    "reponses": [
+      {
+        "text": "Wimbledon",
+        "correct": true
+      },
+      {
+        "text": "US Open",
+        "correct": false
+      }
+    ],
+    "explication": "Wimbledon, seul tournoi du Grand Chelem sur gazon. L'US Open est sur dur."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "sport",
+    "subcategory_slug": "autres-sports",
+    "difficulte": 4,
+    "enonce": "Dans quel sport utilise-t-on le terme 'strike' ?",
+    "reponses": [
+      {
+        "text": "Bowling",
+        "correct": true
+      },
+      {
+        "text": "Pétanque",
+        "correct": false
+      }
+    ],
+    "explication": "Au bowling, un strike est une quille abattue d'un seul lancer."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 3,
+    "enonce": "Qui a réalisé 'Pulp Fiction' ?",
+    "reponses": [
+      {
+        "text": "Quentin Tarantino",
+        "correct": true
+      },
+      {
+        "text": "Martin Scorsese",
+        "correct": false
+      }
+    ],
+    "explication": "Tarantino, Palme d'or à Cannes en 1994."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "animation",
+    "difficulte": 3,
+    "enonce": "Quel studio a créé Mickey Mouse ?",
+    "reponses": [
+      {
+        "text": "Disney",
+        "correct": true
+      },
+      {
+        "text": "Warner Bros",
+        "correct": false
+      }
+    ],
+    "explication": "Walt Disney, Mickey apparaît en 1928 dans 'Steamboat Willie'."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "series",
+    "difficulte": 4,
+    "enonce": "Dans quelle série se trouve le personnage de Walter White ?",
+    "reponses": [
+      {
+        "text": "Breaking Bad",
+        "correct": true
+      },
+      {
+        "text": "The Wire",
+        "correct": false
+      }
+    ],
+    "explication": "Breaking Bad (2008-2013), un prof de chimie qui devient fabricant de méthamphétamine."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 3,
+    "enonce": "Quel groupe a composé 'Stairway to Heaven' ?",
+    "reponses": [
+      {
+        "text": "Led Zeppelin",
+        "correct": true
+      },
+      {
+        "text": "Pink Floyd",
+        "correct": false
+      }
+    ],
+    "explication": "Led Zeppelin, sur leur 4e album en 1971."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "musique",
+    "subcategory_slug": "classique",
+    "difficulte": 4,
+    "enonce": "Qui a composé 'La Flûte enchantée' ?",
+    "reponses": [
+      {
+        "text": "Mozart",
+        "correct": true
+      },
+      {
+        "text": "Beethoven",
+        "correct": false
+      }
+    ],
+    "explication": "Mozart (1791), sa dernière année de vie."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "musique",
+    "subcategory_slug": "rap",
+    "difficulte": 4,
+    "enonce": "Quel rappeur américain a sorti l'album 'The Marshall Mathers LP' ?",
+    "reponses": [
+      {
+        "text": "Eminem",
+        "correct": true
+      },
+      {
+        "text": "Dr. Dre",
+        "correct": false
+      }
+    ],
+    "explication": "Eminem (2000). Marshall Mathers est son vrai nom."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 3,
+    "enonce": "Qui a peint 'Les Tournesols' ?",
+    "reponses": [
+      {
+        "text": "Vincent van Gogh",
+        "correct": true
+      },
+      {
+        "text": "Claude Monet",
+        "correct": false
+      }
+    ],
+    "explication": "Van Gogh, série réalisée à Arles en 1888-1889."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 4,
+    "enonce": "Dans quel musée est exposée 'La Ronde de nuit' de Rembrandt ?",
+    "reponses": [
+      {
+        "text": "Rijksmuseum d'Amsterdam",
+        "correct": true
+      },
+      {
+        "text": "Musée du Prado à Madrid",
+        "correct": false
+      }
+    ],
+    "explication": "Rijksmuseum d'Amsterdam depuis 1808, chef-d'œuvre de la peinture néerlandaise."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 3,
+    "enonce": "Quel organe produit l'insuline ?",
+    "reponses": [
+      {
+        "text": "Le pancréas",
+        "correct": true
+      },
+      {
+        "text": "Le foie",
+        "correct": false
+      }
+    ],
+    "explication": "Les cellules bêta des îlots de Langerhans du pancréas."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 3,
+    "enonce": "Quel animal est le symbole de la sagesse dans la mythologie grecque ?",
+    "reponses": [
+      {
+        "text": "La chouette",
+        "correct": true
+      },
+      {
+        "text": "Le corbeau",
+        "correct": false
+      }
+    ],
+    "explication": "La chouette (ou hibou), associée à la déesse Athéna."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 3,
+    "enonce": "Quelle est l'étoile la plus proche de la Terre ?",
+    "reponses": [
+      {
+        "text": "Le Soleil",
+        "correct": true
+      },
+      {
+        "text": "Proxima Centauri",
+        "correct": false
+      }
+    ],
+    "explication": "Le Soleil, à 150 millions de km. Proxima Centauri est la 2e plus proche (4,24 années-lumière)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "physique",
+    "subcategory_slug": "electricite",
+    "difficulte": 4,
+    "enonce": "Quelle unité mesure la résistance électrique ?",
+    "reponses": [
+      {
+        "text": "L'ohm",
+        "correct": true
+      },
+      {
+        "text": "Le watt",
+        "correct": false
+      }
+    ],
+    "explication": "L'ohm (Ω). Le watt mesure la puissance."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 3,
+    "enonce": "Quel est le symbole chimique de l'or ?",
+    "reponses": [
+      {
+        "text": "Au",
+        "correct": true
+      },
+      {
+        "text": "Or",
+        "correct": false
+      }
+    ],
+    "explication": "Au, du latin 'Aurum'."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 4,
+    "enonce": "Quel métal est liquide à température ambiante ?",
+    "reponses": [
+      {
+        "text": "Le mercure",
+        "correct": true
+      },
+      {
+        "text": "Le plomb",
+        "correct": false
+      }
+    ],
+    "explication": "Le mercure (Hg), seul métal liquide à température ambiante. Le plomb fond à 327 °C."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "cuisine-monde",
+    "difficulte": 3,
+    "enonce": "De quel pays vient le couscous à l'origine ?",
+    "reponses": [
+      {
+        "text": "Maghreb (Afrique du Nord)",
+        "correct": true
+      },
+      {
+        "text": "Turquie",
+        "correct": false
+      }
+    ],
+    "explication": "Plat traditionnel berbère d'Afrique du Nord (Maroc, Algérie, Tunisie)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "patisserie",
+    "difficulte": 4,
+    "enonce": "Quelle pâtisserie française est faite de deux macarons garnis ?",
+    "reponses": [
+      {
+        "text": "Le macaron parisien",
+        "correct": true
+      },
+      {
+        "text": "Le baba au rhum",
+        "correct": false
+      }
+    ],
+    "explication": "Le macaron parisien (type Ladurée), deux coques d'amande avec ganache au milieu."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "culture-g",
+    "subcategory_slug": "religions",
+    "difficulte": 3,
+    "enonce": "Quel est le livre sacré de l'islam ?",
+    "reponses": [
+      {
+        "text": "Le Coran",
+        "correct": true
+      },
+      {
+        "text": "La Torah",
+        "correct": false
+      }
+    ],
+    "explication": "Le Coran. La Torah est le livre sacré du judaïsme."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "culture-g",
+    "subcategory_slug": "mythologie",
+    "difficulte": 3,
+    "enonce": "Quel dieu égyptien a une tête de chacal ?",
+    "reponses": [
+      {
+        "text": "Anubis",
+        "correct": true
+      },
+      {
+        "text": "Horus",
+        "correct": false
+      }
+    ],
+    "explication": "Anubis, dieu des morts et de l'embaumement. Horus a une tête de faucon."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "langue-francaise",
+    "subcategory_slug": "grammaire",
+    "difficulte": 4,
+    "enonce": "Comment s'appelle un mot qui a plusieurs sens différents ?",
+    "reponses": [
+      {
+        "text": "Polysémique",
+        "correct": true
+      },
+      {
+        "text": "Homonyme",
+        "correct": false
+      }
+    ],
+    "explication": "Polysémique (plusieurs sens pour un même mot). Les homonymes sont des mots différents qui s'écrivent ou se prononcent pareil."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "actualite",
+    "subcategory_slug": "politique",
+    "difficulte": 3,
+    "enonce": "Comment s'appelle le parlement européen ?",
+    "reponses": [
+      {
+        "text": "Parlement européen",
+        "correct": true
+      },
+      {
+        "text": "Assemblée européenne",
+        "correct": false
+      }
+    ],
+    "explication": "Le Parlement européen, basé à Strasbourg et Bruxelles."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "entrepreneurs-tech",
+    "difficulte": 3,
+    "enonce": "Qui a cofondé Microsoft ?",
+    "reponses": [
+      {
+        "text": "Bill Gates",
+        "correct": true
+      },
+      {
+        "text": "Steve Jobs",
+        "correct": false
+      }
+    ],
+    "explication": "Bill Gates avec Paul Allen en 1975. Jobs a cofondé Apple."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "geographie",
+    "subcategory_slug": "monde",
+    "difficulte": 3,
+    "enonce": "Le continent africain compte-t-il plus ou moins de 50 pays ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "54 pays reconnus par l'ONU en Afrique."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "geographie",
+    "subcategory_slug": "france",
+    "difficulte": 3,
+    "enonce": "La France métropolitaine compte-t-elle plus ou moins de 90 départements ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "96 départements en métropole, 101 avec l'outre-mer."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "geographie",
+    "subcategory_slug": "fleuves-montagnes",
+    "difficulte": 4,
+    "enonce": "L'Everest culmine-t-il à plus ou moins de 9 000 mètres ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": false
+      },
+      {
+        "text": "Moins",
+        "correct": true
+      }
+    ],
+    "explication": "8 849 mètres au sommet (mesure officielle 2020)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "geographie",
+    "subcategory_slug": "europe",
+    "difficulte": 4,
+    "enonce": "L'Union européenne compte-t-elle plus ou moins de 30 États membres ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": false
+      },
+      {
+        "text": "Moins",
+        "correct": true
+      }
+    ],
+    "explication": "27 États membres depuis le Brexit (2020)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "histoire",
+    "subcategory_slug": "xxe",
+    "difficulte": 4,
+    "enonce": "La Première Guerre mondiale a-t-elle fait plus ou moins de 15 millions de morts ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Environ 18 à 20 millions de morts (militaires et civils)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "histoire",
+    "subcategory_slug": "antiquite",
+    "difficulte": 5,
+    "enonce": "La Grande Muraille de Chine mesure-t-elle plus ou moins de 10 000 km ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Plus de 21 000 km au total en comptant toutes les sections (mesure officielle chinoise de 2012)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "sport",
+    "subcategory_slug": "football",
+    "difficulte": 4,
+    "enonce": "Un match de football dure-t-il plus ou moins de 90 minutes de jeu effectif ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": false
+      },
+      {
+        "text": "Moins",
+        "correct": true
+      }
+    ],
+    "explication": "90 minutes de temps réglementaire MAIS seulement environ 55-60 minutes de jeu effectif (ballon en jeu)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "sport",
+    "subcategory_slug": "jo",
+    "difficulte": 4,
+    "enonce": "Les JO de Paris 2024 ont-ils accueilli plus ou moins de 10 000 athlètes ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Environ 10 500 athlètes pour les Jeux de Paris 2024."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "svt",
+    "subcategory_slug": "corps-humain",
+    "difficulte": 4,
+    "enonce": "Le cœur humain bat-il plus ou moins de 100 000 fois par jour au repos ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Environ 100 000 à 115 000 battements par jour (70 bpm en moyenne au repos)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 4,
+    "enonce": "Une girafe adulte mesure-t-elle plus ou moins de 5 mètres de haut ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "5 à 6 mètres pour un mâle adulte. C'est le plus grand animal terrestre."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "svt",
+    "subcategory_slug": "animaux",
+    "difficulte": 5,
+    "enonce": "Un colibri peut-il battre des ailes plus ou moins de 50 fois par seconde ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Jusqu'à 80 battements par seconde pour certaines espèces (record du règne animal pour un vertébré)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 4,
+    "enonce": "Le Soleil est-il plus ou moins âgé que 5 milliards d'années ?",
+    "reponses": [
+      {
+        "text": "Moins",
+        "correct": true
+      },
+      {
+        "text": "Plus",
+        "correct": false
+      }
+    ],
+    "explication": "Environ 4,6 milliards d'années."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "physique",
+    "subcategory_slug": "astronomie",
+    "difficulte": 4,
+    "enonce": "Jupiter met-elle plus ou moins de 10 ans à faire le tour du Soleil ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Environ 11,86 années terrestres pour une révolution autour du Soleil."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "chimie",
+    "subcategory_slug": "elements",
+    "difficulte": 5,
+    "enonce": "Le tableau périodique compte-t-il plus ou moins de 100 éléments ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "118 éléments officiellement reconnus, du numéro atomique 1 (H) à 118 (Og, oganesson)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "actualite",
+    "subcategory_slug": "societe",
+    "difficulte": 3,
+    "enonce": "La Terre compte-t-elle plus ou moins de 7 milliards d'habitants ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Plus de 8 milliards d'habitants depuis novembre 2022."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "actualite",
+    "subcategory_slug": "economie",
+    "difficulte": 4,
+    "enonce": "Le SMIC brut mensuel en France est-il plus ou moins de 1 800 euros en 2024 ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": false
+      },
+      {
+        "text": "Moins",
+        "correct": true
+      }
+    ],
+    "explication": "Environ 1 767 € brut mensuel en 2024 (temps plein 35h)."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "culture-g",
+    "subcategory_slug": "langues",
+    "difficulte": 5,
+    "enonce": "Y a-t-il plus ou moins de 5 000 langues parlées dans le monde ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Environ 7 000 langues parlées dans le monde selon l'UNESCO."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "litterature",
+    "subcategory_slug": "classiques-fr",
+    "difficulte": 5,
+    "enonce": "Victor Hugo est-il mort avant ou après ses 80 ans ?",
+    "reponses": [
+      {
+        "text": "Après",
+        "correct": true
+      },
+      {
+        "text": "Avant",
+        "correct": false
+      }
+    ],
+    "explication": "Mort à 83 ans en 1885. Funérailles nationales suivies par 2 millions de personnes."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "cinema-tv",
+    "subcategory_slug": "films-cultes",
+    "difficulte": 4,
+    "enonce": "Le film 'Avatar' (2009) a-t-il rapporté plus ou moins de 2 milliards de dollars au box-office ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "Plus de 2,9 milliards de dollars, longtemps numéro 1 au box-office mondial."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "musique",
+    "subcategory_slug": "rock-pop",
+    "difficulte": 4,
+    "enonce": "Les Beatles ont-ils existé plus ou moins de 15 ans en tant que groupe ?",
+    "reponses": [
+      {
+        "text": "Moins",
+        "correct": true
+      },
+      {
+        "text": "Plus",
+        "correct": false
+      }
+    ],
+    "explication": "Fondés en 1960, séparés en 1970, soit 10 ans."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "gastronomie",
+    "subcategory_slug": "vins",
+    "difficulte": 5,
+    "enonce": "Une bouteille de vin standard contient-elle plus ou moins de 80 cl ?",
+    "reponses": [
+      {
+        "text": "Moins",
+        "correct": true
+      },
+      {
+        "text": "Plus",
+        "correct": false
+      }
+    ],
+    "explication": "75 cl (bouteille standard dite 'bordelaise' ou 'bourguignonne')."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "art",
+    "subcategory_slug": "peinture",
+    "difficulte": 5,
+    "enonce": "La Joconde mesure-t-elle plus ou moins de 80 cm de hauteur ?",
+    "reponses": [
+      {
+        "text": "Moins",
+        "correct": true
+      },
+      {
+        "text": "Plus",
+        "correct": false
+      }
+    ],
+    "explication": "77 cm × 53 cm. Beaucoup sont surpris par sa petite taille en la voyant au Louvre."
+  },
+  {
+    "type": "quizz_2",
+    "format": "plus_moins",
+    "category_slug": "expressions-francaises",
+    "subcategory_slug": "origines-historiques",
+    "difficulte": 4,
+    "enonce": "L'expression 'les carottes sont cuites' (tout est fini) est-elle plus ou moins ancienne que 1900 ?",
+    "reponses": [
+      {
+        "text": "Plus",
+        "correct": true
+      },
+      {
+        "text": "Moins",
+        "correct": false
+      }
+    ],
+    "explication": "L'expression remonte au XVIIe siècle, elle était déjà utilisée à cette époque pour signifier que tout était perdu."
+  },
+  {
+    "type": "quizz_2",
+    "format": "ou",
+    "category_slug": "personnalites-modernes",
+    "subcategory_slug": "politique-contemporaine",
+    "difficulte": 3,
+    "enonce": "Qui a été la première femme Premier ministre au Royaume-Uni ?",
+    "reponses": [
+      {
+        "text": "Margaret Thatcher",
+        "correct": true
+      },
+      {
+        "text": "Theresa May",
+        "correct": false
+      }
+    ],
+    "explication": "Margaret Thatcher, Premier ministre de 1979 à 1990, surnommée la 'Dame de fer'."
+  }
+]

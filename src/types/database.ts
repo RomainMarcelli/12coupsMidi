@@ -27,17 +27,23 @@ export type QuestionType =
   | "quizz_4"
   | "etoile"
   | "face_a_face"
-  | "coup_maitre";
+  | "coup_maitre"
+  | "coup_par_coup";
+
+/** Sous-format optionnel pour quizz_2 (Coup d'Envoi). */
+export type QuestionFormat = "vrai_faux" | "ou" | "plus_moins";
 
 export type UserRole = "user" | "admin";
 
 export type GameMode =
   | "jeu1"
-  | "jeu2"
+  | "coup_par_coup"
+  | "etoile"
   | "face_a_face"
   | "coup_maitre"
   | "parcours"
-  | "revision";
+  | "revision"
+  | "douze_coups";
 
 export interface Database {
   public: {
@@ -50,6 +56,11 @@ export interface Database {
           xp: number;
           niveau: number;
           created_at: string;
+          avatar_url: string | null;
+          theme: "light" | "dark" | "system";
+          settings: Json;
+          /** K4 — Branding conditionnel Mahylan vs générique. */
+          is_owner: boolean;
         };
         Insert: {
           id: string;
@@ -58,8 +69,152 @@ export interface Database {
           xp?: number;
           niveau?: number;
           created_at?: string;
+          avatar_url?: string | null;
+          theme?: "light" | "dark" | "system";
+          settings?: Json;
+          is_owner?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Relationships: [];
+      };
+      user_favorites: {
+        Row: {
+          user_id: string;
+          question_id: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          question_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_favorites"]["Insert"]>;
+        Relationships: [];
+      };
+      custom_avatars: {
+        Row: {
+          id: string;
+          url: string;
+          tags: string[];
+          uploaded_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          url: string;
+          tags?: string[];
+          uploaded_by?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["custom_avatars"]["Insert"]>;
+        Relationships: [];
+      };
+      daily_challenges: {
+        Row: {
+          date: string;
+          question_ids: string[];
+          created_at: string;
+        };
+        Insert: {
+          date: string;
+          question_ids: string[];
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["daily_challenges"]["Insert"]>;
+        Relationships: [];
+      };
+      daily_challenge_results: {
+        Row: {
+          user_id: string;
+          date: string;
+          correct_count: number;
+          total_count: number;
+          answers: Json;
+          completed_at: string;
+        };
+        Insert: {
+          user_id: string;
+          date: string;
+          correct_count: number;
+          total_count: number;
+          answers?: Json;
+          completed_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["daily_challenge_results"]["Insert"]>;
+        Relationships: [];
+      };
+      saved_players: {
+        Row: {
+          id: string;
+          owner_id: string;
+          pseudo: string;
+          avatar_url: string | null;
+          games_played: number;
+          games_won: number;
+          last_played_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          owner_id: string;
+          pseudo: string;
+          avatar_url?: string | null;
+          games_played?: number;
+          games_won?: number;
+          last_played_at?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["saved_players"]["Insert"]>;
+        Relationships: [];
+      };
+      tv_rooms: {
+        Row: {
+          id: string;
+          code: string;
+          host_id: string;
+          status: "waiting" | "playing" | "paused" | "ended";
+          game_mode: string;
+          state: Json;
+          created_at: string;
+          ended_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          host_id: string;
+          status?: "waiting" | "playing" | "paused" | "ended";
+          game_mode: string;
+          state?: Json;
+          created_at?: string;
+          ended_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["tv_rooms"]["Insert"]>;
+        Relationships: [];
+      };
+      tv_room_players: {
+        Row: {
+          id: string;
+          room_id: string;
+          player_token: string;
+          pseudo: string;
+          avatar_url: string | null;
+          position: number | null;
+          is_connected: boolean;
+          last_seen_at: string;
+          joined_at: string;
+        };
+        Insert: {
+          id?: string;
+          room_id: string;
+          player_token: string;
+          pseudo: string;
+          avatar_url?: string | null;
+          position?: number | null;
+          is_connected?: boolean;
+          last_seen_at?: string;
+          joined_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["tv_room_players"]["Insert"]>;
         Relationships: [];
       };
       categories: {
@@ -114,6 +269,7 @@ export interface Database {
           explication: string | null;
           author_id: string | null;
           created_at: string;
+          format: QuestionFormat | null;
         };
         Insert: {
           id?: string;
@@ -130,6 +286,7 @@ export interface Database {
           explication?: string | null;
           author_id?: string | null;
           created_at?: string;
+          format?: QuestionFormat | null;
         };
         Update: Partial<Database["public"]["Tables"]["questions"]["Insert"]>;
         Relationships: [];

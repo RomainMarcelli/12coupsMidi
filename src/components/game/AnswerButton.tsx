@@ -15,11 +15,11 @@ interface AnswerButtonProps extends HTMLMotionProps<"button"> {
 
 const STATE_CLASSES: Record<AnswerState, string> = {
   idle:
-    "border-white/20 bg-card text-foreground hover:border-gold hover:bg-gold/10 hover:text-gold",
+    "border-border bg-card text-foreground hover:border-gold hover:bg-gold/10 hover:scale-[1.01] shadow-[0_2px_0_0_rgba(11,31,77,0.08)]",
   correct:
-    "border-life-green bg-life-green/20 text-life-green shadow-[0_0_24px_rgba(46,204,113,0.6),inset_0_0_0_1px_rgba(46,204,113,0.4)]",
+    "border-life-green bg-life-green/15 text-life-green shadow-[0_0_24px_rgba(46,204,113,0.45),inset_0_0_0_1px_rgba(46,204,113,0.4)]",
   wrong:
-    "border-buzz bg-buzz/20 text-buzz shadow-[0_0_24px_rgba(230,57,70,0.55)]",
+    "border-buzz bg-buzz/15 text-buzz shadow-[0_0_24px_rgba(230,57,70,0.4)]",
 };
 
 /**
@@ -51,8 +51,8 @@ export const AnswerButton = forwardRef<HTMLButtonElement, AnswerButtonProps>(
         {keyHint && (
           <kbd
             className={cn(
-              "absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-md border border-white/20 bg-white/5 font-mono text-sm transition-colors",
-              state === "idle" && "group-hover/answer:border-gold group-hover/answer:text-gold",
+              "absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-md border border-border bg-muted/80 font-mono text-sm text-foreground transition-colors",
+              state === "idle" && "group-hover/answer:border-gold group-hover/answer:bg-gold/20",
             )}
             aria-hidden="true"
           >

@@ -27,13 +27,13 @@ export default async function NewQuestionPage() {
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
       <Link
         href="/admin/questions"
-        className="flex items-center gap-1 self-start text-sm text-cream/70 transition-colors hover:text-gold"
+        className="flex items-center gap-1 self-start text-sm text-foreground/70 transition-colors hover:text-gold"
       >
         <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         Retour à la liste
       </Link>
 
-      <h1 className="font-display text-3xl font-extrabold text-gold">
+      <h1 className="font-display text-3xl font-extrabold text-foreground">
         Nouvelle question
       </h1>
 

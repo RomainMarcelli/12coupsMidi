@@ -33,7 +33,7 @@ export function QuestionCard({
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
       className={cn(
-        "flex flex-col gap-5 rounded-2xl border border-white/10 bg-card p-6 text-card-foreground glow-midnight sm:p-8",
+        "flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 text-card-foreground glow-card sm:p-8",
         className,
       )}
     >
@@ -41,7 +41,7 @@ export function QuestionCard({
         <div className="flex items-center gap-2">
           {category && (
             <span
-              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-midnight"
+              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide text-on-color"
               style={{ backgroundColor: categoryColor ?? "var(--color-gold)" }}
             >
               {category}
@@ -57,7 +57,7 @@ export function QuestionCard({
                   key={i}
                   className={cn(
                     "block h-1.5 w-3 rounded-sm",
-                    i < difficulte ? "bg-gold" : "bg-white/10",
+                    i < difficulte ? "bg-gold" : "bg-navy/10",
                   )}
                   aria-hidden="true"
                 />

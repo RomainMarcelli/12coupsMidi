@@ -17,9 +17,18 @@ export const QUESTION_TYPES = [
   "etoile",
   "face_a_face",
   "coup_maitre",
+  "coup_par_coup",
 ] as const;
 
 export type QuestionType = (typeof QUESTION_TYPES)[number];
+
+export const QUESTION_FORMATS = [
+  "vrai_faux",
+  "ou",
+  "plus_moins",
+] as const;
+
+export type QuestionFormat = (typeof QUESTION_FORMATS)[number];
 
 const reponseSchema = z.object({
   text: z.string().min(1),
@@ -38,6 +47,7 @@ const baseFields = {
   indices: z.array(z.string()).optional(),
   image_url: z.string().url().optional(),
   explication: z.string().optional(),
+  format: z.enum(QUESTION_FORMATS).optional(),
 };
 
 /**
@@ -48,6 +58,15 @@ export const questionSchema = z
   .superRefine((q, ctx) => {
     const countReponses = q.reponses.length;
     const countCorrect = q.reponses.filter((r) => r.correct).length;
+
+    // `format` est réservé à quizz_2.
+    if (q.format && q.type !== "quizz_2") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["format"],
+        message: "`format` est uniquement autorisé pour quizz_2.",
+      });
+    }
 
     switch (q.type) {
       case "quizz_2":
@@ -64,6 +83,30 @@ export const questionSchema = z
             path: ["reponses"],
             message: "quizz_2 : exactement 1 réponse correcte.",
           });
+        }
+        // format est optionnel pour quizz_2, mais s'il est défini il doit
+        // correspondre aux réponses attendues :
+        if (q.format === "vrai_faux") {
+          const texts = q.reponses.map((r) => r.text.toLowerCase().trim());
+          if (!texts.includes("vrai") || !texts.includes("faux")) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["reponses"],
+              message:
+                "format vrai_faux : les réponses doivent être 'Vrai' et 'Faux'.",
+            });
+          }
+        }
+        if (q.format === "plus_moins") {
+          const texts = q.reponses.map((r) => r.text.toLowerCase().trim());
+          if (!texts.includes("plus") || !texts.includes("moins")) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["reponses"],
+              message:
+                "format plus_moins : les réponses doivent être 'Plus' et 'Moins'.",
+            });
+          }
         }
         break;
 
@@ -108,6 +151,25 @@ export const questionSchema = z
             code: "custom",
             path: ["bonne_reponse"],
             message: "face_a_face : bonne_reponse requise.",
+          });
+        }
+        break;
+
+      case "coup_par_coup":
+        if (countReponses !== 7) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["reponses"],
+            message:
+              "coup_par_coup : exactement 7 propositions requises (6 liées + 1 intrus).",
+          });
+        }
+        if (countCorrect !== 6) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["reponses"],
+            message:
+              "coup_par_coup : exactement 6 propositions correct:true (liées) et 1 correct:false (intrus).",
           });
         }
         break;
