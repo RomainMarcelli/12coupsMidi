@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
-import { AlertTriangle, FileUp, Info, Upload } from "lucide-react";
+import { AlertTriangle, ArrowRight, FileUp, Info, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   questionsBulkSchema,
@@ -80,7 +79,6 @@ function parseRaw(raw: string): Parsed {
 }
 
 export function ImportForm() {
-  const router = useRouter();
   const [raw, setRaw] = useState("");
   const [result, setResult] = useState<ImportResult | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -117,9 +115,15 @@ export function ImportForm() {
     startTransition(async () => {
       const res = await importQuestionsBulk(parsed.data);
       setResult(res);
+      // N (correction) — Plus de redirect automatique : l'admin reste
+      // sur la page pour lire le récap (count importé, doublons,
+      // warnings). Vide le textarea pour permettre un nouvel import
+      // immédiat sans confusion.
       if (res.status === "ok") {
-        // Laisse le temps de lire le récap puis retour à la liste
-        setTimeout(() => router.push("/admin/questions"), 1500);
+        setRaw("");
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
       }
     });
   }
@@ -286,6 +290,15 @@ export function ImportForm() {
               ))}
             </ul>
           )}
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              href="/admin/questions"
+              className="inline-flex items-center gap-1.5 rounded-md border border-life-green/50 bg-life-green/5 px-3 py-1.5 text-xs font-semibold text-life-green transition-colors hover:bg-life-green/10"
+            >
+              Voir la liste
+              <ArrowRight className="h-3 w-3" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       )}
 

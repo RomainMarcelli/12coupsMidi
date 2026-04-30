@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import { ConsoleFilter } from "@/components/layout/ConsoleFilter";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { getBuildBrand } from "@/lib/build-brand";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,42 +18,51 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-// K4 — Le metadata HTML est server-side et est rendu AVANT l'auth.
-// Il est donc IMPOSSIBLE de le rendre conditionnel par utilisateur.
-// On garde donc le branding générique. Le compte owner verra
-// "Coups de Midi Quiz" dans l'icône d'install PWA et dans l'onglet —
-// limitation acceptée. Le branding personnalisé Mahylan apparaît dès
-// que la page (app)/ est rendue (Navbar, accueil, hero).
-const APP_NAME = "Coups de Midi Quiz";
-const APP_DESCRIPTION =
-  "Application de quiz multijoueur inspirée des 12 Coups de Midi.";
+// O — Le metadata HTML est server-side, rendu AVANT l'auth. On utilise
+// `getBuildBrand()` qui lit `NEXT_PUBLIC_BRAND_MODE` (figé au build) :
+//   - déploiement public générique → "Coups de Midi Quiz"
+//   - déploiement Mahylan          → "Les 12 coups de Mahylan"
+//
+// Pour le branding DYNAMIQUE par utilisateur connecté (Navbar, Hero,
+// Splash via `is_owner`), continuer à utiliser `getBranding(isOwner)`
+// dans `src/lib/branding.ts`.
+const brand = getBuildBrand();
 
 export const metadata: Metadata = {
-  title: { default: APP_NAME, template: `%s — ${APP_NAME}` },
-  description: APP_DESCRIPTION,
-  applicationName: APP_NAME,
-  manifest: "/manifest.json",
+  title: { default: brand.appName, template: `%s — ${brand.appName}` },
+  description: brand.description,
+  applicationName: brand.appName,
+  // O2 — Le manifest est généré dynamiquement par `app/manifest.ts`.
+  // Next l'expose à `/manifest.webmanifest` (pas `.json`).
+  manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: APP_NAME,
+    title: brand.appShortName,
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
-      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
+      { url: brand.faviconPath, sizes: "any" },
+      // Les PNG d'icônes sont sous `iconBasePath` (mahylan = sous-dossier,
+      // generic = racine de public/).
+      {
+        url: `${brand.iconBasePath}/icon-192.png`,
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        url: `${brand.iconBasePath}/icon-512.png`,
+        type: "image/png",
+        sizes: "512x512",
+      },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-    shortcut: "/favicon.ico",
+    apple: [{ url: brand.appleTouchIconPath, sizes: "180x180" }],
+    shortcut: brand.faviconPath,
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FFF8EC" },
-    { media: "(prefers-color-scheme: dark)", color: "#0A0E27" },
-  ],
+  themeColor: brand.themeColor,
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

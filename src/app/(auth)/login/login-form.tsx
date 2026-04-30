@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { forwardRef, useActionState, useEffect, useRef, useState } from "react";
 import { Eye, EyeOff, Loader2, Lock, LogIn, Mail, UserPlus } from "lucide-react";
 import { signIn, signUp, type AuthResult } from "./actions";
 import { cn } from "@/lib/utils";
@@ -9,8 +9,24 @@ type Mode = "signin" | "signup";
 
 const INITIAL: AuthResult = { status: "ok" };
 
+/**
+ * N1.1 — Le formulaire de login conserve l'email saisi quand
+ * l'authentification échoue, vide uniquement le mot de passe et le
+ * focus dessus. Évite à l'utilisateur de retaper son email à chaque
+ * tentative.
+ *
+ * Implémentation :
+ *   - email : state contrôlé (`useState`) → préservé au re-render
+ *   - password : input non-contrôlé, manipulé via un ref → reset
+ *     après un retour `state.status === "error"` du server action,
+ *     puis focus + sélection (au cas où l'utilisateur veut taper
+ *     par-dessus immédiatement).
+ */
 export function LoginForm() {
   const [mode, setMode] = useState<Mode>("signin");
+  const [email, setEmail] = useState("");
+  const passwordRef = useRef<HTMLInputElement>(null);
+
   const [signInState, signInAction, signInPending] = useActionState(
     signIn,
     INITIAL,
@@ -23,6 +39,14 @@ export function LoginForm() {
   const state = mode === "signin" ? signInState : signUpState;
   const isPending = mode === "signin" ? signInPending : signUpPending;
   const action = mode === "signin" ? signInAction : signUpAction;
+
+  // N1.1 — Quand on reçoit une erreur, vide le password et focus dessus.
+  useEffect(() => {
+    if (state.status === "error" && passwordRef.current) {
+      passwordRef.current.value = "";
+      passwordRef.current.focus();
+    }
+  }, [state]);
 
   return (
     <div className="w-full max-w-sm">
@@ -51,12 +75,15 @@ export function LoginForm() {
           autoComplete="email"
           placeholder="toi@exemple.fr"
           disabled={isPending}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Field
           label="Mot de passe"
           icon={Lock}
           name="password"
           type="password"
+          ref={passwordRef}
           autoComplete={mode === "signin" ? "current-password" : "new-password"}
           placeholder={mode === "signup" ? "Au moins 6 caractères" : "•••••••"}
           minLength={6}
@@ -67,7 +94,6 @@ export function LoginForm() {
           type="submit"
           disabled={isPending}
           className="flex h-12 items-center justify-center gap-2 rounded-md bg-gold font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-60"
-
         >
           {isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -126,14 +152,15 @@ function TabButton({
   );
 }
 
-function Field({
-  label,
-  icon: Icon,
-  ...props
-}: {
+interface FieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   icon: typeof Mail;
-} & React.InputHTMLAttributes<HTMLInputElement>) {
+}
+
+const Field = forwardRef<HTMLInputElement, FieldProps>(function Field(
+  { label, icon: Icon, ...props },
+  ref,
+) {
   // M2.1 — Pour les champs password, on gère le toggle œil ici
   // directement (pas via le composant PasswordInput) car on a déjà
   // une icône à gauche dans le wrapper relatif.
@@ -151,6 +178,7 @@ function Field({
         />
         <input
           {...props}
+          ref={ref}
           type={effectiveType}
           required
           className={cn(
@@ -181,4 +209,4 @@ function Field({
       </div>
     </label>
   );
-}
+});

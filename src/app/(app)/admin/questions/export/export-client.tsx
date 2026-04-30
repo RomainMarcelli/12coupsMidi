@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Loader2 } from "lucide-react";
+import { Database, Dices, Download, Loader2, Tags } from "lucide-react";
 import { useState, useTransition } from "react";
 import { exportQuestions } from "./actions";
 import type { QuestionType } from "@/lib/schemas/question";
@@ -9,6 +9,7 @@ interface CategoryOption {
   id: number;
   nom: string;
   slug: string;
+  questionCount: number;
 }
 
 interface ExportClientProps {
@@ -18,9 +19,14 @@ interface ExportClientProps {
 }
 
 /**
- * M6.1 — UI pour les 3 modes d'export. Le téléchargement est déclenché
- * côté client en construisant un Blob à partir des données retournées
- * par la server action.
+ * N3.1 — UI repensée pour les 3 modes d'export :
+ *   - 3 cards en grille responsive (1 col mobile, 2 cols tablette,
+ *     3 cols desktop), avec padding aéré et `min-h` pour aligner
+ *     visuellement les hauteurs
+ *   - Icône en haut de chaque card pour identifier visuellement le mode
+ *   - Bouton CTA gold en bas (push-to-bottom via flex-1)
+ *   - Card "Par catégorie" : affiche le count entre parenthèses
+ *     (ex. "Histoire (89)"), désactive les catégories à 0 questions
  */
 export function ExportClient({
   categories,
@@ -28,7 +34,7 @@ export function ExportClient({
   questionTypes,
 }: ExportClientProps) {
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <ExportAllCard totalCount={totalCount} />
       <ExportByCategoryCard categories={categories} />
       <ExportSampleCard
@@ -63,11 +69,19 @@ function ExportAllCard({ totalCount }: { totalCount: number }) {
   }
 
   return (
-    <Card title="Tout exporter">
+    <Card icon={<Database className="h-7 w-7" aria-hidden="true" />} title="Tout exporter">
       <p className="text-sm text-foreground/70">
-        Télécharge l&apos;intégralité des questions de la base
-        ({totalCount} questions).
+        Télécharge l&apos;intégralité de la base en un seul fichier JSON.
       </p>
+      <div className="mt-2 rounded-lg border border-border/60 bg-background/40 px-3 py-2 text-center">
+        <p className="text-2xl font-extrabold text-gold-warm font-mono">
+          {totalCount}
+        </p>
+        <p className="text-xs uppercase tracking-wider text-foreground/50">
+          questions
+        </p>
+      </div>
+      <div className="flex-1" />
       <ExportButton onClick={onClick} pending={pending} label="Exporter tout" />
       <Feedback msg={msg} />
     </Card>
@@ -125,34 +139,62 @@ function ExportByCategoryCard({
     });
   }
 
+  // Total de questions sélectionnées pour info dans le bouton.
+  const selectedTotal = categories
+    .filter((c) => selected.has(c.id))
+    .reduce((acc, c) => acc + c.questionCount, 0);
+
   return (
-    <Card title="Par catégorie">
+    <Card
+      icon={<Tags className="h-7 w-7" aria-hidden="true" />}
+      title="Par catégorie"
+    >
       <p className="text-sm text-foreground/70">
         Sélectionne une ou plusieurs catégories.
       </p>
-      <div className="flex max-h-48 flex-col gap-1 overflow-y-auto rounded-md border border-border bg-background/30 p-2">
-        {categories.map((c) => (
-          <label
-            key={c.id}
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-foreground/5"
-          >
-            <input
-              type="checkbox"
-              checked={selected.has(c.id)}
-              onChange={() => toggle(c.id)}
-              className="h-4 w-4 rounded border-border accent-gold"
-            />
-            <span className="text-foreground/90">{c.nom}</span>
-            <span className="ml-auto font-mono text-xs text-foreground/40">
-              {c.slug}
-            </span>
-          </label>
-        ))}
+      <div className="flex max-h-64 min-h-[8rem] flex-col gap-0.5 overflow-y-auto rounded-md border border-border bg-background/30 p-1">
+        {categories.length === 0 && (
+          <p className="px-2 py-3 text-center text-xs text-foreground/50">
+            Aucune catégorie.
+          </p>
+        )}
+        {categories.map((c) => {
+          const empty = c.questionCount === 0;
+          return (
+            <label
+              key={c.id}
+              className={
+                empty
+                  ? "flex cursor-not-allowed items-center justify-between gap-2 rounded px-2 py-1.5 text-sm opacity-50"
+                  : "flex cursor-pointer items-center justify-between gap-2 rounded px-2 py-1.5 text-sm transition-colors hover:bg-foreground/5"
+              }
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selected.has(c.id)}
+                  onChange={() => toggle(c.id)}
+                  disabled={empty}
+                  className="h-4 w-4 shrink-0 rounded border-border accent-gold"
+                />
+                <span className="truncate text-foreground/90">{c.nom}</span>
+              </span>
+              <span className="font-mono text-xs text-foreground/50">
+                ({c.questionCount})
+              </span>
+            </label>
+          );
+        })}
       </div>
+      <div className="flex-1" />
       <ExportButton
         onClick={onClick}
         pending={pending}
-        label={`Exporter ${selected.size} catégorie${selected.size > 1 ? "s" : ""}`}
+        label={
+          selected.size === 0
+            ? "Exporter"
+            : `Exporter ${selected.size} catégorie${selected.size > 1 ? "s" : ""} (${selectedTotal})`
+        }
         disabled={selected.size === 0}
       />
       <Feedback msg={msg} />
@@ -206,77 +248,73 @@ function ExportSampleCard({
   }
 
   return (
-    <Card title="Échantillon aléatoire">
+    <Card
+      icon={<Dices className="h-7 w-7" aria-hidden="true" />}
+      title="Échantillon aléatoire"
+    >
       <p className="text-sm text-foreground/70">
-        Tirage aléatoire avec filtres optionnels.
+        Tirage au sort avec filtres optionnels.
       </p>
-      <label className="flex flex-col gap-1 text-xs">
-        <span className="font-semibold uppercase tracking-wider text-foreground/60">
-          Nombre
-        </span>
-        <input
-          type="number"
-          min={1}
-          value={count}
-          onChange={(e) => setCount(Number(e.target.value))}
-          className="h-9 rounded-md border border-border bg-card px-2 text-sm"
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-xs">
-        <span className="font-semibold uppercase tracking-wider text-foreground/60">
-          Catégorie (optionnel)
-        </span>
-        <select
-          value={categoryId}
-          onChange={(e) =>
-            setCategoryId(e.target.value === "" ? "" : Number(e.target.value))
-          }
-          className="h-9 rounded-md border border-border bg-card px-2 text-sm"
-        >
-          <option value="">— Toutes —</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.nom}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="flex flex-col gap-1 text-xs">
-        <span className="font-semibold uppercase tracking-wider text-foreground/60">
-          Type (optionnel)
-        </span>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value as QuestionType | "")}
-          className="h-9 rounded-md border border-border bg-card px-2 text-sm"
-        >
-          <option value="">— Tous —</option>
-          {questionTypes.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="flex flex-col gap-1 text-xs">
-        <span className="font-semibold uppercase tracking-wider text-foreground/60">
-          Difficulté (optionnel)
-        </span>
-        <select
-          value={difficulte}
-          onChange={(e) =>
-            setDifficulte(e.target.value === "" ? "" : Number(e.target.value))
-          }
-          className="h-9 rounded-md border border-border bg-card px-2 text-sm"
-        >
-          <option value="">— Toutes —</option>
-          {[1, 2, 3, 4, 5].map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div className="flex flex-col gap-3">
+        <FilterField label="Nombre">
+          <input
+            type="number"
+            min={1}
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))}
+            className="h-9 w-full rounded-md border border-border bg-card px-2 text-sm"
+          />
+        </FilterField>
+        <FilterField label="Catégorie">
+          <select
+            value={categoryId}
+            onChange={(e) =>
+              setCategoryId(e.target.value === "" ? "" : Number(e.target.value))
+            }
+            className="h-9 w-full rounded-md border border-border bg-card px-2 text-sm"
+          >
+            <option value="">— Toutes —</option>
+            {categories
+              .filter((c) => c.questionCount > 0)
+              .map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nom} ({c.questionCount})
+                </option>
+              ))}
+          </select>
+        </FilterField>
+        <FilterField label="Type">
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value as QuestionType | "")}
+            className="h-9 w-full rounded-md border border-border bg-card px-2 text-sm"
+          >
+            <option value="">— Tous —</option>
+            {questionTypes.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </FilterField>
+        <FilterField label="Difficulté">
+          <select
+            value={difficulte}
+            onChange={(e) =>
+              setDifficulte(e.target.value === "" ? "" : Number(e.target.value))
+            }
+            className="h-9 w-full rounded-md border border-border bg-card px-2 text-sm"
+          >
+            <option value="">— Toutes —</option>
+            {[1, 2, 3, 4, 5].map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+        </FilterField>
+      </div>
+      <div className="flex-1" />
       <ExportButton
         onClick={onClick}
         pending={pending}
@@ -292,17 +330,43 @@ function ExportSampleCard({
 // =============================================================================
 
 function Card({
+  icon,
   title,
   children,
 }: {
+  icon: React.ReactNode;
   title: string;
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 glow-card">
-      <h2 className="font-display text-lg font-bold text-foreground">{title}</h2>
+    <section className="flex min-h-[420px] flex-col gap-3 rounded-2xl border border-border bg-card p-6 glow-card transition-all hover:border-gold/40 hover:shadow-[0_0_24px_rgba(245,183,0,0.12)]">
+      <div className="flex items-center gap-3">
+        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/15 text-gold-warm">
+          {icon}
+        </span>
+        <h2 className="font-display text-lg font-bold text-foreground">
+          {title}
+        </h2>
+      </div>
       {children}
     </section>
+  );
+}
+
+function FilterField({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex flex-col gap-1 text-xs">
+      <span className="font-semibold uppercase tracking-wider text-foreground/60">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }
 
@@ -322,7 +386,7 @@ function ExportButton({
       type="button"
       onClick={onClick}
       disabled={pending || disabled}
-      className="mt-auto inline-flex items-center justify-center gap-2 rounded-md bg-gold px-4 py-2 text-sm font-bold text-on-color shadow-[0_3px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_5px_16px_rgba(245,183,0,0.45)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center justify-center gap-2 rounded-md bg-gold px-4 py-2.5 text-sm font-bold text-on-color shadow-[0_3px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_5px_16px_rgba(245,183,0,0.45)] disabled:cursor-not-allowed disabled:opacity-50"
     >
       {pending ? (
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
