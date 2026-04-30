@@ -8,25 +8,26 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { createClient } from "@/lib/supabase/client";
-import { endTvRoom, updateTvRoomState } from "@/lib/realtime/room-actions";
+import { endTvRoom } from "@/lib/realtime/room-actions";
 import { prepareTvGame, saveTvGameState } from "@/lib/realtime/tv-game-actions";
 import { joinTvChannel, type TvChannelHandle } from "@/lib/realtime/tv-channel";
-import {
-  isTvGameState,
-  type TvGameState,
-} from "@/lib/realtime/tv-game-state";
+import { type TvGameState } from "@/lib/realtime/tv-game-state";
 import { AnimEffect } from "@/components/animations/AnimEffect";
+
+interface PlayerRow {
+  id: string;
+  pseudo: string;
+  avatarUrl: string | null;
+  isConnected: boolean;
+  joinedAt: string;
+  /** P1.1 — token pour cross-ref Presence. */
+  token: string;
+}
 
 interface TvHostRoomProps {
   roomId: string;
   code: string;
-  initialPlayers: Array<{
-    id: string;
-    pseudo: string;
-    avatarUrl: string | null;
-    isConnected: boolean;
-    joinedAt: string;
-  }>;
+  initialPlayers: PlayerRow[];
   initialStatus: "waiting" | "playing" | "paused" | "ended";
 }
 
@@ -61,8 +62,10 @@ export function TvHostRoom({
     }
   }, [code]);
 
-  // Souscription Realtime à la table tv_room_players (filtre par room_id)
-  // pour voir arriver/partir les joueurs en live.
+  // P1.1 — Souscription Realtime à la table tv_room_players (filtre par
+  // room_id) UNIQUEMENT pour les changements de profil persistants
+  // (INSERT/UPDATE/DELETE). L'état "online/offline" vient de Presence
+  // (voir effet ci-dessous) — on ignore donc le champ `is_connected` ici.
   useEffect(() => {
     const supabase = createClient();
     const channel = supabase
@@ -81,8 +84,8 @@ export function TvHostRoom({
               id: string;
               pseudo: string;
               avatar_url: string | null;
-              is_connected: boolean;
               joined_at: string;
+              player_token: string;
             };
             setPlayers((prev) => {
               if (prev.some((p) => p.id === r.id)) return prev;
@@ -92,8 +95,9 @@ export function TvHostRoom({
                   id: r.id,
                   pseudo: r.pseudo,
                   avatarUrl: r.avatar_url,
-                  isConnected: r.is_connected,
+                  isConnected: false, // mis à jour via Presence
                   joinedAt: r.joined_at,
+                  token: r.player_token,
                 },
               ];
             });
@@ -102,8 +106,8 @@ export function TvHostRoom({
               id: string;
               pseudo: string;
               avatar_url: string | null;
-              is_connected: boolean;
               joined_at: string;
+              player_token: string;
             };
             setPlayers((prev) =>
               prev.map((p) =>
@@ -112,7 +116,6 @@ export function TvHostRoom({
                       ...p,
                       pseudo: r.pseudo,
                       avatarUrl: r.avatar_url,
-                      isConnected: r.is_connected,
                     }
                   : p,
               ),
@@ -130,9 +133,48 @@ export function TvHostRoom({
     };
   }, [roomId]);
 
+  // P1.1 — Source de vérité "online/offline" : Presence du channel
+  // `room:{code}`. La TV elle-même track sa propre présence (role: "host")
+  // pour signaler qu'elle est live (utile pour les téléphones qui veulent
+  // afficher un indicateur "TV connectée").
+  const [presenceTokens, setPresenceTokens] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    const ch = joinTvChannel(code);
+    void ch.trackPresence({
+      token: `host:${roomId}`,
+      pseudo: "TV",
+      avatarUrl: null,
+      joinedAt: Date.now(),
+      role: "host",
+    });
+    const unbind = ch.onPresence((state) => {
+      const tokens = new Set<string>();
+      for (const metas of Object.values(state)) {
+        for (const m of metas) {
+          if (m.role === "player") tokens.add(m.token);
+        }
+      }
+      setPresenceTokens(tokens);
+    });
+    return () => {
+      unbind();
+      void ch.unsubscribe();
+    };
+  }, [code, roomId]);
+
+  // Merge BDD + Presence pour l'UI : isConnected vient de Presence.
+  const playersWithPresence = useMemo(
+    () =>
+      players.map((p) => ({
+        ...p,
+        isConnected: presenceTokens.has(p.token),
+      })),
+    [players, presenceTokens],
+  );
+
   const canStart = useMemo(
-    () => players.filter((p) => p.isConnected).length >= 2,
-    [players],
+    () => playersWithPresence.filter((p) => p.isConnected).length >= 2,
+    [playersWithPresence],
   );
 
   // État du jeu TV (en mode playing). Chargé via prepareTvGame ou via
@@ -143,17 +185,12 @@ export function TvHostRoom({
   async function handleStart() {
     if (!canStart || starting) return;
     setStarting(true);
-    // Construit l'ordre de tour à partir des joueurs connectés (par
-    // joinedAt). On a besoin du player_token de chacun → re-fetch.
-    const supabase = createClient();
-    const { data: rows } = await supabase
-      .from("tv_room_players")
-      .select("player_token, joined_at, is_connected")
-      .eq("room_id", roomId)
-      .order("joined_at", { ascending: true });
-    const turnOrder = (rows ?? [])
-      .filter((r) => r.is_connected)
-      .map((r) => r.player_token as string);
+    // P1.1 — turnOrder construit depuis Presence (qui est en ligne MAINTENANT)
+    // intersecté avec la liste BDD pour l'ordre stable (par joinedAt).
+    const turnOrder = playersWithPresence
+      .filter((p) => p.isConnected)
+      .sort((a, b) => a.joinedAt.localeCompare(b.joinedAt))
+      .map((p) => p.token);
     const res = await prepareTvGame({ roomId, turnOrder, totalRounds: 10 });
     if (!res.ok) {
       alert(res.message);
@@ -307,7 +344,7 @@ export function TvHostRoom({
       <TvPlayingView
         code={code}
         game={game}
-        players={players}
+        players={playersWithPresence}
         tokenCache={tokenPseudoCache.current}
         onEnd={() => setShowEndConfirm(true)}
       />
@@ -317,7 +354,7 @@ export function TvHostRoom({
     return (
       <TvResultsView
         game={game}
-        players={players}
+        players={playersWithPresence}
         tokenCache={tokenPseudoCache.current}
         onClose={() => setShowEndConfirm(true)}
       />
@@ -395,18 +432,18 @@ export function TvHostRoom({
               </h2>
             </div>
             <span className="rounded-full bg-gold/15 px-3 py-1 text-sm font-bold text-gold-warm">
-              {players.filter((p) => p.isConnected).length} / 8
+              {playersWithPresence.filter((p) => p.isConnected).length} / 8
             </span>
           </div>
 
-          {players.length === 0 ? (
+          {playersWithPresence.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border py-10 text-center text-foreground/50">
               <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
               <p>En attente des premiers joueurs…</p>
             </div>
           ) : (
             <ul className="flex flex-col gap-2">
-              {players.map((p) => (
+              {playersWithPresence.map((p) => (
                 <li
                   key={p.id}
                   className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-3"
@@ -480,30 +517,21 @@ export function TvHostRoom({
 }
 
 // ============================================================================
-// useTokenPseudoCache : map token → pseudo (chargée via SELECT sur la BDD)
+// useTokenPseudoCache : map token → pseudo
 // ============================================================================
-// Les `players` exposés au TV n'incluent pas le `player_token` (volontaire :
-// il ne sert qu'aux téléphones). Mais l'hôte a besoin de mapper token →
-// pseudo pour les broadcasts ("currentPlayerPseudo"). On fetch séparément.
+// P1.1 — Maintenant qu'on a `token` directement dans la liste players (issu
+// de la query server + Realtime postgres_changes), ce cache est juste un
+// dérivé de l'array. On garde la signature ref-style pour ne pas casser
+// les callers existants (TvPlayingView, TvResultsView).
 function useTokenPseudoCache(
-  roomId: string,
-  players: Array<{ id: string; pseudo: string }>,
+  _roomId: string,
+  players: Array<{ token: string; pseudo: string }>,
 ) {
   const cache = useRef<Map<string, string>>(new Map());
   useEffect(() => {
-    const supabase = createClient();
-    void supabase
-      .from("tv_room_players")
-      .select("player_token, pseudo")
-      .eq("room_id", roomId)
-      .then(({ data }) => {
-        if (!data) return;
-        cache.current.clear();
-        for (const r of data) {
-          cache.current.set(r.player_token as string, r.pseudo as string);
-        }
-      });
-  }, [roomId, players.length]);
+    cache.current.clear();
+    for (const p of players) cache.current.set(p.token, p.pseudo);
+  }, [players]);
   return cache;
 }
 

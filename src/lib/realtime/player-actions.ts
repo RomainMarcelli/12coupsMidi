@@ -10,6 +10,11 @@ import { createClient } from "@/lib/supabase/client";
  *
  * Le `player_token` est généré côté client (UUID v4 via `crypto.randomUUID`)
  * et stocké en localStorage pour la reconnexion.
+ *
+ * **P1.1** : la présence "online/offline" passe maintenant par Supabase
+ * Realtime Presence (cf. tv-channel.ts). Les fonctions `sendHeartbeat` et
+ * `markDisconnected` sont conservées en no-op pour rétrocompatibilité mais
+ * ne sont plus appelées par les composants /play.
  */
 
 const TOKEN_KEY_PREFIX = "mahylan-tv-token:";
@@ -151,28 +156,55 @@ export async function rejoinRoomByToken(input: {
   };
 }
 
-/** Heartbeat : bump `last_seen_at` pour signaler qu'on est toujours là. */
-export async function sendHeartbeat(input: {
+/**
+ * P1.1 — DEPRECATED. La présence est désormais gérée par Supabase Realtime
+ * Presence (cf. tv-channel.ts). On garde ces helpers en no-op pour ne pas
+ * casser les anciens callers qui n'ont pas encore migré.
+ *
+ * Si tu écris du nouveau code : utilise `channel.trackPresence()` /
+ * `channel.untrackPresence()` au lieu de ces fonctions.
+ */
+export async function sendHeartbeat(_input: {
   playerId: string;
   token: string;
 }): Promise<void> {
-  const supabase = createClient();
-  await supabase
-    .from("tv_room_players")
-    .update({ last_seen_at: new Date().toISOString(), is_connected: true })
-    .eq("id", input.playerId)
-    .eq("player_token", input.token);
+  // No-op : presence native gère le heartbeat WebSocket.
+  return;
 }
 
-/** Marque le joueur déconnecté (au unload de la page). */
-export async function markDisconnected(input: {
+export async function markDisconnected(_input: {
   playerId: string;
   token: string;
 }): Promise<void> {
+  // No-op : presence native émet `leave` au close du socket.
+  return;
+}
+
+/**
+ * P1.1 — Met à jour pseudo et/ou avatar d'un joueur déjà inscrit. Appelé
+ * depuis le lobby quand le joueur veut éditer ses infos avant le démarrage.
+ * Protégé par `player_token` côté WHERE (équivalent du contrôle d'accès :
+ * sans le token, impossible de cibler la bonne ligne).
+ */
+export async function updatePlayerProfile(input: {
+  playerId: string;
+  token: string;
+  pseudo?: string;
+  avatarUrl?: string | null;
+}): Promise<{ ok: true } | { ok: false; message: string }> {
+  if (input.pseudo !== undefined && !input.pseudo.trim()) {
+    return { ok: false, message: "Le pseudo ne peut pas être vide." };
+  }
   const supabase = createClient();
-  await supabase
+  const fields: { pseudo?: string; avatar_url?: string | null } = {};
+  if (input.pseudo !== undefined) fields.pseudo = input.pseudo.trim();
+  if (input.avatarUrl !== undefined) fields.avatar_url = input.avatarUrl;
+  if (Object.keys(fields).length === 0) return { ok: true };
+  const { error } = await supabase
     .from("tv_room_players")
-    .update({ is_connected: false })
+    .update(fields)
     .eq("id", input.playerId)
     .eq("player_token", input.token);
+  if (error) return { ok: false, message: error.message };
+  return { ok: true };
 }

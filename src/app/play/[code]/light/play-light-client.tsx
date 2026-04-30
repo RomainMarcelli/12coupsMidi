@@ -9,10 +9,8 @@ import {
   type TvChannelHandle,
 } from "@/lib/realtime/tv-channel";
 import {
-  markDisconnected,
   readStoredToken,
   rejoinRoomByToken,
-  sendHeartbeat,
 } from "@/lib/realtime/player-actions";
 import type {
   QuestionResultPayload,
@@ -92,11 +90,21 @@ export function PlayLightClient({
     });
   }, [playerId]);
 
-  // Channel realtime
+  // Channel realtime + Presence (P1.1)
   useEffect(() => {
     if (!token || !playerId) return;
     const ch = joinTvChannel(code);
     channelRef.current = ch;
+
+    // Track presence — la TV verra le joueur "online" via presenceState().
+    // pseudo/avatarUrl sont remplis quand on les a (sinon "" + null en attendant).
+    void ch.trackPresence({
+      token,
+      pseudo: pseudo || "...",
+      avatarUrl: null,
+      joinedAt: Date.now(),
+      role: "player",
+    });
 
     ch.on("question:show", (payload) => {
       setQuestion(payload);
@@ -124,27 +132,31 @@ export function PlayLightClient({
       if (payload.phase === "results") setPhase("ended");
     });
 
+    function onBeforeUnload() {
+      void ch.untrackPresence();
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+
     return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
       void ch.unsubscribe();
       channelRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, token, playerId]);
 
-  // Heartbeat toutes les 12 s + marquer déconnecté à l'unload
+  // Re-track presence quand le pseudo arrive (initialement vide, puis chargé
+  // depuis la BDD). Évite que la TV affiche "..." en permanence.
   useEffect(() => {
-    if (!playerId || !token) return;
-    const interval = window.setInterval(() => {
-      void sendHeartbeat({ playerId, token });
-    }, 12_000);
-    function onBeforeUnload() {
-      void markDisconnected({ playerId: playerId!, token: token! });
-    }
-    window.addEventListener("beforeunload", onBeforeUnload);
-    return () => {
-      window.clearInterval(interval);
-      window.removeEventListener("beforeunload", onBeforeUnload);
-    };
-  }, [playerId, token]);
+    if (!channelRef.current || !token || !pseudo) return;
+    void channelRef.current.trackPresence({
+      token,
+      pseudo,
+      avatarUrl: null,
+      joinedAt: Date.now(),
+      role: "player",
+    });
+  }, [pseudo, token]);
 
   function handleAnswer(idx: number) {
     if (!question || !channelRef.current || !token) return;

@@ -45,8 +45,14 @@ export default async function TvHostRoomPage({
         id: p.id,
         pseudo: p.pseudo,
         avatarUrl: p.avatar_url,
-        isConnected: p.is_connected,
+        // P1.1 — `is_connected` n'est plus la source de vérité. La TV
+        // calcule l'état live depuis Presence ; on initialise à `false`
+        // pour éviter le flash "tous en ligne" au mount avant que
+        // Presence ait fait son premier sync.
+        isConnected: false,
         joinedAt: p.joined_at,
+        // P1.1 — token nécessaire pour cross-ref BDD ↔ Presence côté TV.
+        token: p.player_token as string,
       }))}
       initialStatus={room.status as "waiting" | "playing" | "paused" | "ended"}
     />
