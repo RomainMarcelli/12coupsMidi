@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Camera,
@@ -10,10 +10,11 @@ import {
   Smartphone,
   Tv,
   WifiOff,
+  X,
 } from "lucide-react";
 import Image from "next/image";
+import { AvatarPicker } from "@/components/avatars/AvatarPicker";
 import { Button } from "@/components/ui/button";
-import { uploadAvatarClient } from "@/lib/avatar-upload";
 import {
   joinRoom,
   readStoredToken,
@@ -47,11 +48,10 @@ export function PlayJoinClient({
   const [pseudo, setPseudo] = useState("");
   const [mode, setMode] = useState<Mode>("light");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [reconnecting, setReconnecting] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   // Tentative de reconnexion automatique si on a un token en localStorage.
   useEffect(() => {
@@ -73,22 +73,6 @@ export function PlayJoinClient({
       })
       .catch(() => setReconnecting(false));
   }, [code, roomFound, router]);
-
-  async function handlePickFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setError(null);
-    const res = await uploadAvatarClient(
-      file,
-      "saved-players-avatars",
-      "guest",
-    );
-    setUploading(false);
-    if (inputRef.current) inputRef.current.value = "";
-    if (res.status === "ok") setAvatarUrl(res.url);
-    else setError(res.message);
-  }
 
   async function handleJoin() {
     if (!pseudo.trim() || submitting) return;
@@ -160,35 +144,28 @@ export function PlayJoinClient({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={uploading}
-            className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-gold/10 hover:border-gold hover:bg-gold/20"
+            onClick={() => setPickerOpen(true)}
+            aria-label="Choisir un avatar"
+            className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-gold/10 transition-colors hover:border-gold hover:bg-gold/20"
           >
             {avatarUrl ? (
-              <Image
-                src={avatarUrl}
-                alt=""
-                width={64}
-                height={64}
-                className="h-full w-full object-cover"
-                unoptimized
-              />
+              <>
+                <Image
+                  src={avatarUrl}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="h-full w-full object-cover"
+                  unoptimized
+                />
+                <span className="absolute inset-x-0 bottom-0 bg-foreground/70 px-1 py-0.5 text-[9px] font-bold uppercase tracking-wider text-background">
+                  Modifier
+                </span>
+              </>
             ) : (
               <Camera className="h-6 w-6 text-gold-warm" aria-hidden="true" />
             )}
-            {uploading && (
-              <span className="absolute inset-0 flex items-center justify-center bg-navy/40">
-                <Loader2 className="h-5 w-5 animate-spin text-white" aria-hidden="true" />
-              </span>
-            )}
           </button>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            onChange={handlePickFile}
-            className="hidden"
-          />
           <input
             type="text"
             value={pseudo}
@@ -198,10 +175,21 @@ export function PlayJoinClient({
             className="h-12 flex-1 rounded-xl border border-border bg-card px-4 text-lg font-semibold text-foreground focus:border-gold focus:outline-none"
           />
         </div>
-        <p className="text-xs text-foreground/50">
-          La photo est optionnelle — tu peux mettre un emoji-style avatar
-          plus tard si tu veux.
-        </p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs text-foreground/50">
+            Avatar : choisis dans le pack, prends une photo, ou importe.
+          </p>
+          {avatarUrl && (
+            <button
+              type="button"
+              onClick={() => setAvatarUrl(null)}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-foreground/60 hover:text-buzz"
+            >
+              <X className="h-3 w-3" aria-hidden="true" />
+              Retirer
+            </button>
+          )}
+        </div>
       </section>
 
       <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
@@ -238,7 +226,7 @@ export function PlayJoinClient({
       <Button
         variant="gold"
         size="lg"
-        disabled={!pseudo.trim() || submitting || uploading}
+        disabled={!pseudo.trim() || submitting}
         onClick={handleJoin}
         className="text-lg"
       >
@@ -249,6 +237,20 @@ export function PlayJoinClient({
         )}
         Rejoindre
       </Button>
+
+      {/* Modal avatar : Pack DiceBear / Aléatoire / Photo / Upload.
+          `hideCustomTab` : la table `custom_avatars` exige l'auth, on
+          la cache pour les guests. `uploadBucket` "saved-players-avatars"
+          est public en INSERT (cf. RLS). */}
+      <AvatarPicker
+        open={pickerOpen}
+        currentUrl={avatarUrl}
+        onClose={() => setPickerOpen(false)}
+        onPick={(url) => setAvatarUrl(url)}
+        uploadBucket="saved-players-avatars"
+        uploadPath="guest"
+        hideCustomTab
+      />
     </main>
   );
 }

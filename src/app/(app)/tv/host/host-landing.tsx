@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, MonitorPlay, Smartphone, Tv, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  Gamepad2,
+  Loader2,
+  MonitorPlay,
+  Smartphone,
+  Tv,
+  Users,
+} from "lucide-react";
 import { createTvRoom } from "@/lib/realtime/room-actions";
 
 /**
@@ -52,25 +59,37 @@ export function TvHostLanding() {
         <Step icon={Users} title="2 à 8 joueurs" desc="Tour par tour" />
       </div>
 
-      <Button
-        variant="gold"
-        size="lg"
-        onClick={handleCreate}
-        disabled={pending}
-        className="text-lg"
-      >
-        {pending ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
-            Création…
-          </>
-        ) : (
-          <>
-            <Tv className="h-5 w-5" aria-hidden="true" />
-            Créer la partie
-          </>
-        )}
-      </Button>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={handleCreate}
+          disabled={pending}
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-gold px-6 text-lg font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {pending ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+              Création…
+            </>
+          ) : (
+            <>
+              <Tv className="h-5 w-5" aria-hidden="true" />
+              Créer la partie
+            </>
+          )}
+        </button>
+
+        {/* Bouton "Rejoindre" : pointe vers /play (publique, code à 4 chiffres).
+            Mêmes h-12 + px-6 + text-lg que le bouton or pour un alignement
+            parfait des 2 CTAs côte à côte. */}
+        <Link
+          href="/play"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border-2 border-sky/50 bg-card px-6 text-lg font-bold text-sky transition-all hover:-translate-y-px hover:border-sky hover:bg-sky/5 hover:shadow-[0_5px_16px_rgba(43,142,230,0.35)]"
+        >
+          <Gamepad2 className="h-5 w-5" aria-hidden="true" />
+          Rejoindre une partie
+        </Link>
+      </div>
 
       {error && (
         <p
