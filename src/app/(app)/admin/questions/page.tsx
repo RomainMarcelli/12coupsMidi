@@ -117,13 +117,13 @@ export default async function AdminQuestionsPage({
             <ShieldCheck className="h-4 w-4" aria-hidden="true" />
             Audit doublons
           </Link>
-          <a
-            href="/api/questions/export"
+          <Link
+            href="/admin/questions/export"
             className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             Exporter
-          </a>
+          </Link>
         </div>
       </header>
 
