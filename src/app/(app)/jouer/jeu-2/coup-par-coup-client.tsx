@@ -259,7 +259,15 @@ export function CoupParCoupClient({
     if (!currentPlayer?.isBot) return;
     if (!current) return;
 
-    const delay = botResponseDelayMs(botDifficulty);
+    // Bot doit "lire" le thème + les propositions avant de choisir.
+    const propsTextLen = current.propositions.reduce(
+      (sum, p) => sum + p.text.length,
+      0,
+    );
+    const delay = botResponseDelayMs(botDifficulty, {
+      enonceLength: current.theme.length + propsTextLen,
+      answerLength: 0,
+    });
     const id = window.setTimeout(() => {
       const pickIdx = botPickCpcProposition(
         current.propositions,

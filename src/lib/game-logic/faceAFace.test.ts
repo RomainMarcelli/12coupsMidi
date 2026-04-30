@@ -113,13 +113,13 @@ describe("nextQuestionIndex", () => {
 });
 
 describe("botResponseDelayMs", () => {
-  it("reste dans l'intervalle du profil", () => {
+  it("reste dans l'intervalle du profil sans bonus de lecture", () => {
     for (const level of ["facile", "moyen", "difficile"] as const) {
       const profile = BOT_PROFILES[level];
       for (let i = 0; i < 50; i++) {
         const d = botResponseDelayMs(level);
         expect(d).toBeGreaterThanOrEqual(profile.minDelayMs);
-        expect(d).toBeLessThan(profile.maxDelayMs);
+        expect(d).toBeLessThanOrEqual(profile.maxDelayMs);
       }
     }
   });
@@ -127,6 +127,44 @@ describe("botResponseDelayMs", () => {
   it("retourne un entier", () => {
     const d = botResponseDelayMs("moyen");
     expect(Number.isInteger(d)).toBe(true);
+  });
+
+  it("ajoute un bonus de lecture proportionnel à la longueur de la question", () => {
+    // Avec une longueur d'énoncé non-nulle, le délai doit être plus
+    // grand que le min du profil seul.
+    const baseLow = BOT_PROFILES.difficile.minDelayMs;
+    const withReading = botResponseDelayMs("difficile", {
+      enonceLength: 200,
+      answerLength: 0,
+      rng: () => 0, // tire le min de l'intervalle de base
+    });
+    expect(withReading).toBeGreaterThan(baseLow);
+  });
+
+  it("plafonne à 8 000 ms même avec énoncé très long", () => {
+    const d = botResponseDelayMs("facile", {
+      enonceLength: 5000,
+      answerLength: 500,
+      rng: () => 0.99,
+    });
+    expect(d).toBeLessThanOrEqual(8000);
+  });
+
+  it("le bot facile met plus de temps que le difficile pour la même question", () => {
+    // Plage d'intervalle fixée → on prend rng=0 pour avoir le min de
+    // l'intervalle de base, on ajoute la même longueur d'énoncé. Le
+    // résultat doit toujours être plus grand pour facile (lecture lente).
+    const easy = botResponseDelayMs("facile", {
+      enonceLength: 100,
+      answerLength: 20,
+      rng: () => 0,
+    });
+    const hard = botResponseDelayMs("difficile", {
+      enonceLength: 100,
+      answerLength: 20,
+      rng: () => 0,
+    });
+    expect(easy).toBeGreaterThan(hard);
   });
 });
 

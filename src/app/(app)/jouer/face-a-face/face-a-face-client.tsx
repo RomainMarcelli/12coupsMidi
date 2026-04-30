@@ -334,7 +334,10 @@ export function FaceAFaceClient({
     if (!currentQuestion) return;
     if (isTransitioningRef.current) return;
 
-    const delay = botResponseDelayMs(botDifficulty);
+    const delay = botResponseDelayMs(botDifficulty, {
+      enonceLength: currentQuestion.enonce.length,
+      answerLength: currentQuestion.bonne_reponse.length,
+    });
     const timer = window.setTimeout(() => {
       // Ré-évalue le verrou au moment du tir (sécurité)
       if (isTransitioningRef.current) return;

@@ -640,7 +640,14 @@ function DcJeu1Stage({ ceQuestions }: { ceQuestions: CeQuestion[] }) {
     if (inTransitionDuel) return;
     const scheduledPlayerId = currentPlayer.id;
     const scheduledQuestionId = currentQuestion.id;
-    const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen");
+    const reponsesLen = currentQuestion.reponses.reduce(
+      (sum, r) => sum + r.text.length,
+      0,
+    );
+    const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen", {
+      enonceLength: currentQuestion.enonce.length + reponsesLen,
+      answerLength: 0,
+    });
     const t = window.setTimeout(() => {
       if (isTransitioningRef.current) return;
       // Garde stricte : si le tour ou la question a glissé entre-temps,
@@ -1178,7 +1185,14 @@ function DcJeu2Stage({ cpcRounds }: { cpcRounds: CpcRound[] }) {
     if (isTransitioningRef.current) return;
     if (showingFeedback) return;
     if (inTransitionDuel) return;
-    const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen");
+    const propsLen = current.propositions.reduce(
+      (sum, p) => sum + p.text.length,
+      0,
+    );
+    const delay = botResponseDelayMs(currentPlayer.botLevel ?? "moyen", {
+      enonceLength: current.theme.length + propsLen,
+      answerLength: 0,
+    });
     const t = window.setTimeout(() => {
       if (isTransitioningRef.current) return;
       const idx = botPickCpcProposition(
@@ -1598,7 +1612,10 @@ function DcFaceAFaceStage({
     if (!activePlayer?.isBot) return;
     if (!currentQuestion) return;
     if (isTransitioningRef.current) return;
-    const delay = botResponseDelayMs(activePlayer.botLevel ?? "moyen");
+    const delay = botResponseDelayMs(activePlayer.botLevel ?? "moyen", {
+      enonceLength: currentQuestion.enonce.length,
+      answerLength: (currentQuestion.bonne_reponse ?? "").length,
+    });
     const t = window.setTimeout(() => {
       if (isTransitioningRef.current) return;
       const correct = botAnswersCorrectly(activePlayer.botLevel ?? "moyen");

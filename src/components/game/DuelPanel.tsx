@@ -195,7 +195,14 @@ export function DuelPanel({
     if (phase !== "question") return;
     if (!adversary?.isBot) return;
     if (!duelQuestion) return;
-    const delay = botResponseDelayMs(botDifficulty);
+    const reponsesLen = duelQuestion.reponses.reduce(
+      (sum, r) => sum + r.text.length,
+      0,
+    );
+    const delay = botResponseDelayMs(botDifficulty, {
+      enonceLength: duelQuestion.enonce.length + reponsesLen,
+      answerLength: 0,
+    });
     const id = window.setTimeout(() => {
       const correct = botAnswersCorrectly(botDifficulty);
       const correctIdx = duelQuestion.reponses.findIndex((r) => r.correct);
