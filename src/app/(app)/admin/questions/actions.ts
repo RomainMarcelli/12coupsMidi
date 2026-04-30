@@ -159,6 +159,38 @@ export async function deleteQuestion(id: string): Promise<ActionResult> {
   return { status: "ok", message: "Question supprimée." };
 }
 
+/**
+ * Suppression multiple. Renvoie le nombre de lignes effectivement
+ * supprimées (utile pour le toast UI). Cap à 500 ids par appel pour
+ * éviter une URL trop longue côté Supabase JS.
+ */
+export async function deleteQuestionsBulk(
+  ids: string[],
+): Promise<ActionResult & { deleted?: number }> {
+  await requireAdmin();
+  if (ids.length === 0) {
+    return { status: "error", message: "Aucune question sélectionnée." };
+  }
+  if (ids.length > 500) {
+    return {
+      status: "error",
+      message: "Sélection trop large (max 500 par lot).",
+    };
+  }
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("questions")
+    .delete({ count: "exact" })
+    .in("id", ids);
+  if (error) return { status: "error", message: error.message };
+  revalidatePath("/admin/questions");
+  return {
+    status: "ok",
+    message: `${count ?? ids.length} question(s) supprimée(s).`,
+    deleted: count ?? ids.length,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // BULK IMPORT
 // ---------------------------------------------------------------------------

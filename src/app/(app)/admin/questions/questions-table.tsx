@@ -1,10 +1,10 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Pencil, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Pencil, Trash2, X } from "lucide-react";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { deleteQuestion } from "./actions";
+import { deleteQuestion, deleteQuestionsBulk } from "./actions";
 import {
   getDisplayedAnswer,
   truncate,
@@ -104,6 +104,32 @@ export function QuestionsTable({
   const catById = new Map(categories.map((c) => [c.id, c]));
   const [isPending, startTransition] = useTransition();
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  // Sélection multiple — Set des ids cochés.
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkConfirmOpen, setBulkConfirmOpen] = useState(false);
+
+  const allIds = useMemo(() => questions.map((q) => q.id), [questions]);
+  const allSelected = selected.size > 0 && selected.size === allIds.length;
+  const someSelected = selected.size > 0 && !allSelected;
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    setSelected((prev) =>
+      prev.size === allIds.length ? new Set() : new Set(allIds),
+    );
+  }
+
+  function clearSelection() {
+    setSelected(new Set());
+  }
 
   // Toggle : si on est en desc, le clic suivant passe en asc, et vice-versa.
   const nextSort: "asc" | "desc" = sort === "asc" ? "desc" : "asc";
@@ -120,11 +146,59 @@ export function QuestionsTable({
 
   return (
     <>
+      {/* Barre d'action : visible quand au moins une question est cochée. */}
+      {selected.size > 0 && (
+        <div
+          role="region"
+          aria-label="Actions sur la sélection"
+          className="sticky top-2 z-10 mb-3 flex items-center justify-between gap-3 rounded-xl border border-gold/40 bg-card px-4 py-2.5 shadow-md"
+        >
+          <div className="flex items-center gap-2">
+            <span className="font-display text-sm font-bold text-foreground">
+              {selected.size} sélectionnée{selected.size > 1 ? "s" : ""}
+            </span>
+            <button
+              type="button"
+              onClick={clearSelection}
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs font-semibold text-foreground/70 hover:border-foreground/30 hover:text-foreground"
+            >
+              <X className="h-3 w-3" aria-hidden="true" />
+              Annuler
+            </button>
+          </div>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => setBulkConfirmOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-md border border-buzz/40 bg-buzz/10 px-3 py-1.5 text-sm font-bold text-buzz transition-colors hover:bg-buzz/20 disabled:opacity-50"
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            Supprimer la sélection
+          </button>
+        </div>
+      )}
+
       {/* Desktop : <table> sémantique, visible à partir de md */}
       <div className="hidden overflow-x-auto rounded-xl border border-border md:block">
         <table className="w-full divide-y divide-border text-sm">
           <thead className="bg-muted text-xs uppercase tracking-wider text-foreground/60">
             <tr>
+              <th scope="col" className="w-10 px-3 py-3 text-left">
+                <input
+                  type="checkbox"
+                  aria-label={
+                    allSelected
+                      ? "Tout désélectionner"
+                      : "Sélectionner toutes les questions de la page"
+                  }
+                  checked={allSelected}
+                  ref={(el) => {
+                    if (el) el.indeterminate = someSelected;
+                  }}
+                  onChange={toggleAll}
+                  className="h-4 w-4 cursor-pointer accent-gold"
+                />
+              </th>
               <th scope="col" className="px-4 py-3 text-left">
                 Énoncé
               </th>
@@ -167,11 +241,25 @@ export function QuestionsTable({
                 bonne_reponse: q.bonne_reponse,
                 reponses: q.reponses,
               });
+              const isChecked = selected.has(q.id);
               return (
                 <tr
                   key={q.id}
-                  className="transition-colors hover:bg-muted/50"
+                  className={
+                    isChecked
+                      ? "bg-gold/5 transition-colors"
+                      : "transition-colors hover:bg-muted/50"
+                  }
                 >
+                  <td className="px-3 py-3 align-top">
+                    <input
+                      type="checkbox"
+                      aria-label={`Sélectionner : ${truncate(q.enonce, 40)}`}
+                      checked={isChecked}
+                      onChange={() => toggleOne(q.id)}
+                      className="h-4 w-4 cursor-pointer accent-gold"
+                    />
+                  </td>
                   <td className="px-4 py-3 align-top">
                     <span title={q.enonce} className="text-foreground">
                       {truncate(q.enonce, 90)}
@@ -225,7 +313,19 @@ export function QuestionsTable({
 
       {/* Mobile : liste de cards, visible jusqu'à md */}
       <div className="flex flex-col gap-3 md:hidden">
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-between">
+          <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-foreground/70">
+            <input
+              type="checkbox"
+              checked={allSelected}
+              ref={(el) => {
+                if (el) el.indeterminate = someSelected;
+              }}
+              onChange={toggleAll}
+              className="h-4 w-4 accent-gold"
+            />
+            Tout sélectionner
+          </label>
           <Link
             href={sortHref}
             aria-label={
@@ -247,15 +347,29 @@ export function QuestionsTable({
               bonne_reponse: q.bonne_reponse,
               reponses: q.reponses,
             });
+            const isChecked = selected.has(q.id);
             return (
               <li
                 key={q.id}
-                className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4"
+                className={
+                  isChecked
+                    ? "flex flex-col gap-2 rounded-xl border-2 border-gold bg-gold/5 p-4"
+                    : "flex flex-col gap-2 rounded-xl border border-border bg-card p-4"
+                }
                 aria-label={`Question : ${truncate(q.enonce, 60)}`}
               >
-                <p className="font-display text-sm font-bold text-foreground">
-                  {q.enonce}
-                </p>
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    aria-label={`Sélectionner : ${truncate(q.enonce, 40)}`}
+                    checked={isChecked}
+                    onChange={() => toggleOne(q.id)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-gold"
+                  />
+                  <p className="flex-1 font-display text-sm font-bold text-foreground">
+                    {q.enonce}
+                  </p>
+                </div>
                 <p className="text-sm">
                   <span className="text-foreground/60">→ </span>
                   <span className="font-semibold text-life-green">
@@ -308,6 +422,27 @@ export function QuestionsTable({
         title="Supprimer cette question ?"
         description="Cette action est irréversible. La question sera retirée de la base et toutes les sessions futures."
         confirmLabel={isPending ? "Suppression…" : "Supprimer"}
+        confirmVariant="danger"
+      />
+
+      <ConfirmDialog
+        open={bulkConfirmOpen}
+        onClose={() => !isPending && setBulkConfirmOpen(false)}
+        onConfirm={() => {
+          const ids = Array.from(selected);
+          if (ids.length === 0) return;
+          startTransition(async () => {
+            const res = await deleteQuestionsBulk(ids);
+            if (res.status === "ok") {
+              clearSelection();
+            }
+            setBulkConfirmOpen(false);
+          });
+        }}
+        isPending={isPending}
+        title={`Supprimer ${selected.size} question${selected.size > 1 ? "s" : ""} ?`}
+        description="Cette action est irréversible. Toutes les questions sélectionnées seront retirées de la base et n'apparaîtront plus dans aucune session."
+        confirmLabel={isPending ? "Suppression…" : "Tout supprimer"}
         confirmVariant="danger"
       />
     </>

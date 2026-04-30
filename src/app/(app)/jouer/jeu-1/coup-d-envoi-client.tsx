@@ -232,7 +232,15 @@ export function CoupDEnvoiClient({
     if (!currentPlayer?.isBot) return;
     if (!currentQuestion) return;
 
-    const delay = botResponseDelayMs(botDifficulty);
+    // Bot lit l'énoncé + les 2 réponses possibles avant de cliquer.
+    const reponsesLen = currentQuestion.reponses.reduce(
+      (sum, r) => sum + r.text.length,
+      0,
+    );
+    const delay = botResponseDelayMs(botDifficulty, {
+      enonceLength: currentQuestion.enonce.length + reponsesLen,
+      answerLength: 0,
+    });
     const timer = window.setTimeout(() => {
       const correct = botAnswersCorrectly(botDifficulty);
       const correctIdx = currentQuestion.reponses.findIndex((r) => r.correct);

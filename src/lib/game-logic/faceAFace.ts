@@ -36,37 +36,61 @@ export interface FafQuestion {
 
 export interface BotProfile {
   correctProbability: number;
+  /** Délai de base avant que le bot "réfléchisse" à répondre. */
   minDelayMs: number;
   maxDelayMs: number;
+  /**
+   * Facteur appliqué au temps de lecture/saisie calculé à partir de la
+   * longueur de la question + réponse. Plus le bot est facile, plus il
+   * met de temps "à lire" (ex. 1.4x plus lent qu'un bot difficile).
+   */
+  readingFactor: number;
   label: string;
 }
 
 /**
  * Profils du bot par difficulté.
- *  - facile   : 50 % de bonnes réponses, délai 2.5–4.5 s
- *  - moyen    : 70 % de bonnes réponses, délai 1.8–3.2 s
- *  - difficile: 90 % de bonnes réponses, délai 1.2–2.5 s
+ * Délais réajustés pour rester réalistes même sur questions courtes :
+ * un humain met 2–3 s minimum pour lire un énoncé court + saisir.
+ *
+ *  - facile   : 50 %, délai base 3.0–5.5 s, lecture lente (1.4x)
+ *  - moyen    : 70 %, délai base 2.5–4.5 s, lecture normale (1.0x)
+ *  - difficile: 90 %, délai base 2.0–3.5 s, lecture rapide (0.7x)
+ *
+ * Le délai TOTAL = base + (enonceLength + answerLength) × 25ms × readingFactor.
+ * Plafonné à 8 000 ms par tour pour que le jeu reste fluide même sur
+ * des questions longues.
  */
 export const BOT_PROFILES: Record<BotDifficulty, BotProfile> = {
   facile: {
     correctProbability: 0.5,
-    minDelayMs: 2500,
-    maxDelayMs: 4500,
+    minDelayMs: 3000,
+    maxDelayMs: 5500,
+    readingFactor: 1.4,
     label: "Facile",
   },
   moyen: {
     correctProbability: 0.7,
-    minDelayMs: 1800,
-    maxDelayMs: 3200,
+    minDelayMs: 2500,
+    maxDelayMs: 4500,
+    readingFactor: 1.0,
     label: "Moyen",
   },
   difficile: {
     correctProbability: 0.9,
-    minDelayMs: 1200,
-    maxDelayMs: 2500,
+    minDelayMs: 2000,
+    maxDelayMs: 3500,
+    readingFactor: 0.7,
     label: "Difficile",
   },
 };
+
+/** ms par caractère pour le temps de lecture/saisie (avant readingFactor). */
+const MS_PER_CHAR = 25;
+/** Cap dur pour ne pas avoir un bot qui dort 15 s sur une longue question. */
+const MAX_READING_BONUS_MS = 4000;
+/** Cap total pour que le tour reste jouable. */
+const MAX_TOTAL_DELAY_MS = 8000;
 
 type Rng = () => number;
 
@@ -127,13 +151,34 @@ export function nextQuestionIndex(
   return available[Math.floor(rng() * available.length)]!;
 }
 
-/** Délai de réponse du bot (ms) — uniforme entre min et max du profil. */
+/**
+ * Délai de réponse du bot (ms). Délai de base aléatoire dans le profil,
+ * + bonus "temps de lecture/saisie" proportionnel à la longueur de la
+ * question et de la réponse correcte (modulé par `readingFactor`).
+ *
+ * Sans `enonceLength`/`answerLength`, on retombe sur le délai de base
+ * uniquement (ancien comportement). Mais idéalement les callers passent
+ * ces longueurs pour que le bot soit "réaliste" sur les questions longues.
+ */
 export function botResponseDelayMs(
   difficulty: BotDifficulty,
-  rng: Rng = Math.random,
+  optsOrRng: Rng | { enonceLength?: number; answerLength?: number; rng?: Rng } = Math.random,
 ): number {
   const p = BOT_PROFILES[difficulty];
-  return p.minDelayMs + Math.floor(rng() * (p.maxDelayMs - p.minDelayMs));
+  const opts =
+    typeof optsOrRng === "function"
+      ? { rng: optsOrRng, enonceLength: 0, answerLength: 0 }
+      : {
+          rng: optsOrRng.rng ?? Math.random,
+          enonceLength: Math.max(0, optsOrRng.enonceLength ?? 0),
+          answerLength: Math.max(0, optsOrRng.answerLength ?? 0),
+        };
+  const base =
+    p.minDelayMs + Math.floor(opts.rng() * (p.maxDelayMs - p.minDelayMs));
+  const readingBonusRaw =
+    (opts.enonceLength + opts.answerLength) * MS_PER_CHAR * p.readingFactor;
+  const readingBonus = Math.min(MAX_READING_BONUS_MS, readingBonusRaw);
+  return Math.min(MAX_TOTAL_DELAY_MS, Math.floor(base + readingBonus));
 }
 
 /** True si le bot donne une bonne réponse à ce tour (tirage Bernoulli). */
