@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Crown, Loader2, Play, Smartphone, Tv, Users, X } from "lucide-react";
+import { Crown, Loader2, Mic, Play, Smartphone, Tv, Users, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
@@ -13,8 +13,11 @@ import { endTvRoom } from "@/lib/realtime/room-actions";
 import { prepareTvGame, saveTvGameState } from "@/lib/realtime/tv-game-actions";
 import { joinTvChannel, type TvChannelHandle } from "@/lib/realtime/tv-channel";
 import { type TvGameState } from "@/lib/realtime/tv-game-state";
+import { prepareFaceAFace } from "@/lib/realtime/face-a-face-actions";
+import { type FaceAFaceState } from "@/lib/realtime/face-a-face-state";
 import { AnimEffect } from "@/components/animations/AnimEffect";
 import { WaitingCarousel } from "./waiting-carousel";
+import { TvFaceAFaceView } from "./tv-face-a-face-view";
 
 interface PlayerRow {
   id: string;
@@ -189,6 +192,44 @@ export function TvHostRoom({
   // un SELECT sur tv_rooms.state si on revient sur la page après refresh.
   const [game, setGame] = useState<TvGameState | null>(null);
   const [hostChannel, setHostChannel] = useState<TvChannelHandle | null>(null);
+  // P5.1 — État du face-à-face (null tant que non démarré). Si non null,
+  // on affiche TvFaceAFaceView au lieu du flux normal.
+  const [faState, setFaState] = useState<FaceAFaceState | null>(null);
+  const [startingFa, setStartingFa] = useState(false);
+
+  /** P5.1 — Lance le face-à-face avec les 2 premiers joueurs en ligne. */
+  async function handleStartFaceAFace() {
+    if (startingFa) return;
+    const online = playersWithPresence.filter((p) => p.isConnected);
+    if (online.length < 2) {
+      alert("Il faut au moins 2 joueurs connectés pour le face-à-face.");
+      return;
+    }
+    setStartingFa(true);
+    const [a, b] = online.slice(0, 2);
+    if (!a || !b) {
+      setStartingFa(false);
+      return;
+    }
+    const finalists: [string, string] = [a.token, b.token];
+    const finalistPseudos: Record<string, string> = {
+      [a.token]: a.pseudo,
+      [b.token]: b.pseudo,
+    };
+    const res = await prepareFaceAFace({
+      roomId,
+      finalists,
+      finalistPseudos,
+      timerSeconds: 60,
+    });
+    setStartingFa(false);
+    if (!res.ok) {
+      alert(res.message);
+      return;
+    }
+    setFaState(res.state);
+    setStatus("playing");
+  }
 
   async function handleStart() {
     if (!canStart || starting) return;
@@ -345,6 +386,19 @@ export function TvHostRoom({
 
   // Cache local token → pseudo (rempli après mount via select sur la BDD)
   const tokenPseudoCache = useTokenPseudoCache(roomId, players);
+
+  // P5.1 — Si on est en face-à-face, on affiche cette vue
+  if (faState) {
+    return (
+      <TvFaceAFaceView
+        code={code}
+        roomId={roomId}
+        initialState={faState}
+        players={playersWithPresence}
+        onEnd={() => setShowEndConfirm(true)}
+      />
+    );
+  }
 
   // Switch waiting / playing / results
   if (status === "playing" && game?.phase === "playing") {
@@ -525,6 +579,22 @@ export function TvHostRoom({
             )}
             {status === "playing" ? "Partie en cours…" : "Démarrer la partie"}
           </Button>
+          {/* P5.1 — Bouton "Lancer face-à-face" (alternative au mode regular). */}
+          {status === "waiting" && (
+            <button
+              type="button"
+              disabled={!canStart || startingFa}
+              onClick={handleStartFaceAFace}
+              className="inline-flex items-center justify-center gap-2 rounded-md border-2 border-sky/50 bg-card px-4 py-2 text-sm font-bold text-sky transition-all hover:-translate-y-px hover:border-sky hover:bg-sky/5 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {startingFa ? (
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <Mic className="h-4 w-4" aria-hidden="true" />
+              )}
+              Mode face-à-face (présentateur)
+            </button>
+          )}
           {!canStart && status === "waiting" && (
             <p className="text-center text-xs text-foreground/50">
               Au moins 2 joueurs requis pour démarrer.

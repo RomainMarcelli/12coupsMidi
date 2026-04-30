@@ -19,6 +19,7 @@ import type {
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { PlayProfileEditModal } from "../play-profile-edit-modal";
+import { PlayFaceAFaceView } from "../play-face-a-face-view";
 
 interface PlayLightClientProps {
   code: string;
@@ -66,6 +67,8 @@ export function PlayLightClient({
   const [roomStatus, setRoomStatus] = useState<
     "waiting" | "playing" | "paused" | "ended"
   >("waiting");
+  // P5.1 — Bascule en vue face-à-face quand on reçoit fa:vote-start.
+  const [faMode, setFaMode] = useState(false);
 
   // Reconnexion auto au mount
   useEffect(() => {
@@ -182,6 +185,11 @@ export function PlayLightClient({
       if (payload.phase === "results") setPhase("ended");
     });
 
+    // P5.1 — Bascule en vue face-à-face dès qu'on reçoit le start du vote
+    ch.on("fa:vote-start", () => {
+      setFaMode(true);
+    });
+
     function onBeforeUnload() {
       void ch.untrackPresence();
     }
@@ -249,6 +257,11 @@ export function PlayLightClient({
         </p>
       </main>
     );
+  }
+
+  // P5.1 — Bascule en mode face-à-face si la TV a déclenché le vote
+  if (faMode && channelRef.current) {
+    return <PlayFaceAFaceView myToken={token} channel={channelRef.current} />;
   }
 
   const isMyTurn =

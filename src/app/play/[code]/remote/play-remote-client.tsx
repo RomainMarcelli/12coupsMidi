@@ -30,6 +30,7 @@ import type {
   QuestionShowPayload,
 } from "@/lib/realtime/room-events";
 import { cn } from "@/lib/utils";
+import { PlayFaceAFaceView } from "../play-face-a-face-view";
 
 interface PlayRemoteClientProps {
   code: string;
@@ -70,6 +71,11 @@ export function PlayRemoteClient({
   const [addOpen, setAddOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const channelRef = useRef<TvChannelHandle | null>(null);
+  // P5.1 — En mode régie, on bascule en face-à-face dès qu'on reçoit
+  // fa:vote-start. On utilise le 1er slot comme "voix" du téléphone régie
+  // pour les actions présentateur (typique : c'est l'un des 2 finalistes
+  // qui est le présentateur, et il commande depuis le téléphone régie).
+  const [faMode, setFaMode] = useState(false);
 
   // Charge les slots existants au mount (depuis localStorage)
   useEffect(() => {
@@ -115,6 +121,9 @@ export function PlayRemoteClient({
     });
     ch.on("phase:change", (payload) => {
       if (payload.phase === "results") setPhase("ended");
+    });
+    ch.on("fa:vote-start", () => {
+      setFaMode(true);
     });
     return () => {
       void ch.unsubscribe();
@@ -184,6 +193,20 @@ export function PlayRemoteClient({
           Rejoins-la depuis l&apos;écran principal.
         </p>
       </main>
+    );
+  }
+
+  // P5.1 — En mode régie face-à-face, on prend le 1er slot comme "voix" du
+  // téléphone régie. Limitation MVP : impossible de commander pour le
+  // présentateur ET le challenger en même temps depuis le même téléphone
+  // (de toute façon, l'un des 2 est sur la TV ; en pratique, le régie
+  // joue le rôle du présentateur s'il a été élu).
+  if (faMode && channelRef.current && slots[0]) {
+    return (
+      <PlayFaceAFaceView
+        myToken={slots[0].token}
+        channel={channelRef.current}
+      />
     );
   }
 
