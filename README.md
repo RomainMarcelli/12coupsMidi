@@ -1,4 +1,4 @@
-# Les 12 coups de Mahylan
+# Les 12 coups
 
 PWA d'entraînement aux 12 Coups — multi-modes (Coup d'envoi, Coup par Coup, Face-à-Face, parcours complet, Révision/Apprentissage). Stack : Next.js 16 + TypeScript + Tailwind v4 + Supabase.
 
