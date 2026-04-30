@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Crown, Loader2, Trophy, X } from "lucide-react";
+import { Check, Crown, Loader2, Pencil, Trophy, X } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   joinTvChannel,
@@ -17,6 +17,8 @@ import type {
   QuestionShowPayload,
 } from "@/lib/realtime/room-events";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
+import { PlayProfileEditModal } from "../play-profile-edit-modal";
 
 interface PlayLightClientProps {
   code: string;
@@ -51,12 +53,19 @@ export function PlayLightClient({
   const [token, setToken] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [pseudo, setPseudo] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>("waiting");
   const [question, setQuestion] = useState<QuestionShowPayload | null>(null);
   const [result, setResult] = useState<QuestionResultPayload | null>(null);
   const [score, setScore] = useState(0);
   const [flash, setFlash] = useState(false);
   const channelRef = useRef<TvChannelHandle | null>(null);
+  // P2.1 — état d'édition du profil + status de la room (pour verrouiller
+  // l'édition une fois la partie commencée).
+  const [editOpen, setEditOpen] = useState(false);
+  const [roomStatus, setRoomStatus] = useState<
+    "waiting" | "playing" | "paused" | "ended"
+  >("waiting");
 
   // Reconnexion auto au mount
   useEffect(() => {
@@ -75,20 +84,61 @@ export function PlayLightClient({
     });
   }, [code, router]);
 
-  // Récupère mon pseudo (utile pour fallback affichage)
+  // Récupère mon pseudo + avatar (utile pour fallback affichage et P2 modal).
   useEffect(() => {
     if (!playerId) return;
-    void import("@/lib/supabase/client").then(({ createClient }) => {
-      void createClient()
-        .from("tv_room_players")
-        .select("pseudo")
-        .eq("id", playerId)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data?.pseudo) setPseudo(data.pseudo as string);
-        });
-    });
+    const supabase = createClient();
+    void supabase
+      .from("tv_room_players")
+      .select("pseudo, avatar_url")
+      .eq("id", playerId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.pseudo) setPseudo(data.pseudo as string);
+        setAvatarUrl((data?.avatar_url as string | null) ?? null);
+      });
   }, [playerId]);
+
+  // P2.1 — Suit le statut de la room (waiting/playing/...) pour verrouiller
+  // l'édition de profil dès le démarrage.
+  useEffect(() => {
+    const supabase = createClient();
+    let cancelled = false;
+    void supabase
+      .from("tv_rooms")
+      .select("status")
+      .eq("id", roomId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled || !data) return;
+        setRoomStatus(
+          data.status as "waiting" | "playing" | "paused" | "ended",
+        );
+      });
+    const ch = supabase
+      .channel(`tv-room-status:${roomId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "tv_rooms",
+          filter: `id=eq.${roomId}`,
+        },
+        (payload) => {
+          const r = payload.new as { status: string };
+          setRoomStatus(
+            r.status as "waiting" | "playing" | "paused" | "ended",
+          );
+          if (r.status !== "waiting") setEditOpen(false);
+        },
+      )
+      .subscribe();
+    return () => {
+      cancelled = true;
+      void supabase.removeChannel(ch);
+    };
+  }, [roomId]);
 
   // Channel realtime + Presence (P1.1)
   useEffect(() => {
@@ -101,7 +151,7 @@ export function PlayLightClient({
     void ch.trackPresence({
       token,
       pseudo: pseudo || "...",
-      avatarUrl: null,
+      avatarUrl,
       joinedAt: Date.now(),
       role: "player",
     });
@@ -145,18 +195,19 @@ export function PlayLightClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, token, playerId]);
 
-  // Re-track presence quand le pseudo arrive (initialement vide, puis chargé
-  // depuis la BDD). Évite que la TV affiche "..." en permanence.
+  // Re-track presence quand le pseudo/avatar change (chargé depuis la BDD,
+  // ou édité via P2 modal). Évite que la TV affiche "..." en permanence
+  // et propage les changements de profil en live.
   useEffect(() => {
     if (!channelRef.current || !token || !pseudo) return;
     void channelRef.current.trackPresence({
       token,
       pseudo,
-      avatarUrl: null,
+      avatarUrl,
       joinedAt: Date.now(),
       role: "player",
     });
-  }, [pseudo, token]);
+  }, [pseudo, avatarUrl, token]);
 
   function handleAnswer(idx: number) {
     if (!question || !channelRef.current || !token) return;
@@ -217,9 +268,23 @@ export function PlayLightClient({
           </p>
           <p className="font-display text-base font-extrabold">{pseudo}</p>
         </div>
-        <div className="flex items-center gap-1.5 rounded-full bg-gold/20 px-3 py-1 text-sm font-bold text-gold-warm">
-          <Trophy className="h-4 w-4" aria-hidden="true" />
-          {score}
+        <div className="flex items-center gap-2">
+          {/* P2.1 — Bouton Modifier visible uniquement en lobby (waiting). */}
+          {roomStatus === "waiting" && playerId && (
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              aria-label="Modifier mon profil"
+              className="inline-flex items-center gap-1 rounded-full border border-gold/40 bg-card px-2.5 py-1 text-xs font-semibold text-gold-warm hover:border-gold hover:bg-gold/10"
+            >
+              <Pencil className="h-3 w-3" aria-hidden="true" />
+              Modifier
+            </button>
+          )}
+          <div className="flex items-center gap-1.5 rounded-full bg-gold/20 px-3 py-1 text-sm font-bold text-gold-warm">
+            <Trophy className="h-4 w-4" aria-hidden="true" />
+            {score}
+          </div>
         </div>
       </header>
 
@@ -267,6 +332,22 @@ export function PlayLightClient({
         </section>
       ) : (
         <WaitingTurn question={question} myToken={token} />
+      )}
+
+      {playerId && token && (
+        <PlayProfileEditModal
+          open={editOpen}
+          onClose={() => setEditOpen(false)}
+          onSaved={(next) => {
+            setPseudo(next.pseudo);
+            setAvatarUrl(next.avatarUrl);
+            setEditOpen(false);
+          }}
+          playerId={playerId}
+          token={token}
+          initialPseudo={pseudo}
+          initialAvatarUrl={avatarUrl}
+        />
       )}
     </main>
   );
