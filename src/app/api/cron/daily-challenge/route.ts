@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getBuildBrand } from "@/lib/build-brand";
+import { devLog } from "@/lib/dev-log";
 import { DAILY_CHALLENGE_QUESTION_COUNT } from "@/app/(app)/revision/defi/constants";
 
 /**
@@ -22,6 +24,20 @@ export async function GET(req: Request) {
     if (auth !== `Bearer ${secret}`) {
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
+  }
+
+  // O4 — Garde-fou multi-déploiement : un seul build (le générique)
+  // exécute le cron pour éviter les doublons d'INSERT dans
+  // `daily_challenges` (les 2 déploiements partagent la même BDD).
+  const brand = getBuildBrand();
+  if (brand.mode !== "generic") {
+    devLog("[cron:daily-challenge] skipped on non-generic deployment:", {
+      brand: brand.mode,
+    });
+    return NextResponse.json({
+      skipped: true,
+      reason: `cron disabled on this deployment (BRAND_MODE=${brand.mode})`,
+    });
   }
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

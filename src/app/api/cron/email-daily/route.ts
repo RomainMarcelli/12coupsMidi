@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
+import { getBuildBrand } from "@/lib/build-brand";
+import { devLog } from "@/lib/dev-log";
 import {
   DEFAULT_NOTIFICATION_SETTINGS,
   normalizeNotificationSettings,
@@ -46,6 +48,22 @@ export async function GET(req: NextRequest) {
   const expected = `Bearer ${process.env.CRON_SECRET ?? ""}`;
   if (!process.env.CRON_SECRET || auth !== expected) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // O4 — Garde-fou multi-déploiement : si le build n'est pas le
+  // déploiement public générique, on skip pour éviter les doublons
+  // (ex. 2 mails envoyés au même user, un par déploiement). Les 2
+  // déploiements partagent la même BDD Supabase ; on ne veut pas que
+  // le déploiement Mahylan exécute aussi les crons.
+  const brand = getBuildBrand();
+  if (brand.mode !== "generic") {
+    devLog("[cron:email-daily] skipped on non-generic deployment:", {
+      brand: brand.mode,
+    });
+    return NextResponse.json({
+      skipped: true,
+      reason: `cron disabled on this deployment (BRAND_MODE=${brand.mode})`,
+    });
   }
 
   // 2. Variables Resend / Supabase

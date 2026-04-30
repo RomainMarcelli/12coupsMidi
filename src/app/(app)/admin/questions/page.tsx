@@ -19,7 +19,16 @@ type SearchParams = Promise<{
   category?: string;
   difficulte?: string;
   page?: string;
+  /** N (correction) — Tri par date d'ajout : "asc" = plus anciennes
+   * d'abord, "desc" (défaut) = plus récentes d'abord. */
+  sort?: string;
 }>;
+
+type SortDir = "asc" | "desc";
+
+function parseSort(raw: string | undefined): SortDir {
+  return raw === "asc" ? "asc" : "desc";
+}
 
 export default async function AdminQuestionsPage({
   searchParams,
@@ -32,6 +41,7 @@ export default async function AdminQuestionsPage({
   const page = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
+  const sort = parseSort(params.sort);
 
   const supabase = await createClient();
 
@@ -42,10 +52,12 @@ export default async function AdminQuestionsPage({
     .order("nom");
 
   // Requête questions avec filtres + pagination
+  // N2.1 — On charge aussi `reponses` et `bonne_reponse` pour pouvoir
+  // afficher la bonne réponse à côté de l'énoncé dans la table.
   let query = supabase
     .from("questions")
     .select(
-      "id, type, difficulte, enonce, category_id, subcategory_id, created_at",
+      "id, type, difficulte, enonce, category_id, subcategory_id, created_at, reponses, bonne_reponse",
       { count: "exact" },
     );
 
@@ -67,7 +79,7 @@ export default async function AdminQuestionsPage({
   }
 
   const { data: questions, count, error } = await query
-    .order("created_at", { ascending: false })
+    .order("created_at", { ascending: sort === "asc" })
     .range(from, to);
 
   if (error) {
@@ -84,7 +96,7 @@ export default async function AdminQuestionsPage({
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
+    <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-3xl font-extrabold text-foreground">
@@ -132,6 +144,8 @@ export default async function AdminQuestionsPage({
       <QuestionsTable
         questions={questions ?? []}
         categories={categories ?? []}
+        sort={sort}
+        currentParams={params}
       />
 
       <Pagination page={page} totalPages={totalPages} />

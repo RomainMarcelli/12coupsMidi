@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BarChart3,
+  Home,
   LogOut,
   Menu,
   Play,
@@ -16,30 +17,23 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { signOut } from "@/app/(app)/actions";
 import { cn } from "@/lib/utils";
 
 /**
- * M2.2 — Menu burger pour la navigation mobile (< md / 768px).
+ * M2.2 + N (refonte) — Menu burger pour la navigation mobile (< md / 768px).
  *
- * Visible uniquement sous `md:` via la classe `md:hidden` au niveau
- * de la Navbar. Sur desktop, les liens sont rendus inline directement
- * dans la Navbar.
+ * Bug initial : le drawer était rendu dans le DOM de la Navbar, qui a
+ * `sticky top-0` + `backdrop-blur-md`. Cette combinaison crée un
+ * **containing block** transformé qui annule l'effet de `position: fixed`
+ * (le `inset-0` se confine à la Navbar au lieu de couvrir le viewport).
+ * Conséquence : drawer coupé, le contenu de la page qui transparaît
+ * derrière, scroll body lock cassé.
  *
- * UX :
- *   - Drawer qui slide depuis la droite (Framer Motion, tween 250ms)
- *   - Backdrop semi-transparent au clic en dehors → ferme
- *   - Touche Échap → ferme
- *   - `body { overflow: hidden }` quand ouvert pour bloquer le scroll
- *   - Focus simple : 1er lien focusé à l'ouverture, focus restauré
- *     sur le bouton burger à la fermeture (pas un trap complet —
- *     suffisant pour usage perso, à durcir pour V2 publique)
- *   - Item actif highlight gold
- *   - Auto-close au clic sur un lien
- *
- * Limitation a11y connue (V2) : pas de focus trap au sens strict
- * (Tab peut sortir du menu). Pour usage public RGAA / WCAG, intégrer
- * `focus-trap-react` ou Radix `<Dialog>`.
+ * Fix : rendre le drawer via `createPortal` directement dans
+ * `document.body`, hors de toute hiérarchie transformée. Le portal
+ * n'est créé qu'après le montage côté client (sinon erreur SSR).
  */
 
 interface MobileMenuLink {
@@ -49,7 +43,7 @@ interface MobileMenuLink {
 }
 
 const LINKS: MobileMenuLink[] = [
-  { href: "/", label: "Accueil", icon: Play },
+  { href: "/", label: "Accueil", icon: Home },
   { href: "/jouer", label: "Jouer", icon: Play },
   { href: "/tv/host", label: "Mode TV", icon: Tv },
   { href: "/revision", label: "Révision", icon: RotateCcw },
@@ -65,22 +59,27 @@ interface MobileMenuProps {
 
 export function MobileMenu({ pseudo, role, avatarUrl }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
 
-  // Bloquer scroll body quand ouvert
+  // Le portal a besoin de `document.body` qui n'existe qu'au montage client.
   useEffect(() => {
-    if (open) {
-      const previous = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = previous;
-      };
-    }
+    setMounted(true);
+  }, []);
+
+  // Body scroll lock : empêche la page derrière de scroller.
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
   }, [open]);
 
-  // Échap → ferme
+  // Échap → ferme.
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -90,18 +89,18 @@ export function MobileMenu({ pseudo, role, avatarUrl }: MobileMenuProps) {
     return () => window.removeEventListener("keydown", handler);
   }, [open]);
 
-  // Focus le 1er lien à l'ouverture, restore sur trigger à la fermeture
+  // Focus 1er lien à l'open, restaure sur trigger à la fermeture.
   useEffect(() => {
     if (open) {
       const t = setTimeout(() => firstLinkRef.current?.focus(), 60);
       return () => clearTimeout(t);
     } else {
-      triggerRef.current?.focus();
+      // Pas de focus restore si le composant vient juste de monter.
+      if (mounted) triggerRef.current?.focus({ preventScroll: true });
     }
-  }, [open]);
+  }, [open, mounted]);
 
-  // Fermer si on resize > md (cas où l'utilisateur change orientation
-  // ou ouvre les DevTools en plein menu)
+  // Si on resize >= md, on referme automatiquement (cas rotation tablette).
   useEffect(() => {
     if (!open) return;
     const mq = window.matchMedia("(min-width: 768px)");
@@ -112,10 +111,123 @@ export function MobileMenu({ pseudo, role, avatarUrl }: MobileMenuProps) {
     return () => mq.removeEventListener("change", handler);
   }, [open]);
 
+  // Ferme automatiquement quand l'URL change (= clic sur un lien).
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
   }
+
+  const drawer = (
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
+            aria-hidden="true"
+          />
+          {/* Drawer */}
+          <motion.div
+            key="drawer"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navigation"
+            className="fixed inset-y-0 right-0 z-[201] flex h-full w-[85vw] max-w-sm flex-col border-l border-border bg-card text-foreground shadow-2xl"
+          >
+            {/* Header avec avatar + bouton close */}
+            <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/60 px-4 py-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <Avatar avatarUrl={avatarUrl} pseudo={pseudo} />
+                <span className="truncate font-display text-sm font-bold text-foreground">
+                  {pseudo}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Fermer le menu"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-foreground/70 transition-colors hover:bg-foreground/10 hover:text-foreground"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Liens (scrollable si trop nombreux) */}
+            <nav
+              className="flex flex-1 flex-col gap-1 overflow-y-auto p-3"
+              aria-label="Menu mobile"
+            >
+              {LINKS.map(({ href, label, icon: Icon }, i) => {
+                const active = isActive(href);
+                return (
+                  <Link
+                    key={href}
+                    ref={i === 0 ? firstLinkRef : undefined}
+                    href={href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
+                      active
+                        ? "bg-gold/20 text-foreground"
+                        : "text-foreground/80 hover:bg-gold/10 hover:text-foreground",
+                    )}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                    <span>{label}</span>
+                  </Link>
+                );
+              })}
+
+              {role === "admin" && (
+                <Link
+                  href="/admin"
+                  aria-current={
+                    pathname.startsWith("/admin") ? "page" : undefined
+                  }
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
+                    pathname.startsWith("/admin")
+                      ? "bg-buzz/15 text-buzz"
+                      : "text-buzz/80 hover:bg-buzz/10 hover:text-buzz",
+                  )}
+                >
+                  <Shield className="h-5 w-5 shrink-0" aria-hidden="true" />
+                  <span>Admin</span>
+                </Link>
+              )}
+            </nav>
+
+            {/* Footer : déconnexion */}
+            <div className="shrink-0 border-t border-border/60 p-3">
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/40 px-3 py-2.5 text-sm font-semibold text-foreground/80 transition-colors hover:border-buzz hover:bg-buzz/5 hover:text-buzz"
+                >
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
+                  Se déconnecter
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
 
   return (
     <>
@@ -131,108 +243,11 @@ export function MobileMenu({ pseudo, role, avatarUrl }: MobileMenuProps) {
         <Menu className="h-5 w-5" aria-hidden="true" />
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              onClick={() => setOpen(false)}
-              className="fixed inset-0 z-[90] bg-black/55 backdrop-blur-sm md:hidden"
-              aria-hidden="true"
-            />
-            <motion.nav
-              key="drawer"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.25 }}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Menu de navigation"
-              className="fixed right-0 top-0 bottom-0 z-[100] flex w-[85vw] max-w-sm flex-col bg-card text-foreground shadow-2xl md:hidden"
-            >
-              {/* Header avec avatar + close */}
-              <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <Avatar avatarUrl={avatarUrl} pseudo={pseudo} />
-                  <span className="truncate font-display text-sm font-bold text-foreground">
-                    {pseudo}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  aria-label="Fermer le menu"
-                  className="flex h-9 w-9 items-center justify-center rounded-md text-foreground/70 transition-colors hover:bg-foreground/10 hover:text-foreground"
-                >
-                  <X className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </div>
-
-              {/* Liens */}
-              <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
-                {LINKS.map(({ href, label, icon: Icon }, i) => {
-                  const active = isActive(href);
-                  return (
-                    <Link
-                      key={href}
-                      ref={i === 0 ? firstLinkRef : undefined}
-                      href={href}
-                      onClick={() => setOpen(false)}
-                      aria-current={active ? "page" : undefined}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
-                        active
-                          ? "bg-gold/20 text-foreground"
-                          : "text-foreground/80 hover:bg-gold/10 hover:text-foreground",
-                      )}
-                    >
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                      {label}
-                    </Link>
-                  );
-                })}
-
-                {role === "admin" && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setOpen(false)}
-                    aria-current={
-                      pathname.startsWith("/admin") ? "page" : undefined
-                    }
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition-colors",
-                      pathname.startsWith("/admin")
-                        ? "bg-buzz/15 text-buzz"
-                        : "text-buzz/80 hover:bg-buzz/10 hover:text-buzz",
-                    )}
-                  >
-                    <Shield className="h-5 w-5" aria-hidden="true" />
-                    Admin
-                  </Link>
-                )}
-              </div>
-
-              {/* Footer : déconnexion */}
-              <div className="border-t border-border/60 p-3">
-                <form action={signOut}>
-                  <button
-                    type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-semibold text-foreground/80 transition-colors hover:border-buzz hover:bg-buzz/5 hover:text-buzz"
-                  >
-                    <LogOut className="h-4 w-4" aria-hidden="true" />
-                    Se déconnecter
-                  </button>
-                </form>
-              </div>
-            </motion.nav>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Portal vers document.body : sort de la stack context de la Navbar
+          (sticky + backdrop-blur) qui transforme `position: fixed` en
+          contained. Sans portal, le drawer reste prisonnier de la
+          Navbar et ne couvre pas le viewport. */}
+      {mounted ? createPortal(drawer, document.body) : null}
     </>
   );
 }
