@@ -13,6 +13,7 @@ import { prepareTvGame, saveTvGameState } from "@/lib/realtime/tv-game-actions";
 import { joinTvChannel, type TvChannelHandle } from "@/lib/realtime/tv-channel";
 import { type TvGameState } from "@/lib/realtime/tv-game-state";
 import { AnimEffect } from "@/components/animations/AnimEffect";
+import { WaitingCarousel } from "./waiting-carousel";
 
 interface PlayerRow {
   id: string;
@@ -29,6 +30,8 @@ interface TvHostRoomProps {
   code: string;
   initialPlayers: PlayerRow[];
   initialStatus: "waiting" | "playing" | "paused" | "ended";
+  /** P3.1 — Quiz preview pour le carrousel d'attente (lobby). */
+  quizPreview?: { enonce: string; format: string | null } | null;
 }
 
 /**
@@ -45,6 +48,7 @@ export function TvHostRoom({
   code,
   initialPlayers,
   initialStatus,
+  quizPreview = null,
 }: TvHostRoomProps) {
   const router = useRouter();
   const [players, setPlayers] = useState(initialPlayers);
@@ -420,6 +424,17 @@ export function TvHostRoom({
             Sur ton téléphone, ouvre l&apos;app et entre ce code, ou scanne
             le QR code ci-dessus.
           </p>
+          {/* P3.1 — Carrousel d'ambiance dans le coin bas du bloc QR.
+              N'apparaît qu'en lobby (status waiting). */}
+          {status === "waiting" && (
+            <div className="mt-2 w-full max-w-md">
+              <WaitingCarousel
+                seed={code}
+                quizPreview={quizPreview}
+                intervalMs={7000}
+              />
+            </div>
+          )}
         </section>
 
         {/* Bloc joueurs connectés */}
