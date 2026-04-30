@@ -1,24 +1,39 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, MonitorPlay, Smartphone, Tv, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  Gamepad2,
+  Loader2,
+  MonitorPlay,
+  QrCode,
+  Smartphone,
+  Tv,
+  Users,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 import { createTvRoom } from "@/lib/realtime/room-actions";
+
+type RoomMode = "scan" | "remote";
 
 /**
  * Landing visuelle "Créer une partie TV" : explique le concept en 3 lignes
  * (TV affiche, téléphones jouent), bouton de création principal.
+ *
+ * P4.1 — Choix du mode "scan" (1 téléphone par joueur) vs "remote"
+ * (1 seul téléphone régie commande pour tous).
  */
 export function TvHostLanding() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<RoomMode>("scan");
 
   function handleCreate() {
     setError(null);
     startTransition(async () => {
-      const res = await createTvRoom({ gameMode: "douze_coups" });
+      const res = await createTvRoom({ gameMode: "douze_coups", mode });
       if (!res.ok) {
         setError(res.message);
         return;
@@ -52,25 +67,60 @@ export function TvHostLanding() {
         <Step icon={Users} title="2 à 8 joueurs" desc="Tour par tour" />
       </div>
 
-      <Button
-        variant="gold"
-        size="lg"
-        onClick={handleCreate}
-        disabled={pending}
-        className="text-lg"
-      >
-        {pending ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
-            Création…
-          </>
-        ) : (
-          <>
-            <Tv className="h-5 w-5" aria-hidden="true" />
-            Créer la partie
-          </>
-        )}
-      </Button>
+      {/* P4.1 — Choix du mode de jeu : scan (1 tel/joueur) vs remote (1 tel régie). */}
+      <div className="flex w-full flex-col gap-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-foreground/50">
+          Mode de jeu
+        </p>
+        <div className="grid w-full gap-3 sm:grid-cols-2">
+          <ModeCard
+            icon={QrCode}
+            title="Scan"
+            desc="Chaque joueur a son téléphone (recommandé)"
+            selected={mode === "scan"}
+            onClick={() => setMode("scan")}
+          />
+          <ModeCard
+            icon={Smartphone}
+            title="Télécommande"
+            desc="Un seul téléphone pour tous les joueurs"
+            selected={mode === "remote"}
+            onClick={() => setMode("remote")}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={handleCreate}
+          disabled={pending}
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border-2 border-transparent bg-gold px-6 text-lg font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px hover:shadow-[0_6px_20px_rgba(245,183,0,0.55)] active:translate-y-px active:shadow-[0_2px_0_0_#e89e00] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {pending ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+              Création…
+            </>
+          ) : (
+            <>
+              <Tv className="h-5 w-5" aria-hidden="true" />
+              Créer la partie
+            </>
+          )}
+        </button>
+
+        {/* Bouton "Rejoindre" : pointe vers /play (publique, code à 4 chiffres).
+            Mêmes h-12 + px-6 + text-lg que le bouton or pour un alignement
+            parfait des 2 CTAs côte à côte. */}
+        <Link
+          href="/play"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border-2 border-sky/50 bg-card px-6 text-lg font-bold text-sky transition-all hover:-translate-y-px hover:border-sky hover:bg-sky/5 hover:shadow-[0_5px_16px_rgba(43,142,230,0.35)]"
+        >
+          <Gamepad2 className="h-5 w-5" aria-hidden="true" />
+          Rejoindre une partie
+        </Link>
+      </div>
 
       {error && (
         <p
@@ -104,5 +154,37 @@ function Step({
       <p className="font-display text-sm font-bold text-foreground">{title}</p>
       <p className="text-xs text-foreground/60">{desc}</p>
     </div>
+  );
+}
+
+function ModeCard({
+  icon: Icon,
+  title,
+  desc,
+  selected,
+  onClick,
+}: {
+  icon: typeof Tv;
+  title: string;
+  desc: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={cn(
+        "flex flex-col items-center gap-1.5 rounded-xl border-2 p-4 text-center transition-colors",
+        selected
+          ? "border-gold bg-gold/10"
+          : "border-border bg-card hover:border-gold/50",
+      )}
+    >
+      <Icon className="h-7 w-7 text-gold-warm" aria-hidden="true" />
+      <p className="font-display text-sm font-bold text-foreground">{title}</p>
+      <p className="text-xs text-foreground/60">{desc}</p>
+    </button>
   );
 }

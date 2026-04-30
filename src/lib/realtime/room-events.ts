@@ -67,6 +67,62 @@ export interface HeartbeatPayload {
   playerToken: string;
 }
 
+// =============================================================================
+// P5.1 — Events face-à-face (2 finalistes, vote présentateur, timer par joueur)
+// =============================================================================
+
+export interface FaVoteStartPayload {
+  /** Tokens des 2 finalistes proposés au vote. */
+  finalists: string[];
+  /** Pseudos correspondants pour affichage. */
+  finalistPseudos: Record<string, string>;
+}
+
+export interface FaVoteCastPayload {
+  /** Token du votant. */
+  voterToken: string;
+  /** Token choisi (un des finalistes). */
+  forToken: string;
+}
+
+export interface FaVoteResultPayload {
+  /** Le présentateur choisi (majorité ou aléatoire en cas d'égalité). */
+  presenterToken: string;
+  /** L'autre finaliste, qui devient challenger. */
+  challengerToken: string;
+}
+
+export interface FaQuestionPayload {
+  questionId: string;
+  enonce: string;
+  /** Le challenger qui doit répondre (seul joueur dont le timer décompte). */
+  currentChallengerToken: string;
+  /** Timers en secondes par token de finaliste. */
+  timers: Record<string, number>;
+}
+
+export interface FaTickPayload {
+  /** Token du joueur dont le timer décompte. */
+  token: string;
+  /** Secondes restantes. */
+  remaining: number;
+}
+
+export interface FaAnswerPayload {
+  /** Token du présentateur qui valide. */
+  presenterToken: string;
+  /** Token du challenger validé. */
+  challengerToken: string;
+  isCorrect: boolean;
+}
+
+export interface FaEndPayload {
+  /** Token du gagnant. */
+  winnerToken: string;
+  /** Token du perdant. */
+  loserToken: string;
+}
+
 /** Map nom d'event → payload. Sert au typage strict du channel Realtime. */
 export interface RoomEvents {
   "question:show": QuestionShowPayload;
@@ -79,6 +135,16 @@ export interface RoomEvents {
   "room:resumed": PauseResumePayload;
   "answer:submit": AnswerSubmitPayload;
   heartbeat: HeartbeatPayload;
+  // P5.1 — Face-à-face
+  "fa:vote-start": FaVoteStartPayload;
+  "fa:vote-cast": FaVoteCastPayload;
+  "fa:vote-result": FaVoteResultPayload;
+  "fa:question": FaQuestionPayload;
+  "fa:tick": FaTickPayload;
+  /** Le présentateur clique "GO" pour démarrer le timer du challenger. */
+  "fa:go": { presenterToken: string };
+  "fa:answer": FaAnswerPayload;
+  "fa:end": FaEndPayload;
 }
 
 export type RoomEventName = keyof RoomEvents;

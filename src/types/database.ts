@@ -174,7 +174,9 @@ export interface Database {
           host_id: string;
           status: "waiting" | "playing" | "paused" | "ended";
           game_mode: string;
+          mode: "scan" | "remote";
           state: Json;
+          face_a_face_state: Json | null;
           created_at: string;
           ended_at: string | null;
         };
@@ -184,7 +186,9 @@ export interface Database {
           host_id: string;
           status?: "waiting" | "playing" | "paused" | "ended";
           game_mode: string;
+          mode?: "scan" | "remote";
           state?: Json;
+          face_a_face_state?: Json | null;
           created_at?: string;
           ended_at?: string | null;
         };
@@ -200,6 +204,7 @@ export interface Database {
           avatar_url: string | null;
           position: number | null;
           is_connected: boolean;
+          is_remote: boolean;
           last_seen_at: string;
           joined_at: string;
         };
@@ -211,6 +216,7 @@ export interface Database {
           avatar_url?: string | null;
           position?: number | null;
           is_connected?: boolean;
+          is_remote?: boolean;
           last_seen_at?: string;
           joined_at?: string;
         };

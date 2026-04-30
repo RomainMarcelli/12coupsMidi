@@ -40,9 +40,13 @@ async function generateUniqueCode(): Promise<string | null> {
 /**
  * Crée une nouvelle room TV pour le compte connecté. Le code à 4 chiffres
  * est garanti unique parmi les rooms actives. État initial : `waiting`.
+ *
+ * P4.1 — `mode` : "scan" (défaut, joueurs rejoignent par QR) ou "remote"
+ * (un seul téléphone régie commande pour tous).
  */
 export async function createTvRoom(input: {
   gameMode?: string;
+  mode?: "scan" | "remote";
 }): Promise<CreateRoomResult | CreateRoomError> {
   const supabase = await createClient();
   const {
@@ -63,6 +67,7 @@ export async function createTvRoom(input: {
       code,
       host_id: user.id,
       game_mode: input.gameMode ?? "douze_coups",
+      mode: input.mode ?? "scan",
       state: {},
     })
     .select("id")

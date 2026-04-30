@@ -1,33 +1,43 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Crown, Loader2, Play, Tv, Users, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Crown, Loader2, Mic, Play, Smartphone, Tv, Users, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { createClient } from "@/lib/supabase/client";
-import { endTvRoom, updateTvRoomState } from "@/lib/realtime/room-actions";
+import { endTvRoom } from "@/lib/realtime/room-actions";
 import { prepareTvGame, saveTvGameState } from "@/lib/realtime/tv-game-actions";
 import { joinTvChannel, type TvChannelHandle } from "@/lib/realtime/tv-channel";
-import {
-  isTvGameState,
-  type TvGameState,
-} from "@/lib/realtime/tv-game-state";
+import { type TvGameState } from "@/lib/realtime/tv-game-state";
+import { prepareFaceAFace } from "@/lib/realtime/face-a-face-actions";
+import { type FaceAFaceState } from "@/lib/realtime/face-a-face-state";
 import { AnimEffect } from "@/components/animations/AnimEffect";
+import { WaitingCarousel } from "./waiting-carousel";
+import { TvFaceAFaceView } from "./tv-face-a-face-view";
+
+interface PlayerRow {
+  id: string;
+  pseudo: string;
+  avatarUrl: string | null;
+  isConnected: boolean;
+  joinedAt: string;
+  /** P1.1 — token pour cross-ref Presence. */
+  token: string;
+}
 
 interface TvHostRoomProps {
   roomId: string;
   code: string;
-  initialPlayers: Array<{
-    id: string;
-    pseudo: string;
-    avatarUrl: string | null;
-    isConnected: boolean;
-    joinedAt: string;
-  }>;
+  initialPlayers: PlayerRow[];
   initialStatus: "waiting" | "playing" | "paused" | "ended";
+  /** P3.1 — Quiz preview pour le carrousel d'attente (lobby). */
+  quizPreview?: { enonce: string; format: string | null } | null;
+  /** P4.1 — Mode de la room ("scan" ou "remote"). */
+  roomModeKind?: "scan" | "remote";
 }
 
 /**
@@ -44,6 +54,8 @@ export function TvHostRoom({
   code,
   initialPlayers,
   initialStatus,
+  quizPreview = null,
+  roomModeKind = "scan",
 }: TvHostRoomProps) {
   const router = useRouter();
   const [players, setPlayers] = useState(initialPlayers);
@@ -61,8 +73,10 @@ export function TvHostRoom({
     }
   }, [code]);
 
-  // Souscription Realtime à la table tv_room_players (filtre par room_id)
-  // pour voir arriver/partir les joueurs en live.
+  // P1.1 — Souscription Realtime à la table tv_room_players (filtre par
+  // room_id) UNIQUEMENT pour les changements de profil persistants
+  // (INSERT/UPDATE/DELETE). L'état "online/offline" vient de Presence
+  // (voir effet ci-dessous) — on ignore donc le champ `is_connected` ici.
   useEffect(() => {
     const supabase = createClient();
     const channel = supabase
@@ -81,8 +95,8 @@ export function TvHostRoom({
               id: string;
               pseudo: string;
               avatar_url: string | null;
-              is_connected: boolean;
               joined_at: string;
+              player_token: string;
             };
             setPlayers((prev) => {
               if (prev.some((p) => p.id === r.id)) return prev;
@@ -92,8 +106,9 @@ export function TvHostRoom({
                   id: r.id,
                   pseudo: r.pseudo,
                   avatarUrl: r.avatar_url,
-                  isConnected: r.is_connected,
+                  isConnected: false, // mis à jour via Presence
                   joinedAt: r.joined_at,
+                  token: r.player_token,
                 },
               ];
             });
@@ -102,8 +117,8 @@ export function TvHostRoom({
               id: string;
               pseudo: string;
               avatar_url: string | null;
-              is_connected: boolean;
               joined_at: string;
+              player_token: string;
             };
             setPlayers((prev) =>
               prev.map((p) =>
@@ -112,7 +127,6 @@ export function TvHostRoom({
                       ...p,
                       pseudo: r.pseudo,
                       avatarUrl: r.avatar_url,
-                      isConnected: r.is_connected,
                     }
                   : p,
               ),
@@ -130,30 +144,102 @@ export function TvHostRoom({
     };
   }, [roomId]);
 
+  // P1.1 — Source de vérité "online/offline" : Presence du channel
+  // `room:{code}`. La TV elle-même track sa propre présence (role: "host")
+  // pour signaler qu'elle est live (utile pour les téléphones qui veulent
+  // afficher un indicateur "TV connectée").
+  const [presenceTokens, setPresenceTokens] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    const ch = joinTvChannel(code);
+    void ch.trackPresence({
+      token: `host:${roomId}`,
+      pseudo: "TV",
+      avatarUrl: null,
+      joinedAt: Date.now(),
+      role: "host",
+    });
+    const unbind = ch.onPresence((state) => {
+      const tokens = new Set<string>();
+      for (const metas of Object.values(state)) {
+        for (const m of metas) {
+          if (m.role === "player") tokens.add(m.token);
+        }
+      }
+      setPresenceTokens(tokens);
+    });
+    return () => {
+      unbind();
+      void ch.unsubscribe();
+    };
+  }, [code, roomId]);
+
+  // Merge BDD + Presence pour l'UI : isConnected vient de Presence.
+  const playersWithPresence = useMemo(
+    () =>
+      players.map((p) => ({
+        ...p,
+        isConnected: presenceTokens.has(p.token),
+      })),
+    [players, presenceTokens],
+  );
+
   const canStart = useMemo(
-    () => players.filter((p) => p.isConnected).length >= 2,
-    [players],
+    () => playersWithPresence.filter((p) => p.isConnected).length >= 2,
+    [playersWithPresence],
   );
 
   // État du jeu TV (en mode playing). Chargé via prepareTvGame ou via
   // un SELECT sur tv_rooms.state si on revient sur la page après refresh.
   const [game, setGame] = useState<TvGameState | null>(null);
   const [hostChannel, setHostChannel] = useState<TvChannelHandle | null>(null);
+  // P5.1 — État du face-à-face (null tant que non démarré). Si non null,
+  // on affiche TvFaceAFaceView au lieu du flux normal.
+  const [faState, setFaState] = useState<FaceAFaceState | null>(null);
+  const [startingFa, setStartingFa] = useState(false);
+
+  /** P5.1 — Lance le face-à-face avec les 2 premiers joueurs en ligne. */
+  async function handleStartFaceAFace() {
+    if (startingFa) return;
+    const online = playersWithPresence.filter((p) => p.isConnected);
+    if (online.length < 2) {
+      alert("Il faut au moins 2 joueurs connectés pour le face-à-face.");
+      return;
+    }
+    setStartingFa(true);
+    const [a, b] = online.slice(0, 2);
+    if (!a || !b) {
+      setStartingFa(false);
+      return;
+    }
+    const finalists: [string, string] = [a.token, b.token];
+    const finalistPseudos: Record<string, string> = {
+      [a.token]: a.pseudo,
+      [b.token]: b.pseudo,
+    };
+    const res = await prepareFaceAFace({
+      roomId,
+      finalists,
+      finalistPseudos,
+      timerSeconds: 60,
+    });
+    setStartingFa(false);
+    if (!res.ok) {
+      alert(res.message);
+      return;
+    }
+    setFaState(res.state);
+    setStatus("playing");
+  }
 
   async function handleStart() {
     if (!canStart || starting) return;
     setStarting(true);
-    // Construit l'ordre de tour à partir des joueurs connectés (par
-    // joinedAt). On a besoin du player_token de chacun → re-fetch.
-    const supabase = createClient();
-    const { data: rows } = await supabase
-      .from("tv_room_players")
-      .select("player_token, joined_at, is_connected")
-      .eq("room_id", roomId)
-      .order("joined_at", { ascending: true });
-    const turnOrder = (rows ?? [])
-      .filter((r) => r.is_connected)
-      .map((r) => r.player_token as string);
+    // P1.1 — turnOrder construit depuis Presence (qui est en ligne MAINTENANT)
+    // intersecté avec la liste BDD pour l'ordre stable (par joinedAt).
+    const turnOrder = playersWithPresence
+      .filter((p) => p.isConnected)
+      .sort((a, b) => a.joinedAt.localeCompare(b.joinedAt))
+      .map((p) => p.token);
     const res = await prepareTvGame({ roomId, turnOrder, totalRounds: 10 });
     if (!res.ok) {
       alert(res.message);
@@ -301,13 +387,26 @@ export function TvHostRoom({
   // Cache local token → pseudo (rempli après mount via select sur la BDD)
   const tokenPseudoCache = useTokenPseudoCache(roomId, players);
 
+  // P5.1 — Si on est en face-à-face, on affiche cette vue
+  if (faState) {
+    return (
+      <TvFaceAFaceView
+        code={code}
+        roomId={roomId}
+        initialState={faState}
+        players={playersWithPresence}
+        onEnd={() => setShowEndConfirm(true)}
+      />
+    );
+  }
+
   // Switch waiting / playing / results
   if (status === "playing" && game?.phase === "playing") {
     return (
       <TvPlayingView
         code={code}
         game={game}
-        players={players}
+        players={playersWithPresence}
         tokenCache={tokenPseudoCache.current}
         onEnd={() => setShowEndConfirm(true)}
       />
@@ -317,7 +416,7 @@ export function TvHostRoom({
     return (
       <TvResultsView
         game={game}
-        players={players}
+        players={playersWithPresence}
         tokenCache={tokenPseudoCache.current}
         onClose={() => setShowEndConfirm(true)}
       />
@@ -379,10 +478,34 @@ export function TvHostRoom({
               {code}
             </p>
           </div>
-          <p className="max-w-xs text-sm text-foreground/70">
-            Sur ton téléphone, ouvre l&apos;app et entre ce code, ou scanne
-            le QR code ci-dessus.
-          </p>
+          {roomModeKind === "remote" ? (
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="rounded-full bg-sky/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-sky">
+                <Smartphone className="mr-1 inline h-3 w-3" aria-hidden="true" />
+                Mode télécommande
+              </span>
+              <p className="max-w-xs text-sm text-foreground/70">
+                Un seul téléphone (la régie) suffit. Il scanne ce QR code et
+                ajoute tous les joueurs depuis sa liste.
+              </p>
+            </div>
+          ) : (
+            <p className="max-w-xs text-sm text-foreground/70">
+              Sur ton téléphone, ouvre l&apos;app et entre ce code, ou scanne
+              le QR code ci-dessus.
+            </p>
+          )}
+          {/* P3.1 — Carrousel d'ambiance dans le coin bas du bloc QR.
+              N'apparaît qu'en lobby (status waiting). */}
+          {status === "waiting" && (
+            <div className="mt-2 w-full max-w-md">
+              <WaitingCarousel
+                seed={code}
+                quizPreview={quizPreview}
+                intervalMs={7000}
+              />
+            </div>
+          )}
         </section>
 
         {/* Bloc joueurs connectés */}
@@ -395,18 +518,18 @@ export function TvHostRoom({
               </h2>
             </div>
             <span className="rounded-full bg-gold/15 px-3 py-1 text-sm font-bold text-gold-warm">
-              {players.filter((p) => p.isConnected).length} / 8
+              {playersWithPresence.filter((p) => p.isConnected).length} / 8
             </span>
           </div>
 
-          {players.length === 0 ? (
+          {playersWithPresence.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border py-10 text-center text-foreground/50">
               <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
               <p>En attente des premiers joueurs…</p>
             </div>
           ) : (
             <ul className="flex flex-col gap-2">
-              {players.map((p) => (
+              {playersWithPresence.map((p) => (
                 <li
                   key={p.id}
                   className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-3"
@@ -456,6 +579,22 @@ export function TvHostRoom({
             )}
             {status === "playing" ? "Partie en cours…" : "Démarrer la partie"}
           </Button>
+          {/* P5.1 — Bouton "Lancer face-à-face" (alternative au mode regular). */}
+          {status === "waiting" && (
+            <button
+              type="button"
+              disabled={!canStart || startingFa}
+              onClick={handleStartFaceAFace}
+              className="inline-flex items-center justify-center gap-2 rounded-md border-2 border-sky/50 bg-card px-4 py-2 text-sm font-bold text-sky transition-all hover:-translate-y-px hover:border-sky hover:bg-sky/5 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {startingFa ? (
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <Mic className="h-4 w-4" aria-hidden="true" />
+              )}
+              Mode face-à-face (présentateur)
+            </button>
+          )}
           {!canStart && status === "waiting" && (
             <p className="text-center text-xs text-foreground/50">
               Au moins 2 joueurs requis pour démarrer.
@@ -480,30 +619,21 @@ export function TvHostRoom({
 }
 
 // ============================================================================
-// useTokenPseudoCache : map token → pseudo (chargée via SELECT sur la BDD)
+// useTokenPseudoCache : map token → pseudo
 // ============================================================================
-// Les `players` exposés au TV n'incluent pas le `player_token` (volontaire :
-// il ne sert qu'aux téléphones). Mais l'hôte a besoin de mapper token →
-// pseudo pour les broadcasts ("currentPlayerPseudo"). On fetch séparément.
+// P1.1 — Maintenant qu'on a `token` directement dans la liste players (issu
+// de la query server + Realtime postgres_changes), ce cache est juste un
+// dérivé de l'array. On garde la signature ref-style pour ne pas casser
+// les callers existants (TvPlayingView, TvResultsView).
 function useTokenPseudoCache(
-  roomId: string,
-  players: Array<{ id: string; pseudo: string }>,
+  _roomId: string,
+  players: Array<{ token: string; pseudo: string }>,
 ) {
   const cache = useRef<Map<string, string>>(new Map());
   useEffect(() => {
-    const supabase = createClient();
-    void supabase
-      .from("tv_room_players")
-      .select("player_token, pseudo")
-      .eq("room_id", roomId)
-      .then(({ data }) => {
-        if (!data) return;
-        cache.current.clear();
-        for (const r of data) {
-          cache.current.set(r.player_token as string, r.pseudo as string);
-        }
-      });
-  }, [roomId, players.length]);
+    cache.current.clear();
+    for (const p of players) cache.current.set(p.token, p.pseudo);
+  }, [players]);
   return cache;
 }
 
@@ -523,6 +653,7 @@ function TvPlayingView({
     id: string;
     pseudo: string;
     avatarUrl: string | null;
+    token?: string;
   }>;
   tokenCache: Map<string, string>;
   onEnd: () => void;
@@ -531,9 +662,66 @@ function TvPlayingView({
   const currentPseudo = game.currentPlayerToken
     ? tokenCache.get(game.currentPlayerToken)
     : "?";
+  const currentPlayer = useMemo(
+    () =>
+      players.find(
+        (p) =>
+          p.token === game.currentPlayerToken ||
+          tokenCache.get(game.currentPlayerToken ?? "") === p.pseudo,
+      ),
+    [players, game.currentPlayerToken, tokenCache],
+  );
+
+  // P4.1 — Animation "À toi, [Joueur]" 1.6s à chaque changement de tour.
+  const [announcing, setAnnouncing] = useState(false);
+  const lastAnnouncedRef = useRef<string | null>(null);
+  useEffect(() => {
+    const tk = game.currentPlayerToken;
+    if (!tk) return;
+    if (lastAnnouncedRef.current === tk) return;
+    lastAnnouncedRef.current = tk;
+    setAnnouncing(true);
+    const id = window.setTimeout(() => setAnnouncing(false), 1600);
+    return () => window.clearTimeout(id);
+  }, [game.currentPlayerToken]);
 
   return (
     <main className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col gap-6 p-6 lg:p-10">
+      <AnimatePresence>
+        {announcing && currentPseudo && (
+          <motion.div
+            key={`ann-${game.currentPlayerToken}`}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/80 backdrop-blur-sm"
+          >
+            <div className="flex flex-col items-center gap-4 text-center">
+              {currentPlayer?.avatarUrl ? (
+                <Image
+                  src={currentPlayer.avatarUrl}
+                  alt=""
+                  width={160}
+                  height={160}
+                  className="h-32 w-32 rounded-3xl border-4 border-gold object-cover shadow-[0_0_64px_rgba(245,183,0,0.7)] sm:h-40 sm:w-40"
+                  unoptimized
+                />
+              ) : (
+                <div className="flex h-32 w-32 items-center justify-center rounded-3xl border-4 border-gold bg-gold/30 shadow-[0_0_64px_rgba(245,183,0,0.7)] sm:h-40 sm:w-40">
+                  <Crown className="h-16 w-16 text-gold-warm" aria-hidden="true" />
+                </div>
+              )}
+              <p className="text-xl font-bold uppercase tracking-widest text-gold">
+                À toi
+              </p>
+              <p className="font-display text-6xl font-extrabold text-background sm:text-7xl">
+                {currentPseudo}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <header className="flex items-center justify-between text-foreground">
         <p className="text-sm font-bold uppercase tracking-widest text-gold-warm">
           Partie {code} · Tour {game.currentRound + 1} / {game.totalRounds}

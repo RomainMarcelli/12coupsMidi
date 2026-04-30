@@ -35,6 +35,12 @@ interface AvatarPickerProps {
   uploadBucket?: UploadBucket;
   /** Sous-dossier pour l'upload. */
   uploadPath?: string;
+  /**
+   * Cache l'onglet "Custom" (avatars admin uploadés). Utile pour les
+   * pages publiques sans auth (ex. `/play/[code]`) où la lecture de la
+   * table `custom_avatars` n'est pas autorisée par RLS.
+   */
+  hideCustomTab?: boolean;
 }
 
 type Tab = "pack" | "custom" | "random" | "upload";
@@ -42,10 +48,13 @@ type Tab = "pack" | "custom" | "random" | "upload";
 /**
  * Sélecteur d'avatar unifié (F3.2).
  *
- * 3 onglets :
+ * 4 onglets :
  *   - Pack : 16 avatars pré-définis (DiceBear)
+ *   - Custom : avatars uploadés par l'admin (peut être caché via
+ *     `hideCustomTab` pour les contextes guests)
  *   - Aléatoire : génère un avatar via DiceBear avec choix de style
- *   - Importer : upload depuis l'appareil (compression côté client)
+ *   - Importer : upload depuis fichiers ET prise de photo (mobile via
+ *     `capture` HTML attribute → caméra ouverte directement)
  */
 export function AvatarPicker({
   open,
@@ -54,7 +63,10 @@ export function AvatarPicker({
   onPick,
   uploadBucket = "avatars",
   uploadPath = "user",
+  hideCustomTab = false,
 }: AvatarPickerProps) {
+  // Si l'onglet Custom est caché et que c'était l'onglet actif, fallback
+  // sur "pack" qui est toujours dispo.
   const [tab, setTab] = useState<Tab>("pack");
 
   useEffect(() => {
@@ -110,13 +122,15 @@ export function AvatarPicker({
               >
                 Pack
               </TabButton>
-              <TabButton
-                active={tab === "custom"}
-                onClick={() => setTab("custom")}
-                icon={ImageIcon}
-              >
-                Custom
-              </TabButton>
+              {!hideCustomTab && (
+                <TabButton
+                  active={tab === "custom"}
+                  onClick={() => setTab("custom")}
+                  icon={ImageIcon}
+                >
+                  Custom
+                </TabButton>
+              )}
               <TabButton
                 active={tab === "random"}
                 onClick={() => setTab("random")}
@@ -156,7 +170,7 @@ export function AvatarPicker({
                   }}
                 />
               )}
-              {tab === "custom" && (
+              {tab === "custom" && !hideCustomTab && (
                 <CustomTab
                   currentUrl={currentUrl}
                   onPick={(url) => {
@@ -370,7 +384,11 @@ function UploadTab({
   path: string;
   onPick: (url: string) => void;
 }) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  // 2e input dédié à la prise de photo : sur mobile, l'attribut HTML
+  // `capture="environment"` (caméra arrière) ouvre directement la caméra
+  // au lieu de la galerie. Sur desktop, c'est ignoré → fallback file picker.
+  const cameraRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -381,7 +399,9 @@ function UploadTab({
     setUploading(true);
     const res = await uploadAvatarClient(file, bucket, path);
     setUploading(false);
-    if (inputRef.current) inputRef.current.value = "";
+    // Reset les 2 inputs (l'un est utilisé, l'autre garde sa value précédente)
+    if (fileRef.current) fileRef.current.value = "";
+    if (cameraRef.current) cameraRef.current.value = "";
     if (res.status === "ok") onPick(res.url);
     else setError(res.message);
   }
@@ -393,28 +413,51 @@ function UploadTab({
       </div>
       <div>
         <h3 className="font-display text-base font-extrabold text-foreground">
-          Importer une photo
+          Prends une photo ou importe-en une
         </h3>
         <p className="text-xs text-foreground/65">
           JPG, PNG, WebP — max ~5 Mo. Compression automatique côté
           client.
         </p>
       </div>
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        disabled={uploading}
-        className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-2.5 font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px disabled:opacity-50"
-      >
-        {uploading ? (
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-        ) : (
-          <Upload className="h-4 w-4" aria-hidden="true" />
-        )}
-        {uploading ? "Upload…" : "Choisir un fichier"}
-      </button>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={() => cameraRef.current?.click()}
+          disabled={uploading}
+          className="inline-flex items-center gap-2 rounded-md bg-gold px-4 py-2.5 text-sm font-bold text-on-color shadow-[0_4px_0_0_#e89e00] transition-all hover:-translate-y-px disabled:opacity-50"
+        >
+          {uploading ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <Camera className="h-4 w-4" aria-hidden="true" />
+          )}
+          Prendre une photo
+        </button>
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          className="inline-flex items-center gap-2 rounded-md border-2 border-gold/40 bg-card px-4 py-2.5 text-sm font-bold text-gold-warm transition-colors hover:bg-gold/10 disabled:opacity-50"
+        >
+          {uploading ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <Upload className="h-4 w-4" aria-hidden="true" />
+          )}
+          Choisir un fichier
+        </button>
+      </div>
       <input
-        ref={inputRef}
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handleFile}
+        className="hidden"
+      />
+      <input
+        ref={fileRef}
         type="file"
         accept="image/*"
         onChange={handleFile}
