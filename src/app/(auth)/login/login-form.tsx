@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Loader2, Lock, LogIn, Mail, UserPlus } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, LogIn, Mail, UserPlus } from "lucide-react";
 import { signIn, signUp, type AuthResult } from "./actions";
 import { cn } from "@/lib/utils";
 
@@ -134,6 +134,13 @@ function Field({
   label: string;
   icon: typeof Mail;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
+  // M2.1 — Pour les champs password, on gère le toggle œil ici
+  // directement (pas via le composant PasswordInput) car on a déjà
+  // une icône à gauche dans le wrapper relatif.
+  const isPassword = props.type === "password";
+  const [visible, setVisible] = useState(false);
+  const effectiveType = isPassword && visible ? "text" : props.type;
+
   return (
     <label className="flex flex-col gap-1.5 text-sm">
       <span className="font-semibold text-foreground">{label}</span>
@@ -144,9 +151,33 @@ function Field({
         />
         <input
           {...props}
+          type={effectiveType}
           required
-          className="h-11 w-full rounded-md border border-border bg-card pl-10 pr-3 text-sm text-foreground placeholder-foreground/30 focus:border-gold focus:outline-none disabled:opacity-50"
+          className={cn(
+            "h-11 w-full rounded-md border border-border bg-card pl-10 text-sm text-foreground placeholder-foreground/30 focus:border-gold focus:outline-none disabled:opacity-50",
+            isPassword ? "pr-10" : "pr-3",
+          )}
         />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setVisible((v) => !v)}
+            tabIndex={-1}
+            aria-label={
+              visible
+                ? "Masquer le mot de passe"
+                : "Afficher le mot de passe"
+            }
+            aria-pressed={visible}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/50 transition-colors hover:text-foreground"
+          >
+            {visible ? (
+              <EyeOff className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <Eye className="h-4 w-4" aria-hidden="true" />
+            )}
+          </button>
+        )}
       </div>
     </label>
   );

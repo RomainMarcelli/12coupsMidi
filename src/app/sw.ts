@@ -17,6 +17,17 @@ const serwist = new Serwist({
   clientsClaim: true,
   navigationPreload: true,
   runtimeCaching: defaultCache,
+  // L+ — Fallback HTML servi quand une navigation échoue offline
+  // et que la page demandée n'est pas dans le précache. Pointe sur
+  // /offline (cf src/app/offline/page.tsx).
+  fallbacks: {
+    entries: [
+      {
+        url: "/offline",
+        matcher: ({ request }) => request.destination === "document",
+      },
+    ],
+  },
 });
 
 serwist.addEventListeners();

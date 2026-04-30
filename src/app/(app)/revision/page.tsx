@@ -26,11 +26,15 @@ export default async function RevisionPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const todayIso = new Date().toISOString().slice(0, 10);
+
   const [
     { data: wrongs },
     { data: categories },
     { count: totalQuestionsCount },
     { data: favorites },
+    { data: todayChallenge },
+    { data: todayResult },
   ] = await Promise.all([
     supabase
       .from("wrong_answers")
@@ -45,6 +49,20 @@ export default async function RevisionPage() {
       .from("user_favorites")
       .select("question_id")
       .eq("user_id", user.id),
+    // M4.1 — Existence du défi du jour (le cron peut ne pas avoir
+    // tourné). On ne charge pas les questions, juste la présence.
+    supabase
+      .from("daily_challenges")
+      .select("date")
+      .eq("date", todayIso)
+      .maybeSingle(),
+    // M4.1 — Le user a-t-il déjà joué le défi d'aujourd'hui ?
+    supabase
+      .from("daily_challenge_results")
+      .select("date")
+      .eq("user_id", user.id)
+      .eq("date", todayIso)
+      .maybeSingle(),
   ]);
 
   // Fetch les questions ratées (jointe en deux étapes pour éviter le typage Postgres)
@@ -81,6 +99,8 @@ export default async function RevisionPage() {
       wrongQuestions={wrongQuestions}
       totalQuestionsAvailable={totalQuestionsCount ?? 0}
       favoriteIds={favoriteIds}
+      defiAvailable={todayChallenge != null}
+      defiPlayedToday={todayResult != null}
     />
   );
 }

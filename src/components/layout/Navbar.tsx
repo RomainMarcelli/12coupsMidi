@@ -14,8 +14,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/(app)/actions";
 import type { AppBranding } from "@/lib/branding";
-import { BUILD_VERSION } from "@/lib/build-info";
 import { cn } from "@/lib/utils";
+import { MobileMenu } from "./MobileMenu";
 
 interface NavbarProps {
   pseudo: string;
@@ -38,7 +38,7 @@ export function Navbar({ pseudo, role, avatarUrl, branding }: NavbarProps) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/85 px-4 py-3 text-foreground shadow-sm backdrop-blur-md sm:px-6 relative">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/85 px-4 py-3 text-foreground shadow-sm backdrop-blur-md sm:px-6">
       <Link
         href="/"
         className="flex items-center gap-2 transition-opacity hover:opacity-80"
@@ -49,24 +49,38 @@ export function Navbar({ pseudo, role, avatarUrl, branding }: NavbarProps) {
           width={120}
           height={120}
           className={cn(
-            "rounded-md object-cover",
+            // L+ — `object-contain` au lieu de `object-cover` pour
+            // éviter de cropper le logo. Pas de `rounded-md` non
+            // plus : le logo a déjà son fond transparent et l'arrondi
+            // forcé donnait un cadre disgracieux.
+            "object-contain",
             // L2.2 — Logo plus grand + halo doré pour le owner.
+            // M3.1 — Tailles bumpées : owner garde son palier, non-owner
+            // passe de h-8 → h-10 sm:h-12 pour plus de présence visuelle.
             branding.isOwner
-              ? "h-12 w-12 shadow-[0_0_16px_rgba(245,183,0,0.5)] sm:h-14 sm:w-14"
-              : "h-8 w-8",
+              ? "h-12 w-12 drop-shadow-[0_0_8px_rgba(245,183,0,0.5)] sm:h-14 sm:w-14"
+              : "h-10 w-10 sm:h-12 sm:w-12",
           )}
           priority
         />
-        <span className="font-display text-lg font-extrabold tracking-tight text-foreground">
+        <span
+          className={cn(
+            "font-display font-extrabold tracking-tight text-foreground",
+            branding.isOwner ? "text-base sm:text-xl" : "text-lg",
+          )}
+        >
           {branding.prefixWord}{" "}
-          <span className="text-gold-warm">
-            {branding.accentWord.replace(/ /g, " ")}
-          </span>{" "}
+          <span className="text-gold-warm">{branding.accentWord}</span>{" "}
           {branding.suffixWord}
         </span>
       </Link>
 
-      <nav className="flex items-center gap-1" aria-label="Navigation principale">
+      {/* M2.2 — Liens visibles uniquement à partir de md (≥768px). Sur
+          mobile, le burger MobileMenu prend le relais. */}
+      <nav
+        className="hidden items-center gap-1 md:flex"
+        aria-label="Navigation principale"
+      >
         {LINKS.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           return (
@@ -82,7 +96,7 @@ export function Navbar({ pseudo, role, avatarUrl, branding }: NavbarProps) {
               )}
             >
               <Icon className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{label}</span>
+              <span>{label}</span>
             </Link>
           );
         })}
@@ -99,12 +113,12 @@ export function Navbar({ pseudo, role, avatarUrl, branding }: NavbarProps) {
             )}
           >
             <Shield className="h-4 w-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Admin</span>
+            <span>Admin</span>
           </Link>
         )}
       </nav>
 
-      <div className="flex items-center gap-2">
+      <div className="hidden items-center gap-2 md:flex">
         <Link
           href="/parametres"
           aria-label="Paramètres"
@@ -137,16 +151,9 @@ export function Navbar({ pseudo, role, avatarUrl, branding }: NavbarProps) {
           </button>
         </form>
       </div>
-      {/* L1.1 — Build version (très discret, sur la droite). Utile
-          pour vérifier après refresh que le bundle est bien à jour
-          (cas SW Serwist récalcitrant en prod). */}
-      <span
-        className="pointer-events-none absolute right-2 bottom-0 font-mono text-[9px] text-foreground/30"
-        aria-hidden="true"
-        title={`Build ${BUILD_VERSION}`}
-      >
-        v.{BUILD_VERSION}
-      </span>
+
+      {/* M2.2 — Burger pour mobile. Visible uniquement < md. */}
+      <MobileMenu pseudo={pseudo} role={role} avatarUrl={avatarUrl} />
     </header>
   );
 }

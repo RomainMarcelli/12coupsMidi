@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/auth/admin-guard";
 import { ImportForm } from "./import-form";
+import { ImportFormatGuide } from "./_components/ImportFormatGuide";
 
 export const metadata = {
   title: "Admin — Import JSON",
@@ -26,44 +27,16 @@ export default async function ImportQuestionsPage() {
         </h1>
         <p className="text-sm text-foreground/70">
           Dépose un fichier .json (tableau de questions) ou colle le contenu
-          dans la zone. Le schéma est validé avant l'insertion, tu vois un
+          dans la zone. Le schéma est validé avant l&apos;insertion, tu vois un
           aperçu.
         </p>
       </header>
 
-      <ImportForm />
+      {/* M5.1 — Guide collapsible avec exemple JSON par type +
+          bouton "Tester cet exemple" qui valide via Zod côté client. */}
+      <ImportFormatGuide />
 
-      <details className="rounded-xl border border-border bg-card/50 p-4 text-sm text-foreground/80">
-        <summary className="cursor-pointer font-semibold text-gold">
-          Format attendu
-        </summary>
-        <pre className="mt-3 overflow-x-auto rounded-md bg-muted p-3 text-xs">
-{`[
-  {
-    "type": "quizz_2",
-    "category_slug": "histoire",
-    "subcategory_slug": "xxe",
-    "difficulte": 2,
-    "enonce": "En quelle année a eu lieu le débarquement ?",
-    "reponses": [
-      { "text": "1944", "correct": true },
-      { "text": "1945", "correct": false }
-    ],
-    "explication": "Le 6 juin 1944."
-  },
-  {
-    "type": "etoile",
-    "category_slug": "art",
-    "difficulte": 3,
-    "enonce": "Qui suis-je ?",
-    "bonne_reponse": "Picasso",
-    "alias": ["Pablo Picasso"],
-    "indices": ["Peintre espagnol", "Cubisme", "Guernica"],
-    "reponses": []
-  }
-]`}
-        </pre>
-      </details>
+      <ImportForm />
     </main>
   );
 }

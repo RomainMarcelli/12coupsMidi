@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { devError, devLog } from "@/lib/dev-log";
 import type { Json, QuestionType } from "@/types/database";
 import type { RevQuestion } from "@/lib/revision/types";
 import { DAILY_CHALLENGE_QUESTION_COUNT } from "./constants";
@@ -179,7 +180,7 @@ export async function submitDailyChallengeResult(input: {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  console.log("[defi:server] submitDailyChallengeResult start", {
+  devLog("[defi:server] submitDailyChallengeResult start", {
     userId: user.id,
     date: input.date,
     correctCount: input.correctCount,
@@ -200,7 +201,7 @@ export async function submitDailyChallengeResult(input: {
     .maybeSingle();
 
   if (error) {
-    console.error("[defi:server] INSERT error", {
+    devError("[defi:server] INSERT error", {
       code: error.code,
       message: error.message,
       details: error.details,
@@ -209,14 +210,14 @@ export async function submitDailyChallengeResult(input: {
     return { status: "error", message: error.message };
   }
   if (!data) {
-    console.error("[defi:server] INSERT returned no row (RLS filter ?)");
+    devError("[defi:server] INSERT returned no row (RLS filter ?)");
     return {
       status: "error",
       message:
         "L'enregistrement n'a retourné aucune ligne (problème RLS suspecté). Contacte l'admin.",
     };
   }
-  console.log("[defi:server] INSERT OK", data);
+  devLog("[defi:server] INSERT OK", data);
   revalidatePath("/revision/defi");
   revalidatePath("/revision");
   return { status: "ok" };

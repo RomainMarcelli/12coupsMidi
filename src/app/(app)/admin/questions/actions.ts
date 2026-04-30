@@ -328,8 +328,16 @@ export interface AuditDuplicateRow {
   id: string;
   type: string;
   category_slug: string | null;
+  /** L2.1 — Nom affichable de la catégorie (ex. "Histoire"). */
+  category_nom: string | null;
   enonce: string;
   bonne_reponse: string | null;
+  /** L2.1 — Réponses brutes (pour quizz_2/quizz_4/coup_par_coup). */
+  reponses: { text: string; correct: boolean }[];
+  /** L2.1 — Alias acceptés (face_a_face / etoile). */
+  alias: string[];
+  /** L2.1 — Indices (etoile / coup_maitre). */
+  indices_count: number;
   created_at: string;
 }
 
@@ -354,27 +362,39 @@ export async function auditDuplicateQuestions(): Promise<AuditResult> {
   const supabase = await createClient();
 
   const [{ data: cats }, { data: questions, error: qErr }] = await Promise.all([
-    supabase.from("categories").select("id, slug"),
+    supabase.from("categories").select("id, slug, nom"),
     supabase
       .from("questions")
-      .select("id, type, category_id, enonce, bonne_reponse, created_at")
+      .select(
+        "id, type, category_id, enonce, bonne_reponse, reponses, alias, indices, created_at",
+      )
       .order("created_at", { ascending: true }),
   ]);
 
   if (qErr) return { status: "error", message: qErr.message };
   if (!cats) return { status: "error", message: "Catégories introuvables" };
 
-  const catSlugById = new Map(cats.map((c) => [c.id, c.slug]));
+  const catById = new Map(cats.map((c) => [c.id, c]));
 
-  const rows: AuditDuplicateRow[] = (questions ?? []).map((q) => ({
-    id: q.id,
-    type: q.type,
-    category_slug:
-      q.category_id != null ? catSlugById.get(q.category_id) ?? null : null,
-    enonce: q.enonce,
-    bonne_reponse: q.bonne_reponse,
-    created_at: q.created_at,
-  }));
+  const rows: AuditDuplicateRow[] = (questions ?? []).map((q) => {
+    const cat = q.category_id != null ? catById.get(q.category_id) : null;
+    return {
+      id: q.id,
+      type: q.type,
+      category_slug: cat?.slug ?? null,
+      category_nom: cat?.nom ?? null,
+      enonce: q.enonce,
+      bonne_reponse: q.bonne_reponse,
+      reponses: Array.isArray(q.reponses)
+        ? (q.reponses as { text: string; correct: boolean }[])
+        : [],
+      alias: Array.isArray(q.alias) ? (q.alias as string[]) : [],
+      indices_count: Array.isArray(q.indices)
+        ? (q.indices as string[]).length
+        : 0,
+      created_at: q.created_at,
+    };
+  });
 
   const groups = findDuplicateGroups(rows, (r) =>
     buildSignature({

@@ -45,6 +45,7 @@ import { QuizPlayer } from "./_components/QuizPlayer";
 import { FlashcardPlayer } from "./_components/FlashcardPlayer";
 import { ErrorsReader } from "./_components/ErrorsReader";
 import { FavoriteIdsContext } from "./_components/favorite-ids-context";
+import { DefiAvailabilityBadge } from "./_components/DefiAvailabilityBadge";
 import {
   ReviewBatcherContext,
   type ReviewBatcherValue,
@@ -66,6 +67,10 @@ export interface RevisionClientProps {
   totalQuestionsAvailable: number;
   /** I1.5 — IDs des questions favorites (étoile remplie partout). */
   favoriteIds: string[];
+  /** M4.1 — Le défi du jour existe-t-il dans daily_challenges ? */
+  defiAvailable: boolean;
+  /** M4.1 — Le user a-t-il déjà soumis son résultat aujourd'hui ? */
+  defiPlayedToday: boolean;
 }
 
 type Mode =
@@ -348,6 +353,12 @@ function Hub({
           icon={Calendar}
           accent="gold"
           href="/revision/defi"
+          badge={
+            <DefiAvailabilityBadge
+              defiAvailable={props.defiAvailable}
+              defiPlayedToday={props.defiPlayedToday}
+            />
+          }
         />
         <ModeCard
           title="Fiches de révision"
@@ -395,6 +406,7 @@ function ModeCard({
   disabled,
   onClick,
   href,
+  badge,
 }: {
   title: string;
   desc: string;
@@ -406,6 +418,8 @@ function ModeCard({
   onClick?: () => void;
   /** Si fourni → la card devient un Link Next vers cette URL. */
   href?: string;
+  /** M4.1 — Badge top-right (ex. "Disponible !" / "Joué"). */
+  badge?: React.ReactNode;
 }) {
   const accentClass = {
     gold: {
@@ -445,11 +459,12 @@ function ModeCard({
     <>
       <div
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-110",
+          // M3.1 — Bump h-12 → h-16 sm:h-20 pour homogénéité avec /jouer.
+          "flex h-16 w-16 items-center justify-center rounded-xl transition-transform group-hover:scale-110 sm:h-20 sm:w-20",
           accentClass.bg,
         )}
       >
-        <Icon className="h-6 w-6" aria-hidden="true" />
+        <Icon className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
       </div>
       <div>
         <h3 className="font-display text-lg font-bold text-foreground">
@@ -462,6 +477,9 @@ function ModeCard({
           <Sparkles className="h-3 w-3" aria-hidden="true" />
           Recommandé
         </span>
+      )}
+      {badge && (
+        <span className="absolute right-3 top-3 z-10">{badge}</span>
       )}
     </>
   );

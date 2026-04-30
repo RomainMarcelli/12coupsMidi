@@ -37,14 +37,20 @@ const sourcePng = await readFile(
 // ---------------------------------------------------------------------------
 
 async function makePng(size, withBg = false) {
-  let pipeline = sharp(sourcePng).resize(size, size, {
-    fit: "contain",
-    background: { r: 0, g: 0, b: 0, alpha: 0 },
-  });
+  // L+ — `ensureAlpha()` garantit que le canal alpha est conservé
+  // jusqu'au final, même quand sharp optimiserait en stripping.
+  // `palette: false` empêche l'encodage en mode palette (qui peut
+  // perdre la transparence sur certains viewers).
+  let pipeline = sharp(sourcePng)
+    .ensureAlpha()
+    .resize(size, size, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    });
   if (withBg) {
     pipeline = pipeline.flatten({ background: MASKABLE_BG });
   }
-  return pipeline.png().toBuffer();
+  return pipeline.png({ palette: false, compressionLevel: 9 }).toBuffer();
 }
 
 const png16 = await makePng(16);

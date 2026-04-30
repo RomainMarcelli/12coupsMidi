@@ -18,13 +18,16 @@ export default async function Home() {
   const branding = await getCurrentBranding();
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 p-4 sm:p-6 lg:p-8">
-      {/* Hero — parcours complet (mode 12 Coups multijoueur) */}
+      {/* Hero — parcours complet (mode 12 Coups multijoueur).
+          L2.2 — Logo plus grand pour le owner, halo doré permanent. */}
       <HeroTile
         href="/jouer/douze-coups"
         title="Les 12 Coups de Midi"
         subtitle="Parcours multijoueur : Coup d'Envoi → Duel → Coup par Coup → Face-à-Face"
         icon={Crown}
         logoUrl={branding.logoUrl}
+        logoLargeUrl={branding.logoLargeUrl}
+        isOwner={branding.isOwner}
       />
 
       {/* 4 tuiles des jeux principaux */}
@@ -120,13 +123,28 @@ interface HeroTileProps {
   subtitle: string;
   icon: LucideIcon;
   logoUrl: string;
+  logoLargeUrl: string;
+  isOwner: boolean;
 }
 
-function HeroTile({ href, title, subtitle, logoUrl }: HeroTileProps) {
+function HeroTile({
+  href,
+  title,
+  subtitle,
+  logoUrl,
+  logoLargeUrl,
+  isOwner,
+}: HeroTileProps) {
   return (
     <Link
       href={href}
-      className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-card p-4 glow-card transition-all hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,183,0,0.18)] sm:p-5"
+      className={cn(
+        "group relative flex items-center gap-4 overflow-hidden rounded-2xl border bg-card glow-card transition-all hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,183,0,0.18)]",
+        // L2.2 — Pour le owner, hero plus généreux + halo permanent.
+        isOwner
+          ? "border-gold/40 p-5 shadow-[0_0_28px_rgba(245,183,0,0.18)] sm:gap-6 sm:p-7"
+          : "border-border p-4 sm:p-5",
+      )}
     >
       {/* Liseré doré gauche : signal "parcours principal" sans gradient
           tape-à-l'œil. */}
@@ -135,11 +153,20 @@ function HeroTile({ href, title, subtitle, logoUrl }: HeroTileProps) {
         aria-hidden="true"
       />
       <Image
-        src={logoUrl}
+        src={isOwner ? logoLargeUrl : logoUrl}
         alt=""
-        width={120}
-        height={120}
-        className="h-14 w-14 shrink-0 rounded-xl object-contain"
+        width={240}
+        height={240}
+        className={cn(
+          // L+ — `object-contain` (pas de crop) + retrait du
+          // `rounded-xl` qui cadrait visuellement le logo. Le PNG
+          // est transparent, autant le laisser flotter.
+          // M3.1 — Tailles bumpées pour plus d'impact (owner inchangé).
+          "shrink-0 object-contain",
+          isOwner
+            ? "h-24 w-24 drop-shadow-[0_0_20px_rgba(245,197,24,0.5)] sm:h-32 sm:w-32"
+            : "h-20 w-20 sm:h-24 sm:w-24",
+        )}
         priority
       />
       <div className="min-w-0 flex-1">

@@ -6,6 +6,7 @@ import {
   Check,
   Crown,
   Dices,
+  ImageIcon,
   Loader2,
   Palette,
   Upload,
@@ -20,6 +21,7 @@ import {
   type DicebearStyle,
 } from "@/lib/avatars/presets";
 import { uploadAvatarClient } from "@/lib/avatar-upload";
+import { createClient as createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 type UploadBucket = "avatars" | "saved-players-avatars";
@@ -35,7 +37,7 @@ interface AvatarPickerProps {
   uploadPath?: string;
 }
 
-type Tab = "pack" | "random" | "upload";
+type Tab = "pack" | "custom" | "random" | "upload";
 
 /**
  * Sélecteur d'avatar unifié (F3.2).
@@ -109,6 +111,13 @@ export function AvatarPicker({
                 Pack
               </TabButton>
               <TabButton
+                active={tab === "custom"}
+                onClick={() => setTab("custom")}
+                icon={ImageIcon}
+              >
+                Custom
+              </TabButton>
+              <TabButton
                 active={tab === "random"}
                 onClick={() => setTab("random")}
                 icon={Dices}
@@ -140,6 +149,15 @@ export function AvatarPicker({
             <div className="max-h-[70vh] overflow-y-auto p-4">
               {tab === "pack" && (
                 <PackTab
+                  currentUrl={currentUrl}
+                  onPick={(url) => {
+                    onPick(url);
+                    onClose();
+                  }}
+                />
+              )}
+              {tab === "custom" && (
+                <CustomTab
                   currentUrl={currentUrl}
                   onPick={(url) => {
                     onPick(url);
@@ -322,12 +340,12 @@ function RandomTab({ onPick }: { onPick: (url: string) => void }) {
             onClick={() => onPick(url)}
             className="group flex flex-col items-center gap-1 rounded-xl border-2 border-border bg-card p-2 transition-all hover:scale-[1.05] hover:border-gold/50"
           >
-            <div className="relative h-16 w-16 overflow-hidden rounded-xl bg-foreground/5">
+            <div className="relative h-20 w-20 overflow-hidden rounded-xl bg-foreground/5">
               <Image
                 src={url}
                 alt=""
-                width={64}
-                height={64}
+                width={80}
+                height={80}
                 className="h-full w-full object-cover"
                 unoptimized
               />
@@ -407,6 +425,141 @@ function UploadTab({
           {error}
         </p>
       )}
+    </div>
+  );
+}
+
+// =============================================================================
+// L2.3 — Custom tab : avatars uploadés par l'admin via /admin/avatars
+// (table public.custom_avatars). Lecture autorisée à tout user
+// authentifié (RLS policy "custom_avatars select for authenticated").
+// =============================================================================
+
+interface CustomAvatar {
+  id: string;
+  url: string;
+  tags: string[];
+}
+
+function CustomTab({
+  currentUrl,
+  onPick,
+}: {
+  currentUrl: string | null;
+  onPick: (url: string) => void;
+}) {
+  const [avatars, setAvatars] = useState<CustomAvatar[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const supabase = createSupabaseBrowserClient();
+      const { data, error: fetchErr } = await supabase
+        .from("custom_avatars")
+        .select("id, url, tags")
+        .order("created_at", { ascending: false });
+      if (cancelled) return;
+      if (fetchErr) {
+        setError(fetchErr.message);
+        setAvatars([]);
+        return;
+      }
+      setAvatars(
+        (data ?? []).map((a) => ({
+          id: a.id,
+          url: a.url,
+          tags: a.tags ?? [],
+        })),
+      );
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (avatars === null) {
+    return (
+      <div className="flex items-center justify-center gap-2 py-8 text-sm text-foreground/60">
+        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+        Chargement des avatars custom…
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <p className="rounded-md border border-buzz/40 bg-buzz/10 px-3 py-2 text-sm text-buzz">
+        Erreur : {error}
+      </p>
+    );
+  }
+
+  if (avatars.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border bg-background/40 p-8 text-center">
+        <ImageIcon
+          className="h-8 w-8 text-foreground/30"
+          aria-hidden="true"
+        />
+        <p className="text-sm text-foreground/65">
+          Aucun avatar custom uploadé pour l&apos;instant.
+        </p>
+        <p className="text-xs text-foreground/50">
+          L&apos;admin peut en ajouter via{" "}
+          <code className="rounded bg-muted px-1 text-[11px]">
+            /admin/avatars
+          </code>
+          .
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <p className="mb-3 text-sm text-foreground/65">
+        {avatars.length} avatar{avatars.length > 1 ? "s" : ""} uploadé
+        {avatars.length > 1 ? "s" : ""} par l&apos;admin :
+      </p>
+      <div className="grid grid-cols-4 gap-3 sm:grid-cols-5">
+        {avatars.map((a) => {
+          const selected = currentUrl === a.url;
+          return (
+            <button
+              key={a.id}
+              type="button"
+              onClick={() => onPick(a.url)}
+              aria-label={a.tags.join(", ") || "Avatar custom"}
+              title={a.tags.join(", ") || undefined}
+              className={cn(
+                "group relative aspect-square overflow-hidden rounded-xl border-2 p-1 transition-all",
+                selected
+                  ? "border-gold bg-gold/10 shadow-[0_0_18px_rgba(245,183,0,0.35)]"
+                  : "border-border bg-card hover:border-gold/50 hover:scale-[1.04]",
+              )}
+            >
+              <div className="relative h-full w-full overflow-hidden rounded-lg bg-foreground/5">
+                {/* Avatars stockés sur le bucket Supabase Storage,
+                    domaine pas dans next.config remotePatterns → on
+                    utilise <img> brut. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={a.url}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {selected && (
+                <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-on-color">
+                  <Check className="h-3 w-3" aria-hidden="true" />
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

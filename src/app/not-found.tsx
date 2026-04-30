@@ -25,7 +25,7 @@ export default function NotFound() {
           alt={branding.appName}
           width={224}
           height={224}
-          className="h-28 w-28 rounded-3xl object-cover shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
+          className="h-28 w-28 object-contain drop-shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
           priority
         />
       </div>

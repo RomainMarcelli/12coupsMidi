@@ -4,16 +4,15 @@ import { useEffect, useState, useTransition } from "react";
 import {
   Bell,
   Check,
-  Eye,
-  EyeOff,
+  Info,
   Key,
   Keyboard,
   Loader2,
   Mail,
   Mic,
-  Monitor,
   Moon,
   Palette,
+  RefreshCw,
   Save,
   Shield,
   Sun,
@@ -55,6 +54,8 @@ import {
   ttsStop,
 } from "@/lib/tts";
 import { saveProfile, saveUserSettings } from "./actions";
+import { BUILD_VERSION } from "@/lib/build-info";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 export interface ParametresInitial {
   email: string;
@@ -179,11 +180,14 @@ function AppearancePanel({
           Choisis l&apos;apparence de l&apos;app.
         </p>
       </div>
-      <div className="grid gap-3 sm:grid-cols-3">
+      {/* L3.1 — Mode "Système" retiré (enableSystem={false} dans
+          ThemeProvider) — l'app est en clair par défaut, le user
+          peut basculer en sombre s'il préfère. */}
+      <div className="grid gap-3 sm:grid-cols-2">
         <ThemeChoiceCard
           label="Clair"
           icon={Sun}
-          active={active === "light"}
+          active={active === "light" || active === "system"}
           onClick={() => pick("light")}
         />
         <ThemeChoiceCard
@@ -191,12 +195,6 @@ function AppearancePanel({
           icon={Moon}
           active={active === "dark"}
           onClick={() => pick("dark")}
-        />
-        <ThemeChoiceCard
-          label="Système"
-          icon={Monitor}
-          active={active === "system"}
-          onClick={() => pick("system")}
         />
       </div>
       {feedback && (
@@ -815,13 +813,12 @@ function ChangeEmailRow({ currentEmail }: { currentEmail: string }) {
             autoComplete="email"
             className="h-10 rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
           />
-          <input
-            type="password"
+          <PasswordInput
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             placeholder="Mot de passe actuel"
             autoComplete="current-password"
-            className="h-10 rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
+            className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
           />
           <div className="flex justify-end">
             <Button
@@ -859,7 +856,6 @@ function ChangePasswordRow() {
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [showNext, setShowNext] = useState(false);
   const [pending, setPending] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(
     null,
@@ -931,43 +927,26 @@ function ChangePasswordRow() {
       </div>
       {open && (
         <div className="mt-3 flex flex-col gap-2">
-          <input
-            type="password"
+          <PasswordInput
             value={current}
             onChange={(e) => setCurrent(e.target.value)}
             placeholder="Mot de passe actuel"
             autoComplete="current-password"
-            className="h-10 rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
+            className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
           />
-          <div className="relative">
-            <input
-              type={showNext ? "text" : "password"}
-              value={next}
-              onChange={(e) => setNext(e.target.value)}
-              placeholder="Nouveau mot de passe (8 car. min, 1 chiffre)"
-              autoComplete="new-password"
-              className="h-10 w-full rounded-md border border-border bg-card px-3 pr-10 text-sm text-foreground focus:border-gold focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={() => setShowNext((s) => !s)}
-              aria-label={showNext ? "Masquer" : "Afficher"}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-foreground/50 hover:text-foreground"
-            >
-              {showNext ? (
-                <EyeOff className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Eye className="h-4 w-4" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-          <input
-            type={showNext ? "text" : "password"}
+          <PasswordInput
+            value={next}
+            onChange={(e) => setNext(e.target.value)}
+            placeholder="Nouveau mot de passe (8 car. min, 1 chiffre)"
+            autoComplete="new-password"
+            className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
+          />
+          <PasswordInput
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="Confirme le nouveau mot de passe"
             autoComplete="new-password"
-            className="h-10 rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
+            className="h-10 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground focus:border-gold focus:outline-none"
           />
           <div className="flex justify-end">
             <Button
@@ -1323,7 +1302,63 @@ function AccountPanel({
         </span>
         <span className="text-xl text-foreground/40">›</span>
       </a>
+
+      <AboutSection />
     </section>
+  );
+}
+
+/**
+ * M3.2 — Bloc "À propos" affiché en bas du panel Compte. Remplace
+ * l'ancien affichage discret de la build version dans la Navbar.
+ *
+ * Affiche :
+ *   - Version du build (timestamp injecté au build par next.config.ts)
+ *   - Environnement (development / production)
+ *   - Bouton "Recharger l'app" qui force `window.location.reload()`
+ *     pour forcer le SW à pull les derniers assets
+ */
+function AboutSection() {
+  const env =
+    process.env.NODE_ENV === "production" ? "production" : "development";
+  return (
+    <div className="mt-3 flex flex-col gap-3 rounded-xl border border-border bg-background/40 p-4">
+      <div className="flex items-center gap-2">
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground/10 text-foreground/70">
+          <Info className="h-4 w-4" aria-hidden="true" />
+        </span>
+        <h3 className="font-display text-sm font-bold text-foreground">
+          À propos
+        </h3>
+      </div>
+      <dl className="grid gap-2 text-sm sm:grid-cols-2">
+        <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/60 px-3 py-2">
+          <dt className="text-xs uppercase tracking-wider text-foreground/50">
+            Version
+          </dt>
+          <dd className="font-mono text-xs text-foreground/80">
+            v.{BUILD_VERSION}
+          </dd>
+        </div>
+        <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/60 px-3 py-2">
+          <dt className="text-xs uppercase tracking-wider text-foreground/50">
+            Build
+          </dt>
+          <dd className="font-mono text-xs text-foreground/80">{env}</dd>
+        </div>
+      </dl>
+      <button
+        type="button"
+        onClick={() => window.location.reload()}
+        className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground/80 transition-colors hover:border-gold/50 hover:bg-gold/10 hover:text-foreground"
+      >
+        <RefreshCw className="h-4 w-4" aria-hidden="true" />
+        Recharger l&apos;app
+      </button>
+      <p className="text-xs text-foreground/50">
+        Mahylan Quiz — Application personnelle
+      </p>
+    </div>
   );
 }
 

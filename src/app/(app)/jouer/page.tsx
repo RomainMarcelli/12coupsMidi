@@ -94,21 +94,35 @@ export default async function JouerPage() {
       {/* J4.2 — Hero "12 Coups de Midi" en tête de page : parcours
           multijoueur complet, mis en avant avec un liseré doré. Style
           aligné sur la HeroTile de l'accueil.
-          K5.2 — Logo PNG (branding-aware) au lieu de l'icône Crown. */}
+          K5.2 — Logo PNG (branding-aware) au lieu de l'icône Crown.
+          L2.2 — Logo plus grand pour le owner. */}
       <Link
         href="/jouer/douze-coups"
-        className="group relative flex items-center gap-4 overflow-hidden rounded-2xl border border-border bg-card p-4 glow-card transition-all hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,183,0,0.18)] sm:p-5"
+        className={cn(
+          "group relative flex items-center gap-4 overflow-hidden rounded-2xl border bg-card glow-card transition-all hover:border-gold/60 hover:shadow-[0_0_32px_rgba(245,183,0,0.18)]",
+          branding.isOwner
+            ? "border-gold/40 p-5 shadow-[0_0_28px_rgba(245,183,0,0.18)] sm:gap-6 sm:p-7"
+            : "border-border p-4 sm:p-5",
+        )}
       >
         <div
           className="absolute inset-y-0 left-0 w-1 bg-gold"
           aria-hidden="true"
         />
         <Image
-          src={branding.logoUrl}
+          src={branding.isOwner ? branding.logoLargeUrl : branding.logoUrl}
           alt=""
-          width={120}
-          height={120}
-          className="h-14 w-14 shrink-0 rounded-xl object-contain"
+          width={240}
+          height={240}
+          className={cn(
+            // L+ — `object-contain` + retrait du `rounded-xl` (cf
+            // accueil et Navbar pour la cohérence).
+            // M3.1 — Bump non-owner pour homogénéité avec accueil.
+            "shrink-0 object-contain",
+            branding.isOwner
+              ? "h-24 w-24 drop-shadow-[0_0_20px_rgba(245,197,24,0.5)] sm:h-32 sm:w-32"
+              : "h-20 w-20 sm:h-24 sm:w-24",
+          )}
         />
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-bold uppercase tracking-widest text-gold-warm">
@@ -157,8 +171,8 @@ export default async function JouerPage() {
             href="/tv/host"
             className="group flex flex-col items-start gap-2 rounded-2xl border-2 border-gold/40 bg-card p-5 transition-all hover:scale-[1.02] hover:border-gold hover:shadow-[0_0_24px_rgba(245,183,0,0.25)]"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/15 text-gold-warm transition-transform group-hover:scale-110">
-              <Tv className="h-6 w-6" aria-hidden="true" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gold/15 text-gold-warm transition-transform group-hover:scale-110 sm:h-16 sm:w-16">
+              <Tv className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
             </div>
             <div>
               <h3 className="font-display text-lg font-bold text-foreground">
@@ -174,8 +188,8 @@ export default async function JouerPage() {
             href="/play"
             className="group flex flex-col items-start gap-2 rounded-2xl border-2 border-sky/40 bg-card p-5 transition-all hover:scale-[1.02] hover:border-sky hover:shadow-[0_0_24px_rgba(43,142,230,0.25)]"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky/15 text-sky transition-transform group-hover:scale-110">
-              <Gamepad2 className="h-6 w-6" aria-hidden="true" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-sky/15 text-sky transition-transform group-hover:scale-110 sm:h-16 sm:w-16">
+              <Gamepad2 className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
             </div>
             <div>
               <h3 className="font-display text-lg font-bold text-foreground">
@@ -216,11 +230,12 @@ function GameRow({ game }: { game: GameItem }) {
     >
       <div
         className={cn(
-          "flex h-14 w-14 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110",
+          // M3.1 — Bump h-14 → h-16 sm:h-20 pour plus d'impact visuel.
+          "flex h-16 w-16 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110 sm:h-20 sm:w-20",
           iconBg,
         )}
       >
-        <Icon className="h-7 w-7" aria-hidden="true" />
+        <Icon className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2">

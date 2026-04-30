@@ -22,7 +22,7 @@ export default function LoginPage() {
             alt=""
             width={160}
             height={160}
-            className="h-20 w-20 rounded-2xl object-cover shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
+            className="h-20 w-20 object-contain drop-shadow-[0_8px_32px_rgba(245,183,0,0.45)]"
             priority
           />
         </div>

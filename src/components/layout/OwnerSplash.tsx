@@ -89,7 +89,7 @@ export function OwnerSplash({ branding }: OwnerSplashProps) {
               alt={branding.appName}
               width={240}
               height={240}
-              className="h-32 w-32 rounded-3xl object-contain shadow-[0_8px_48px_rgba(245,183,0,0.6)] sm:h-40 sm:w-40"
+              className="h-32 w-32 object-contain drop-shadow-[0_8px_48px_rgba(245,183,0,0.6)] sm:h-40 sm:w-40"
               priority
             />
           </motion.div>
